@@ -106,6 +106,34 @@
         font-size: 0.86rem;
       }
 
+      .article-lang-switch {
+        display: inline-flex;
+        gap: 4px;
+        align-items: center;
+        border: 1px solid var(--faint);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.78);
+        padding: 3px;
+      }
+
+      .article-lang-button {
+        min-width: 42px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.78rem;
+        font-weight: 780;
+        padding: 4px 9px;
+      }
+
+      .article-lang-button[aria-pressed="true"] {
+        background: var(--accent);
+        color: #fff;
+      }
+
       .shell {
         width: min(var(--max), calc(100% - 48px));
         margin: 0 auto;
@@ -633,6 +661,10 @@
         <a href="#notebook">Notebook</a>
         <a href="#interactive">Interactive chart</a>
         <a href="../../index.html">← 返回主页</a>
+        <span class="article-lang-switch" aria-label="Article language">
+          <button class="article-lang-button" type="button" data-lang-target="zh">中文</button>
+          <button class="article-lang-button" type="button" data-lang-target="en">EN</button>
+        </span>
       </div>
     </nav>
 
@@ -936,6 +968,135 @@ summary</code></pre></div>
     </main>
 
     <script>
+      window.articleI18n = {
+        defaultLang: "zh",
+        meta: {
+          zh: {
+            title: "Median-of-Means 估计器：重尾噪声下的稳健均值 | Dale Anfer",
+            description: "一篇 notebook 风格的技术文章，解释 Median-of-Means、稳健估计、污染噪声、Monte Carlo 误差分布和估计尾部风险。"
+          },
+          en: {
+            title: "Median-of-Means Estimator: Robust Mean Under Heavy-Tailed Noise | Dale Anfer",
+            description: "A notebook-style technical article on median-of-means, robust estimation, contaminated noise, Monte Carlo error distributions, and estimation tail risk."
+          }
+        },
+        translations: {
+          "Notebook": { zh: "笔记实验" },
+          "Interactive chart": { zh: "交互图表" },
+          "← 返回主页": { en: "← Home" },
+          "Technical article / Robust statistics": { zh: "技术文章 / 稳健统计" },
+          "Median-of-Means Estimator": { zh: "Median-of-Means 估计器" },
+          "This article starts from a single extreme value, then turns the intuition into a notebook-style Monte Carlo experiment. The goal is not to claim that Median-of-Means is always best; the goal is to show how it reduces tail risk of estimation error under contaminated or heavy-tailed noise.": {
+            zh: "这篇文章从一个极端值例子开始，再把直觉扩展成 notebook 风格的 Monte Carlo 实验。重点不是宣称 Median-of-Means 永远最好，而是说明它如何在污染噪声或重尾噪声下减少估计误差的尾部风险。"
+          },
+          "Date": { zh: "日期" },
+          "Format": { zh: "形式" },
+          "Notebook experiment": { zh: "Notebook 实验" },
+          "Concept": { zh: "概念" },
+          "Robust estimation": { zh: "稳健估计" },
+          "Output": { zh: "输出" },
+          "Code · tables · chart": { zh: "代码 · 表格 · 图表" },
+          "Before the notebook": { zh: "进入实验前" },
+          "What this article is trying to prove": { zh: "这篇文章想说明什么" },
+          "普通均值不是“坏”的估计器；它的问题是对数值大小完全信任。当样本里出现少量极端值时，均值可能偶尔错得很离谱。 Median-of-Means 的价值是把这个风险拆成两层：组内仍然求均值，组间用中位数聚合。": {
+            en: "The ordinary mean is not a “bad” estimator; its issue is that it fully trusts magnitude. When a few extreme values appear, the mean can occasionally make a very large mistake. Median-of-Means splits this risk into two layers: average within each block, then aggregate block means by the median."
+          },
+          "One outlier can dominate the mean": { zh: "一个异常值可以支配均值" },
+          "A single value 1000 moves the sample mean from the visual center near 10 to 109.2.": { zh: "单个 1000 会把样本均值从接近 10 的视觉中心拉到 109.2。" },
+          "MoM changes the aggregation question": { zh: "MoM 改变了聚合问题" },
+          "It asks for the typical average among blocks, not the average of all raw magnitudes at once.": { zh: "它问的是“许多分组均值中典型的均值是什么”，而不是一次性平均所有原始数值。" },
+          "Monte Carlo makes the claim testable": { zh: "Monte Carlo 让这个判断可检验" },
+          "Repeated experiments compare the error distribution of mean, median, and median-of-means.": { zh: "重复实验可以比较普通均值、中位数和 Median-of-Means 的误差分布。" },
+          "The boundary matters": { zh: "边界条件很重要" },
+          "MoM reduces tail risk under contamination; it is not a universal smaller-variance replacement for the mean.": { zh: "MoM 降低污染噪声下的尾部风险；它不是在所有干净场景中方差都更小的通用替代品。" },
+          "Step 01 / Tiny example": { zh: "步骤 01 / 极简例子" },
+          "Start with one contaminated sample": { zh: "从一个被污染的样本开始" },
+          "假设我们想估计一组数据的“真实平均水平”，大部分数据都在 10 附近，但有一个异常值 1000：": {
+            en: "Suppose we want to estimate the true average level of a dataset. Most observations are near 10, but one value is an outlier at 1000:"
+          },
+          "Create the smallest useful example.": { zh: "构造最小但有解释力的例子。" },
+          "input": { zh: "输入" },
+          "Code · contaminated sample": { zh: "代码 · 被污染样本" },
+          "visible": { zh: "可见" },
+          "这个结果明显被 1000 拉歪了。数据的典型中心其实更接近 10。": {
+            en: "This result is clearly pulled by 1000. The typical center of the data is much closer to 10."
+          },
+          "Step 02 / Estimator idea": { zh: "步骤 02 / 估计器思路" },
+          "Group first, then take the median": { zh: "先分组，再取中位数" },
+          "Median-of-Means 的做法是先分组，每组算均值，最后对这些组均值取中位数。这样异常值会污染其中一组，但只要被污染的组不到一半，中位数聚合就能把它压下去。": {
+            en: "Median-of-Means first divides the data into groups, computes the mean inside each group, and finally takes the median of those group means. The outlier contaminates one group, but as long as contaminated groups are fewer than half, the median aggregation can suppress it."
+          },
+          "Group": { zh: "组" },
+          "Data": { zh: "数据" },
+          "Group mean": { zh: "组均值" },
+          "核心问题变了：": { en: "The core question changes:" },
+          "ordinary mean asks, \"What is the average of all points?\" Median-of-Means asks, \"What is the typical average among many small groups?\"": {
+            zh: "普通均值问：“所有点的平均值是多少？”Median-of-Means 问：“许多小组里的典型平均值是多少？”"
+          },
+          "Step 03 / General form": { zh: "步骤 03 / 一般形式" },
+          "Write the estimator explicitly": { zh: "把估计器写清楚" },
+          "More generally, split the sample into \\(k\\) groups \\(G_1,\\ldots,G_k\\), compute the mean inside each group, then take the median of those group means:": {
+            zh: "更一般地，把样本分成 \\(k\\) 个组 \\(G_1,\\ldots,G_k\\)，先计算每组内部均值，再对这些组均值取中位数："
+          },
+          "The number of groups \\(k\\) controls a tradeoff. More groups means smaller blocks, so each block mean is noisier; fewer groups means a single contaminated block has more influence. In practice, \\(k\\) is chosen to make the probability of more than half the blocks being contaminated very small.": {
+            zh: "组数 \\(k\\) 控制一个权衡。组数更多时，每组更小，组均值更 noisy；组数更少时，单个被污染的组影响更大。实际使用时，\\(k\\) 的选择目标是让超过一半分组被污染的概率尽可能小。"
+          },
+          "Repeat the contamination process": { zh: "重复污染过程" },
+          "一个异常值例子只能说明“可能出问题”；重复很多次随机实验才能说明普通均值的误差分布是否真的更不稳定。 每次生成 200 个样本，其中 95% 来自以 10 为中心的正常噪声，5% 来自仍然以 10 为中心、但波动极大的极端噪声。重复 5000 次后，比较普通均值、普通中位数和 Median-of-Means。": {
+            en: "A single outlier example only shows that failure is possible; repeated random experiments show whether the error distribution of the ordinary mean is truly less stable. Each run generates 200 samples: 95% from normal noise centered at 10 and 5% from extreme noise, still centered at 10 but with much larger variance. After 5000 repetitions, we compare the sample mean, sample median, and Median-of-Means."
+          },
+          "Purpose": { zh: "目的" },
+          "Build a reproducible Monte Carlo table so the comparison is based on repeated error distributions, not one hand-made outlier.": {
+            zh: "构造一个可复现的 Monte Carlo 表，让比较基于重复误差分布，而不是单个手工异常值。"
+          },
+          "Compare standard deviation, MSE, mean absolute error, 95% absolute error, and large-error rate.": {
+            zh: "比较标准差、MSE、平均绝对误差、95% 绝对误差和大误差比例。"
+          },
+          "Visual check": { zh: "可视化检查" },
+          "Sampling distribution under tunable contamination": { zh: "可调污染噪声下的抽样分布" },
+          "Use the controls to change contamination rate and extreme-noise scale. The point is not to upload new data; it is to change the assumptions and see how each estimator reacts.": {
+            zh: "使用控件调整污染比例和极端噪声尺度。这里不是上传新数据，而是改变假设，观察每个估计器如何反应。"
+          },
+          "Sample Mean": { zh: "普通均值" },
+          "Median": { zh: "中位数" },
+          "Median-of-Means": { zh: "Median-of-Means" },
+          "Contamination rate": { zh: "污染比例" },
+          "Extreme-noise scale": { zh: "极端噪声尺度" },
+          "Limitations and practical use": { zh: "限制与实际使用" },
+          "Median-of-Means 降低的是重尾噪声下的估计尾部风险，而不只是普通意义上的方差。它适合提醒我们：在薪资 outlier、异常交易金额、长尾响应时间或 noisy scraped records 中，先问均值稳定需要什么假设。": {
+            en: "Median-of-Means reduces the tail risk of estimation error under heavy-tailed noise, not just variance in the ordinary sense. It is useful as a reminder: with salary outliers, abnormal transaction amounts, long-tail response times, or noisy scraped records, first ask which assumptions make the mean stable."
+          },
+          "MoM depends on the number of groups \\(k\\); bad grouping or too many contaminated groups can still hurt.": {
+            zh: "MoM 依赖组数 \\(k\\)；分组不佳或被污染的组过多时仍然会受影响。"
+          },
+          "The sample median can look best for estimating a center, but it is not estimating the mean target in the same way.": {
+            zh: "样本中位数在估计中心时可能看起来最好，但它和均值目标并不完全相同。"
+          },
+          "The article is a reasoning demo, not a universal estimator recommendation.": {
+            zh: "这篇文章是推理演示，不是通用估计器推荐。"
+          },
+          "Conclusion:": { zh: "结论：" },
+          "the useful habit is to inspect the tail risk of an estimator, not only its average-case error.": {
+            zh: "有用的习惯是检查估计器的尾部风险，而不仅是平均误差。"
+          },
+          "Contents": { zh: "目录" },
+          "Key findings": { zh: "核心发现" },
+          "Tiny example": { zh: "极简例子" },
+          "Grouping rule": { zh: "分组规则" },
+          "Estimator definition": { zh: "估计器定义" },
+          "Limitations": { zh: "限制" }
+        },
+        onLanguageChange(lang) {
+          window.momArticleLang = lang;
+          if (typeof window.refreshMomChart === "function") {
+            window.refreshMomChart();
+          }
+        }
+      };
+    </script>
+    <script src="../../article-i18n.js"></script>
+
+    <script>
       const chart = document.querySelector("#mcChart");
       const statsNode = document.querySelector("#stats");
       const readout = document.querySelector("#readout");
@@ -944,6 +1105,28 @@ summary</code></pre></div>
       const trueCenter = 10;
       const repeats = 1200;
       const n = 200;
+      window.momArticleLang = window.momArticleLang || "zh";
+
+      const chartCopy = {
+        zh: {
+          mean: "普通均值",
+          median: "中位数",
+          mom: "Median-of-Means",
+          trueCenter: "真实中心 10",
+          p95: "95% 绝对误差",
+          bad: "|误差| > 1",
+          readout: (contamination, scale) => `污染比例 ${(contamination * 100).toFixed(0)}%，极端噪声标准差 ${scale}。重点看普通均值的尾部是否变厚，以及 Median-of-Means 的尾部风险控制。`
+        },
+        en: {
+          mean: "Sample mean",
+          median: "Median",
+          mom: "Median-of-means",
+          trueCenter: "True center 10",
+          p95: "p95 abs error",
+          bad: "|error| > 1",
+          readout: (contamination, scale) => `Contamination ${(contamination * 100).toFixed(0)}%, extreme-noise scale ${scale}. Watch whether the sample-mean tail becomes thicker and how Median-of-Means controls tail risk.`
+        }
+      };
 
       const makeRng = (seed) => () => {
         seed = (seed * 1664525 + 1013904223) >>> 0;
@@ -1024,6 +1207,7 @@ summary</code></pre></div>
       }
 
       function updateChart() {
+        const copy = chartCopy[window.momArticleLang || "zh"] || chartCopy.zh;
         const contamination = Number(contaminationInput.value) / 100;
         const scale = Number(scaleInput.value);
         const values = simulate(contamination, scale);
@@ -1032,9 +1216,9 @@ summary</code></pre></div>
         const max = Math.max(11.6, quantile(allValues, 0.995) + 0.15);
         const bins = 42;
         const series = [
-          { key: "mean", label: "Sample mean", color: "#c85b5b", counts: histogram(values.mean, min, max, bins), stats: summarize(values.mean) },
-          { key: "median", label: "Median", color: "#536a8a", counts: histogram(values.median, min, max, bins), stats: summarize(values.median) },
-          { key: "mom", label: "Median-of-means", color: "#0f7662", counts: histogram(values.mom, min, max, bins), stats: summarize(values.mom) }
+          { key: "mean", label: copy.mean, color: "#c85b5b", counts: histogram(values.mean, min, max, bins), stats: summarize(values.mean) },
+          { key: "median", label: copy.median, color: "#536a8a", counts: histogram(values.median, min, max, bins), stats: summarize(values.median) },
+          { key: "mom", label: copy.mom, color: "#0f7662", counts: histogram(values.mom, min, max, bins), stats: summarize(values.mom) }
         ];
         const maxCount = Math.max(...series.flatMap((item) => item.counts));
         const plot = { x: 70, y: 38, width: 634, height: 254 };
@@ -1051,20 +1235,21 @@ summary</code></pre></div>
           <line x1="70" y1="292" x2="704" y2="292" stroke="#b8b8b8"></line>
           ${bars}
           <line x1="${trueX.toFixed(1)}" y1="38" x2="${trueX.toFixed(1)}" y2="298" stroke="#111" stroke-width="1.6" stroke-dasharray="6 5"></line>
-          <text x="${Math.min(600, trueX + 8).toFixed(1)}" y="54" fill="#333" font-size="14">True center 10</text>
+          <text x="${Math.min(600, trueX + 8).toFixed(1)}" y="54" fill="#333" font-size="14">${copy.trueCenter}</text>
           ${[min, trueCenter, max].map((value) => `<text x="${toX(value).toFixed(1)}" y="322" text-anchor="middle" fill="#555" font-size="13">${value.toFixed(1)}</text>`).join("")}
         `;
         statsNode.innerHTML = series.map((item) => `
           <span>
             <b>${item.label}</b>
-            <em>p95 abs error: ${item.stats.p95.toFixed(2)}</em>
-            <small>|error| &gt; 1: ${(item.stats.badRate * 100).toFixed(1)}%</small>
+            <em>${copy.p95}: ${item.stats.p95.toFixed(2)}</em>
+            <small>${copy.bad}: ${(item.stats.badRate * 100).toFixed(1)}%</small>
           </span>
         `).join("");
-        readout.textContent = `污染比例 ${(contamination * 100).toFixed(0)}%，极端噪声标准差 ${scale}。重点看 sample mean 的尾部是否变厚，以及 Median-of-Means 的 tail-risk control。`;
+        readout.textContent = copy.readout(contamination, scale);
       }
 
       [contaminationInput, scaleInput].forEach((input) => input.addEventListener("input", updateChart));
+      window.refreshMomChart = updateChart;
       updateChart();
     </script>
   </body>

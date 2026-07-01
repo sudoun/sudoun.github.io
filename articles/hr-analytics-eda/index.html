@@ -60,6 +60,9 @@ a { color: inherit; text-decoration: none; }
 .brand-mark { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--faint); border-radius: 9px; background: var(--surface); color: var(--accent-2); font-weight: 800; }
 .top-actions { display: flex; align-items: center; gap: 16px; color: var(--muted); font-size: 0.86rem; }
 .top-actions a:hover { color: var(--accent); }
+.article-lang-switch { display: inline-flex; gap: 4px; align-items: center; border: 1px solid var(--faint); border-radius: 999px; background: rgba(255,255,255,.78); padding: 3px; }
+.article-lang-button { min-width: 42px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; font: inherit; font-size: .78rem; font-weight: 780; padding: 4px 9px; }
+.article-lang-button[aria-pressed="true"] { background: var(--accent); color: #fff; }
 .shell { width: min(var(--max), calc(100% - 48px)); margin: 0 auto; }
 .hero { padding: 78px 0 46px; border-bottom: 1px solid var(--faint); }
 .eyebrow { margin: 0 0 14px; color: var(--accent); font-size: 0.78rem; font-weight: 850; letter-spacing: 0.13em; text-transform: uppercase; }
@@ -552,6 +555,10 @@ h1 { max-width: 900px; font-size: clamp(2.75rem, 5.4vw, 5.05rem); line-height: 0
 <a href="#notebook-start">Notebook</a>
 <a href="#limitations-and-next-steps">Next steps</a>
 <a href="../../index.html">← 返回主页</a>
+<span aria-label="Article language" class="article-lang-switch">
+<button class="article-lang-button" data-lang-target="zh" type="button">中文</button>
+<button class="article-lang-button" data-lang-target="en" type="button">EN</button>
+</span>
 </nav>
 </header>
 <main class="shell">
@@ -5599,6 +5606,202 @@ Approximate n per group needed for ±10 percentage-point margin of error: 52
 <a class="toc-h2" href="#limitations-and-next-steps">Limitations and Next Steps</a></aside>
 </div>
 </main>
+<script>
+window.articleI18n = {
+  defaultLang: "zh",
+  meta: {
+    zh: {
+      title: "HR Analytics EDA：员工流失与人力数据洞察 | Dale Anfer",
+      description: "一篇技术 EDA 项目文章，展示 HR Analytics 数据集的数据审计、类别特征、数值特征、分类建模框架和可复核 notebook 输出。"
+    },
+    en: {
+      title: "HR Analytics EDA: Employee Attrition and Workforce Insights | Dale Anfer",
+      description: "A technical EDA project article covering data audit, categorical features, numerical features, classification framing, and reproducible notebook evidence for an HR analytics dataset."
+    }
+  },
+  translations: {
+    "Findings": { zh: "发现" },
+    "Notebook": { zh: "Notebook" },
+    "Next steps": { zh: "下一步" },
+    "← 返回主页": { en: "← Home" },
+    "Technical article / HR analytics EDA": { zh: "技术文章 / HR 数据 EDA" },
+    "HR Analytics EDA: Employee Attrition and Workforce Insights": { zh: "HR Analytics EDA：员工流失与人力数据洞察" },
+    "This project explores employee attrition patterns using a public HR analytics dataset. The goal is to understand which employee characteristics are associated with higher attrition risk and translate the findings into interpretable HR insights.": {
+      zh: "这个项目使用公开 HR Analytics 数据集探索员工流失模式。目标是理解哪些员工特征与更高流失风险相关，并把结果转化为可解释的人力数据洞察。"
+    },
+    "The project is for analytical and educational purposes only. It is not intended for automated hiring, firing, or employee evaluation decisions.": {
+      zh: "本项目只用于分析和学习，不用于自动招聘、解雇或员工评价决策。"
+    },
+    "Dataset": { zh: "数据集" },
+    "Task": { zh: "任务" },
+    "Attrition EDA": { zh: "员工流失 EDA" },
+    "Methods": { zh: "方法" },
+    "Audit · Wilson CI · Cramér’s V · diagnostics": { zh: "数据审计 · Wilson 置信区间 · Cramér’s V · 诊断图" },
+    "Evidence": { zh: "证据" },
+    "Tables · figures · code review": { zh: "表格 · 图表 · 代码复核" },
+    "Boundary": { zh: "边界" },
+    "Descriptive, not causal": { zh: "描述性分析，不做因果结论" },
+    "Reader map": { zh: "阅读地图" },
+    "Key findings before the notebook details": { zh: "进入 Notebook 细节前的核心发现" },
+    "Attrition is imbalanced": { zh: "流失类别是不平衡的" },
+    "Only about 16% of employees left, so accuracy alone is not a useful modeling target.": {
+      zh: "只有约 16% 的员工离职，因此单看 accuracy 不是有用的建模目标。"
+    },
+    "Overtime is the clearest categorical signal": { zh: "加班是最清晰的类别信号" },
+    "Overtime employees show much higher observed attrition than non-overtime employees.": {
+      zh: "加班员工的观察流失率明显高于不加班员工。"
+    },
+    "Role, age, salary, travel, and marital status matter descriptively": {
+      zh: "岗位、年龄、薪资、出差和婚姻状态在描述层面有关系"
+    },
+    "These variables show meaningful marginal associations, but group size and confidence intervals matter.": {
+      zh: "这些变量显示了有意义的边际关联，但必须同时看组大小和置信区间。"
+    },
+    "Numerical diagnostics support the same pattern": { zh: "数值诊断支持类似模式" },
+    "Leavers tend to be younger, lower-income, farther from work, and shorter-tenured.": {
+      zh: "离职员工通常更年轻、收入更低、离公司更远、任职时间更短。"
+    },
+    "The analysis stops before causal HR decisions": { zh: "分析停在因果性 HR 决策之前" },
+    "The results are descriptive signals for modeling and review, not automated hiring, firing, or employee evaluation rules.": {
+      zh: "这些结果是建模和复核用的描述性信号，不是自动招聘、解雇或评价规则。"
+    },
+    "Boundary:": { zh: "边界：" },
+    "this article demonstrates an audit-to-modeling workflow. It does not claim causal drivers of attrition.": {
+      zh: "本文展示从数据审计到建模准备的流程，不声称识别员工流失的因果驱动因素。"
+    },
+    "Expand outputs": { zh: "展开输出" },
+    "Collapse outputs": { zh: "折叠输出" },
+    "Show code": { zh: "显示代码" },
+    "Hide code": { zh: "隐藏代码" },
+    "Evidence format:": { zh: "证据格式：" },
+    "each code cell has a one-sentence functionality summary, code remains available for review, and repeated plot galleries are summarized with labeled outputs so the article stays readable.": {
+      zh: "每个代码单元都有一句功能说明，代码保留用于复核，重复图表用带标签的输出概括，使文章保持可读。"
+    },
+    "Large tables and repeated figures are collapsible; key previews remain visible where they support the main claim.": {
+      zh: "大表格和重复图表可以折叠；只有支持主要结论的关键预览保持可见。"
+    },
+    "Problem Statement": { zh: "问题陈述" },
+    "This analysis asks three practical questions:": { zh: "这次分析回答三个实际问题：" },
+    "Which data-quality issues must be resolved before interpreting employee attrition?": {
+      zh: "在解释员工流失之前，哪些数据质量问题必须先处理？"
+    },
+    "Which categorical and numerical employee features show the strongest marginal association with attrition?": {
+      zh: "哪些类别特征和数值特征与员工流失有最强的边际关联？"
+    },
+    "What modeling assumptions should be checked before moving from EDA to classification modeling?": {
+      zh: "从 EDA 进入分类建模前，需要检查哪些建模假设？"
+    },
+    "The dataset is used for analytical and educational purposes only. The output should be read as descriptive workforce analysis, not as an automated decision system.": {
+      zh: "该数据集只用于分析和学习。输出应理解为描述性人力数据分析，而不是自动决策系统。"
+    },
+    "The first stage follows standard EDA practice: checking missing values, duplicated records, data types, and unusual feature ranges. However, missingness is not treated as a purely technical cleaning issue. If missing records are systematically related to attrition, tenure, department, or employee survival in the HR system, dropping them may introduce complete-case bias or survivorship-style sample selection bias, leading to misleading assumptions about the workforce.": {
+      zh: "第一阶段遵循标准 EDA 流程：检查缺失值、重复记录、数据类型和异常特征范围。但缺失并不只是技术清洗问题。如果缺失记录与流失、任职时间、部门或 HR 系统中的员工留存状态系统性相关，直接删除可能引入 complete-case bias 或类似 survivorship 的样本选择偏差，从而误导我们对员工群体的假设。"
+    },
+    "Therefore, before imputation or deletion, I audit missingness patterns, compare retained vs dropped samples, add missingness indicators, and use conservative imputation strategies for modeling.": {
+      zh: "因此，在插补或删除之前，我会审计缺失模式，比较保留样本与删除样本，加入缺失指示变量，并在建模中使用保守的插补策略。"
+    },
+    "Purpose": { zh: "目的" },
+    "Prepare the environment for loading the Kaggle HR dataset.": { zh: "准备加载 Kaggle HR 数据集的运行环境。" },
+    "Install the Kaggle helper package only when the notebook is run in a fresh environment.": {
+      zh: "只在全新 notebook 环境中安装 Kaggle helper package。"
+    },
+    "Load libraries and configure readable dataframe output.": { zh: "加载库并配置更易读的 dataframe 输出。" },
+    "Import the analysis stack and widen dataframe display so audit tables are easier to inspect.": {
+      zh: "导入分析工具栈，并放宽 dataframe 显示宽度，便于检查审计表。"
+    },
+    "Feature representation note": { zh: "特征表示说明" },
+    "This dataset mixes categorical grouping labels and numerical employee attributes. For readable EDA, I keep labels such as department, job role, overtime, age group, and salary slab as interpretable categories. For modeling, nominal categories should be one-hot encoded rather than label-encoded, because label encoding would create artificial ordinal structure.": {
+      zh: "这个数据集混合了类别分组标签和数值型员工属性。为了让 EDA 可读，我保留 department、job role、overtime、age group、salary slab 等标签；建模时，名义类别应使用 one-hot encoding，而不是 label encoding，以避免制造不存在的顺序。"
+    },
+    "Dimensionality reduction is a future option for exploratory representation, but it is not used as final evidence in this article.": {
+      zh: "降维在本文中只是未来探索选项，不作为最终证据。"
+    },
+    "Feature engineering note: zero-inflated tenure variables": { zh: "特征工程说明：零膨胀任职变量" },
+    "Some tenure-related variables contain many zeros. Instead of treating this only as a plotting inconvenience, I create explicit indicator variables so a model can preserve the information that an employee has no recent promotion event while the EDA still keeps the original tenure scale readable.": {
+      zh: "一些任职相关变量包含大量 0。与其把它只当作绘图麻烦，我会创建显式指示变量，让模型保留“员工近期没有晋升经历”这一信息，同时在 EDA 中保留原始任职尺度。"
+    },
+    "Insight": { zh: "洞察" },
+    "The attrition rate provides the baseline context for the rest of the analysis. A low attrition rate is not necessarily a data problem; it may reflect the natural base rate of employee turnover. But it creates a modeling challenge because the positive class is under-represented.": {
+      zh: "员工流失率为整个分析提供基线背景。低流失率不一定是数据问题；它可能反映员工流动的正常基准率。但它会带来建模挑战，因为流失样本代表性不足。"
+    },
+    "From an HR perspective, the goal is not simply to maximize prediction accuracy. The goal is to identify meaningful patterns among employees who actually leave while avoiding over-generalization from small subgroups.": {
+      zh: "从 HR 角度看，目标不只是最大化预测准确率，而是在避免从小样本子群过度概括的前提下，识别真正离职员工中的有意义模式。"
+    },
+    "Before making statistical inference, I first inspect the data graphically. Visual diagnostics often reveal structure that summary statistics hide. For example, a Q-Q plot compares empirical quantiles with theoretical Gaussian quantiles; it can diagnose skewness, outliers, and heavy-tail behavior, but it should be treated as a visual diagnostic rather than an exact estimator of tail decay.": {
+      zh: "在做统计推断之前，我先看图形诊断。图表经常能揭示 summary statistics 不明显的结构。例如 Q-Q plot 将经验分位数与理论高斯分位数比较，可用于诊断偏度、异常值和重尾行为。但它应该被当作视觉诊断，而不是尾部衰减率的精确估计器。"
+    },
+    "Summary of Categorical Attrition Analysis": { zh: "类别特征流失分析总结" },
+    "Overall attrition is about 16.1%, so all subgroup comparisons should be interpreted against this base rate.": {
+      zh: "整体流失率约为 16.1%，因此所有子群比较都应放在这个基准率下解释。"
+    },
+    "OverTime is the strongest categorical signal in this dataset. Employees who work overtime show a much higher observed attrition rate than employees who do not work overtime.": {
+      zh: "OverTime 是这个数据集中最强的类别信号。加班员工的观察流失率明显高于不加班员工。"
+    },
+    "JobRole also shows substantial variation, but some roles have smaller group sizes, so confidence intervals and minimum expected counts matter before making strong claims.": {
+      zh: "JobRole 也显示出较大差异，但部分岗位组样本量较小，因此在下强结论前必须看置信区间和最小期望频数。"
+    },
+    "AgeGroup, SalarySlab, BusinessTravel, and MaritalStatus provide useful descriptive segmentation. They should be treated as signals for modeling and investigation, not as standalone causal explanations.": {
+      zh: "AgeGroup、SalarySlab、BusinessTravel 和 MaritalStatus 提供了有用的描述性分层。它们应被视为建模和进一步调查的信号，而不是独立因果解释。"
+    },
+    "Gender has a much weaker association in this dataset. This does not mean it is irrelevant in every HR context; it only means this dataset does not show a strong marginal attrition separation by gender.": {
+      zh: "Gender 在这个数据集中的关联较弱。这不代表它在所有 HR 场景中都无关，只说明该数据集没有显示出强烈的性别边际流失差异。"
+    },
+    "Part 3: Numerical Feature Visualization": { zh: "第三部分：数值特征可视化" },
+    "Numerical Feature Interpretation": { zh: "数值特征解释" },
+    "The numerical plots are used to answer four questions:": { zh: "数值图表用于回答四个问题：" },
+    "Do leavers and stayers differ in central tendency?": { zh: "离职者和留任者的中心趋势是否不同？" },
+    "Are numerical distributions skewed or heavy-tailed?": { zh: "数值分布是否偏斜或具有重尾？" },
+    "Are there visible outliers that may affect model fitting?": { zh: "是否存在会影响模型拟合的明显异常值？" },
+    "Which variables should be transformed, binned, or treated with robust methods?": {
+      zh: "哪些变量应被变换、分箱或使用稳健方法处理？"
+    },
+    "The skewness check identifies several right-skewed variables, especially income and tenure-related variables. This matters because tree models can often handle skewness directly, while linear models may benefit from log transformations, winsorization, or robust scaling.": {
+      zh: "偏度检查显示若干变量右偏，尤其是收入和任职相关变量。这很重要，因为树模型通常能直接处理偏态，而线性模型可能需要 log 变换、winsorization 或 robust scaling。"
+    },
+    "Categorical Effect Size Ranking": { zh: "类别效应量排序" },
+    "Cramér’s V is used as a compact effect-size measure for categorical association with attrition. Unlike p-values, it gives a scale for comparing features, but it still does not imply causality.": {
+      zh: "Cramér’s V 被用作类别特征与流失关联的紧凑效应量指标。与 p-value 不同，它提供了比较特征的尺度，但仍然不代表因果关系。"
+    },
+    "Classification Framework": { zh: "分类建模框架" },
+    "The EDA naturally frames attrition as a binary classification problem. The target is whether an employee left the company, and the features are employee attributes observed before or during employment.": {
+      zh: "这个 EDA 自然把员工流失定义为二分类问题。目标变量是员工是否离职，特征是入职前或在职期间观察到的员工属性。"
+    },
+    "Classification theory note": { zh: "分类理论说明" },
+    "A classifier estimates a decision rule that maps employee features \\(X\\) to an attrition label \\(Y\\in\\{0,1\\}\\). In probabilistic terms, many models estimate \\(P(Y=1\\mid X)\\), then choose a threshold to convert probability into a class label.": {
+      zh: "分类器估计的是一个决策规则，把员工特征 \\(X\\) 映射到流失标签 \\(Y\\in\\{0,1\\}\\)。从概率角度看，许多模型估计 \\(P(Y=1\\mid X)\\)，再选择阈值把概率转成类别标签。"
+    },
+    "Because attrition is imbalanced, the threshold should not be chosen by accuracy alone. Recall, precision, F1-score, ROC-AUC, and PR-AUC should be compared, especially if the practical goal is to identify employees who may need retention support.": {
+      zh: "由于流失类别不平衡，阈值不应只按 accuracy 选择。应比较 recall、precision、F1-score、ROC-AUC 和 PR-AUC，尤其当实际目标是识别可能需要留存支持的员工时。"
+    },
+    "Limitations and Next Steps": { zh: "限制与下一步" },
+    "This EDA does not identify causal drivers of attrition. Its value is to build a reproducible audit-to-modeling workflow: preserve the raw data, document duplicate and missingness issues, separate the readable EDA table from the model-ready table, and use uncertainty-aware group comparisons before fitting classifiers.": {
+      zh: "这个 EDA 不识别员工流失的因果驱动因素。它的价值在于建立可复现的数据审计到建模流程：保留原始数据，记录重复和缺失问题，区分可读 EDA 表和模型输入表，并在拟合分类器前使用带不确定性的组间比较。"
+    },
+    "This article reports descriptive EDA summaries from the raw working table while documenting exact duplicates separately; the exact-deduplicated table should become the single source of truth before model fitting.": {
+      zh: "本文基于原始工作表报告描述性 EDA 摘要，同时单独记录完全重复项；在模型拟合前，精确去重后的表应成为唯一数据源。"
+    },
+    "Fit stratified baseline models and report recall, F1-score, ROC-AUC, and PR-AUC.": {
+      zh: "拟合分层基线模型，并报告 recall、F1-score、ROC-AUC 和 PR-AUC。"
+    },
+    "Check whether overtime and job role remain informative after controlling for age, salary, tenure, travel, and satisfaction variables.": {
+      zh: "检查在控制年龄、薪资、任职、出差和满意度变量后，加班和岗位是否仍然有信息量。"
+    },
+    "Confirm that identifiers, constants, derived bands, and duplicate-review fields do not leak information into the model.": {
+      zh: "确认 ID、常量、派生分箱和重复复核字段不会把信息泄漏进模型。"
+    },
+    "Constant fields such as Over18 are documented in the audit but excluded from categorical evidence galleries because they carry no group-comparison signal.": {
+      zh: "Over18 等常量字段会在审计中记录，但不进入类别证据图表，因为它们没有组间比较信号。"
+    },
+    "Conclusion:": { zh: "结论：" },
+    "the strongest portfolio signal in this project is not any single chart; it is the end-to-end discipline of auditing data quality, explaining uncertainty, separating EDA from modeling, and setting clear boundaries for HR analytics.": {
+      zh: "这个项目最强的作品集信号不是某一张图，而是端到端的数据质量审计、解释不确定性、区分 EDA 与建模、并为 HR analytics 设置清晰边界的工作习惯。"
+    },
+    "Contents": { zh: "目录" },
+    "Key findings": { zh: "核心发现" }
+  }
+};
+</script>
+<script src="../../article-i18n.js"></script>
 <script>
 (function() {
   const outputs = () => Array.from(document.querySelectorAll('.output-details'));
