@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Median-of-Means Estimator | Dale Anfer</title>
+    <meta name="description" content="A Quarto-style technical article on median-of-means, contaminated noise, and Monte Carlo estimation error.">
+    <style>
+      :root {
+        --bg: #fbfaf7;
+        --paper: #ffffff;
+        --text: #191919;
+        --muted: #66645e;
+        --faint: #e6e0d8;
+        --accent: #1f7a68;
+        --accent-soft: #eaf4f0;
+        --red: #c85b5b;
+        --blue: #617089;
+        --code-bg: #151515;
+        --code-text: #f3f1ea;
+        --shadow: 0 18px 55px rgba(20, 20, 20, 0.08);
+        --header-height: 64px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(180deg, color-mix(in srgb, #f4f3ef 58%, var(--bg)) 0, var(--bg) 320px);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: grid;
+        min-height: var(--header-height);
+        grid-template-columns: minmax(170px, 1fr) auto;
+        align-items: center;
+        gap: 18px;
+        padding: 0 max(20px, calc((100vw - 1080px) / 2));
+        border-bottom: 1px solid var(--faint);
+        background: color-mix(in srgb, var(--bg) 92%, transparent);
+        backdrop-filter: blur(14px);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text);
+        font-weight: 760;
+      }
+
+      .brand-mark {
+        display: inline-grid;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        border: 1px solid var(--faint);
+        border-radius: 8px;
+        background: var(--paper);
+      }
+
+      .nav-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .nav-actions a {
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        color: var(--accent);
+        padding: 7px 10px;
+        font-weight: 760;
+      }
+
+      .article-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 760px) minmax(160px, 220px);
+        gap: clamp(18px, 4vw, 46px);
+        width: min(1040px, calc(100% - 36px));
+        margin: 0 auto;
+        padding: 28px 0 72px;
+      }
+
+      .toc {
+        position: sticky;
+        top: 22px;
+        align-self: start;
+      }
+
+      .toc {
+        display: grid;
+        gap: 10px;
+        border-left: 1px solid var(--faint);
+        padding-left: 16px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .toc strong {
+        color: var(--text);
+        font-size: 0.76rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .paper {
+        min-width: 0;
+        border: 1px solid var(--faint);
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+
+      header,
+      section {
+        padding: clamp(22px, 5vw, 44px);
+      }
+
+      header {
+        border-bottom: 1px solid var(--faint);
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--accent);
+        font-size: 0.78rem;
+        font-weight: 760;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.2rem, 7vw, 4.8rem);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        max-width: 640px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: clamp(1rem, 2vw, 1.18rem);
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 22px;
+      }
+
+      .meta span,
+      .badge {
+        border: 1px solid var(--faint);
+        background: var(--bg);
+        padding: 4px 8px;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      section {
+        display: grid;
+        gap: 18px;
+        border-bottom: 1px solid var(--faint);
+      }
+
+      section:last-child {
+        border-bottom: 0;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: clamp(1.3rem, 3vw, 1.75rem);
+        line-height: 1.2;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .lead {
+        color: var(--text);
+        font-size: 1.08rem;
+      }
+
+      .note {
+        border-left: 3px solid var(--accent);
+        background: var(--accent-soft);
+        padding: 14px 16px;
+      }
+
+      .formula {
+        overflow-x: auto;
+        border: 1px solid var(--faint);
+        background: var(--bg);
+        padding: 16px;
+        color: var(--text);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.06rem, 2vw, 1.3rem);
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--faint);
+        background: var(--paper);
+        font-size: 0.92rem;
+      }
+
+      th,
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--faint);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .code-cell {
+        overflow: hidden;
+        border: 1px solid #2a2a2a;
+        background: var(--code-bg);
+        color: var(--code-text);
+      }
+
+      .code-caption {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 8px 12px;
+        color: rgba(243, 241, 234, 0.72);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.76rem;
+      }
+
+      pre {
+        margin: 0;
+        overflow-x: auto;
+        padding: 16px;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.84rem;
+        line-height: 1.6;
+      }
+
+      .output {
+        border: 1px solid var(--faint);
+        background: color-mix(in srgb, var(--bg) 66%, var(--paper));
+      }
+
+      .output .code-caption {
+        border-bottom-color: var(--faint);
+        background: var(--bg);
+        color: var(--muted);
+      }
+
+      .chart-card {
+        display: grid;
+        gap: 14px;
+        border: 1px solid var(--faint);
+        background: var(--paper);
+        padding: 14px;
+      }
+
+      .chart-card svg {
+        width: 100%;
+        min-height: 280px;
+        background: #ffffff;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .controls label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .stats span {
+        display: grid;
+        gap: 4px;
+        border: 1px solid var(--faint);
+        background: var(--bg);
+        padding: 10px;
+      }
+
+      .stats b {
+        font-size: 0.84rem;
+      }
+
+      .stats em,
+      .stats small {
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.76rem;
+        font-style: normal;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .legend i {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 6px;
+        border-radius: 999px;
+        vertical-align: -1px;
+      }
+
+      .mean-key {
+        background: var(--red);
+      }
+
+      .median-key {
+        background: var(--blue);
+      }
+
+      .mom-key {
+        background: var(--accent);
+      }
+
+      @media (max-width: 920px) {
+        .article-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .toc {
+          position: static;
+        }
+
+        .toc {
+          display: none;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .site-header {
+          grid-template-columns: 1fr;
+          gap: 8px;
+          padding-block: 10px;
+        }
+
+        .nav-actions {
+          gap: 10px;
+        }
+
+        .article-shell {
+          width: min(100% - 20px, 760px);
+          padding-top: 12px;
+        }
+
+        header,
+        section {
+          padding: 22px 16px;
+        }
+
+        .controls,
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        table {
+          font-size: 0.84rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header" aria-label="Article navigation">
+      <a class="brand" href="../../">
+        <span class="brand-mark">D</span>
+        <span>Dale Anfer</span>
+      </a>
+      <nav class="nav-actions" aria-label="Article links">
+        <a href="../../">← 返回主页</a>
+      </nav>
+    </header>
+
+    <div class="article-shell">
+      <main class="paper">
+        <header>
+          <p class="eyebrow">Statistics Notes / Robust Estimation</p>
+          <h1>Median-of-Means Estimator</h1>
+          <p class="subtitle">A technical note on why ordinary means can become unstable under contaminated noise, and how median-of-means reduces estimation tail risk.</p>
+          <div class="meta">
+            <span>2026-06-30</span>
+            <span>8 min read</span>
+            <span class="badge">Quarto-style note</span>
+          </div>
+        </header>
+
+        <section id="tiny-example">
+          <h2>A tiny example / 一个极简例子</h2>
+          <p class="lead">Suppose we want to estimate the true average level of a dataset. Most observations are near 10, but one record is 1000.</p>
+          <div class="code-cell">
+            <div class="code-caption"><span>python</span><span>input</span></div>
+            <pre><code>x = [10, 11, 9, 10, 12, 11, 10, 9, 10, 1000]</code></pre>
+          </div>
+          <div class="formula">(10 + 11 + 9 + 10 + 12 + 11 + 10 + 9 + 10 + 1000) / 10 = 109.2</div>
+          <p>这个结果明显被 1000 拉歪了。真实中心其实更接近 10。</p>
+
+          <table>
+            <thead>
+              <tr><th>Group</th><th>Data</th><th>Group mean</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>10, 11</td><td>10.5</td></tr>
+              <tr><td>2</td><td>9, 10</td><td>9.5</td></tr>
+              <tr><td>3</td><td>12, 11</td><td>11.5</td></tr>
+              <tr><td>4</td><td>10, 9</td><td>9.5</td></tr>
+              <tr><td>5</td><td>10, 1000</td><td>505.0</td></tr>
+            </tbody>
+          </table>
+
+          <div class="formula">median(10.5, 9.5, 11.5, 9.5, 505) = 10.5</div>
+          <div class="note">
+            <strong>Key intuition:</strong> ordinary mean asks, "What is the average of all points?" Median-of-means asks, "What is the typical average among many small groups?"
+          </div>
+        </section>
+
+        <section id="notebook">
+          <h2>Notebook experiment / 重复随机实验</h2>
+          <p>上面的例子只是一个手工构造的异常值案例。为了验证 Median-of-Means 是否真的能在随机数据中带来更稳定的估计，我们做一个 Monte Carlo 实验：每次生成 200 个样本，其中 95% 来自正常噪声，5% 来自极端噪声。真实中心设为 10，重复 5000 次。</p>
+
+          <div class="code-cell">
+            <div class="code-caption"><span>python</span><span>In [1]</span></div>
+            <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+rng = np.random.default_rng(42)
+
+def median_of_means(x, k=20):
+    x = np.array(x, copy=True)
+    rng.shuffle(x)
+    blocks = np.array_split(x, k)
+    block_means = [block.mean() for block in blocks]
+    return np.median(block_means)
+
+def generate_sample(n=200, true_center=10, contamination_rate=0.05):
+    x = rng.normal(true_center, 1, size=n)
+    mask = rng.random(n) &lt; contamination_rate
+    x[mask] = rng.normal(true_center, 50, size=mask.sum())
+    return x
+
+def run_experiment(repeats=5000, n=200, true_center=10):
+    records = []
+    for _ in range(repeats):
+        x = generate_sample(n=n, true_center=true_center)
+        records.append({
+            "sample_mean": np.mean(x),
+            "median": np.median(x),
+            "median_of_means": median_of_means(x, k=20),
+        })
+    return pd.DataFrame(records)
+
+results = run_experiment()
+results.head()</code></pre>
+          </div>
+
+          <div class="output">
+            <div class="code-caption"><span>Out [1]</span><span>first rows</span></div>
+            <table>
+              <thead>
+                <tr><th>sample_mean</th><th>median</th><th>median_of_means</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>9.783</td><td>9.948</td><td>10.097</td></tr>
+                <tr><td>10.869</td><td>9.924</td><td>10.114</td></tr>
+                <tr><td>10.055</td><td>10.003</td><td>10.199</td></tr>
+                <tr><td>8.829</td><td>9.903</td><td>9.872</td></tr>
+                <tr><td>10.799</td><td>10.133</td><td>10.098</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="code-cell">
+            <div class="code-caption"><span>python</span><span>In [2]</span></div>
+            <pre><code>true_center = 10
+summary = []
+
+for estimator in ["sample_mean", "median", "median_of_means"]:
+    error = results[estimator] - true_center
+    summary.append({
+        "estimator": estimator,
+        "std_of_error": np.std(error),
+        "mse": np.mean(error ** 2),
+        "mean_abs_error": np.mean(np.abs(error)),
+        "p95_abs_error": np.quantile(np.abs(error), 0.95),
+        "catastrophic_rate_error_gt_1": np.mean(np.abs(error) &gt; 1),
+    })
+
+summary = pd.DataFrame(summary)
+summary</code></pre>
+          </div>
+
+          <div class="output">
+            <div class="code-caption"><span>Out [2]</span><span>error summary</span></div>
+            <table>
+              <thead>
+                <tr><th>estimator</th><th>std</th><th>mse</th><th>mae</th><th>p95 abs error</th><th>|error| &gt; 1</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>sample_mean</td><td>0.790</td><td>0.624</td><td>0.625</td><td>1.550</td><td>19.6%</td></tr>
+                <tr><td>median</td><td>0.092</td><td>0.008</td><td>0.073</td><td>0.183</td><td>0.0%</td></tr>
+                <tr><td>median_of_means</td><td>0.155</td><td>0.024</td><td>0.117</td><td>0.296</td><td>0.1%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="note">
+            <strong>Interpretation:</strong> sample mean is not wrong every time, but it occasionally goes very wrong. Median-of-means is not claiming to have the smallest variance in every clean setting; its value is reducing tail risk of estimation error under heavy-tailed or contaminated noise.
+          </div>
+        </section>
+
+        <section id="interactive">
+          <h2>Interactive sampling distribution / 交互抽样分布</h2>
+          <p>Move the controls and watch the error tail change. The red distribution is the sample mean; green is median-of-means.</p>
+          <div class="chart-card">
+            <svg id="mcChart" viewBox="0 0 760 360" role="img" aria-label="Monte Carlo sampling distributions"></svg>
+            <div class="legend">
+              <span><i class="mean-key"></i>Sample Mean</span>
+              <span><i class="median-key"></i>Median</span>
+              <span><i class="mom-key"></i>Median-of-Means</span>
+            </div>
+            <div class="controls">
+              <label>Contamination rate <input id="contaminationInput" type="range" min="0" max="12" step="1" value="5"></label>
+              <label>Extreme-noise scale <input id="scaleInput" type="range" min="10" max="80" step="5" value="50"></label>
+            </div>
+            <div id="stats" class="stats"></div>
+            <p id="readout" class="note"></p>
+          </div>
+        </section>
+
+        <section id="takeaway">
+          <h2>Takeaway</h2>
+          <p><strong>Median-of-Means 降低的是重尾噪声下的估计尾部风险，而不只是普通意义上的方差。</strong></p>
+          <p>This matters in salary data, abnormal transactions, long-tail response times, and noisy scraped records: first ask what assumptions make the mean stable.</p>
+        </section>
+      </main>
+
+      <nav class="toc" aria-label="Article table of contents">
+        <strong>Contents</strong>
+        <a href="#tiny-example">Tiny example</a>
+        <a href="#notebook">Notebook experiment</a>
+        <a href="#interactive">Interactive distribution</a>
+        <a href="#takeaway">Takeaway</a>
+      </nav>
+    </div>
+
+    <script>
+      const chart = document.querySelector("#mcChart");
+      const statsNode = document.querySelector("#stats");
+      const readout = document.querySelector("#readout");
+      const contaminationInput = document.querySelector("#contaminationInput");
+      const scaleInput = document.querySelector("#scaleInput");
+      const trueCenter = 10;
+      const repeats = 1200;
+      const n = 200;
+
+      const makeRng = (seed) => () => {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+      const normal = (rng, mean, sd) => {
+        const u1 = Math.max(rng(), 1e-12);
+        const u2 = rng();
+        return mean + sd * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      };
+      const average = (values) => values.reduce((sum, value) => sum + value, 0) / values.length;
+      const median = (values) => {
+        const sorted = [...values].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+      };
+      const quantile = (values, q) => {
+        const sorted = [...values].sort((a, b) => a - b);
+        const pos = (sorted.length - 1) * q;
+        const base = Math.floor(pos);
+        const rest = pos - base;
+        return sorted[base + 1] === undefined ? sorted[base] : sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+      };
+      const shuffle = (values, rng) => {
+        for (let index = values.length - 1; index > 0; index -= 1) {
+          const swapIndex = Math.floor(rng() * (index + 1));
+          [values[index], values[swapIndex]] = [values[swapIndex], values[index]];
+        }
+      };
+      const medianOfMeans = (values, groups, rng) => {
+        const shuffled = [...values];
+        shuffle(shuffled, rng);
+        const groupMeans = [];
+        for (let group = 0; group < groups; group += 1) {
+          const start = Math.floor(group * shuffled.length / groups);
+          const end = Math.floor((group + 1) * shuffled.length / groups);
+          groupMeans.push(average(shuffled.slice(start, end)));
+        }
+        return median(groupMeans);
+      };
+      const summarize = (values) => {
+        const absErrors = values.map((value) => Math.abs(value - trueCenter));
+        return {
+          p95: quantile(absErrors, 0.95),
+          badRate: average(absErrors.map((error) => error > 1 ? 1 : 0))
+        };
+      };
+
+      function simulate(contamination, scale) {
+        const rng = makeRng(42);
+        const values = { mean: [], median: [], mom: [] };
+        for (let repeat = 0; repeat < repeats; repeat += 1) {
+          const sample = [];
+          for (let index = 0; index < n; index += 1) {
+            sample.push(rng() < contamination ? normal(rng, trueCenter, scale) : normal(rng, trueCenter, 1));
+          }
+          values.mean.push(average(sample));
+          values.median.push(median(sample));
+          values.mom.push(medianOfMeans(sample, 20, rng));
+        }
+        return values;
+      }
+
+      function histogram(values, min, max, bins) {
+        const counts = Array.from({ length: bins }, () => 0);
+        values.forEach((value) => {
+          const index = Math.max(0, Math.min(bins - 1, Math.floor((value - min) / (max - min) * bins)));
+          counts[index] += 1;
+        });
+        return counts;
+      }
+
+      function updateChart() {
+        const contamination = Number(contaminationInput.value) / 100;
+        const scale = Number(scaleInput.value);
+        const values = simulate(contamination, scale);
+        const allValues = [...values.mean, ...values.median, ...values.mom];
+        const min = Math.min(8.4, quantile(allValues, 0.005) - 0.15);
+        const max = Math.max(11.6, quantile(allValues, 0.995) + 0.15);
+        const bins = 42;
+        const series = [
+          { key: "mean", label: "Sample mean", color: "#c85b5b", counts: histogram(values.mean, min, max, bins), stats: summarize(values.mean) },
+          { key: "median", label: "Median", color: "#617089", counts: histogram(values.median, min, max, bins), stats: summarize(values.median) },
+          { key: "mom", label: "Median-of-means", color: "#1f7a68", counts: histogram(values.mom, min, max, bins), stats: summarize(values.mom) }
+        ];
+        const maxCount = Math.max(...series.flatMap((item) => item.counts));
+        const plot = { x: 70, y: 38, width: 634, height: 254 };
+        const toX = (value) => plot.x + (value - min) / (max - min) * plot.width;
+        const barWidth = plot.width / bins;
+        const bars = series.map((item, seriesIndex) => item.counts.map((count, index) => {
+          const height = count / maxCount * (plot.height - 18);
+          const x = plot.x + index * barWidth + seriesIndex * (barWidth / 3);
+          const y = plot.y + plot.height - height;
+          return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(1.8, barWidth / 3.4).toFixed(1)}" height="${height.toFixed(1)}" fill="${item.color}" opacity="0.35"></rect>`;
+        }).join("")).join("");
+        const trueX = toX(trueCenter);
+        chart.innerHTML = `
+          <line x1="70" y1="292" x2="704" y2="292" stroke="#b8b8b8"></line>
+          ${bars}
+          <line x1="${trueX.toFixed(1)}" y1="38" x2="${trueX.toFixed(1)}" y2="298" stroke="#111" stroke-width="1.6" stroke-dasharray="6 5"></line>
+          <text x="${Math.min(600, trueX + 8).toFixed(1)}" y="54" fill="#333" font-size="14">True center 10</text>
+          ${[min, trueCenter, max].map((value) => `<text x="${toX(value).toFixed(1)}" y="322" text-anchor="middle" fill="#555" font-size="13">${value.toFixed(1)}</text>`).join("")}
+        `;
+        statsNode.innerHTML = series.map((item) => `
+          <span>
+            <b>${item.label}</b>
+            <em>p95 abs error: ${item.stats.p95.toFixed(2)}</em>
+            <small>|error| &gt; 1: ${(item.stats.badRate * 100).toFixed(1)}%</small>
+          </span>
+        `).join("");
+        readout.textContent = `污染比例 ${(contamination * 100).toFixed(0)}%，极端噪声标准差 ${scale}。重点看 sample mean 的右尾/左尾是否变厚，以及 MoM 的 tail-risk control。`;
+      }
+
+      [contaminationInput, scaleInput].forEach((input) => input.addEventListener("input", updateChart));
+      updateChart();
+    </script>
+  </body>
+</html>

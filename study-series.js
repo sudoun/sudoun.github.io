@@ -1,0 +1,3 @@
+window.studySeriesPosts = [];
+
+window.zhStudySeriesPosts = {};

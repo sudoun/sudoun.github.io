@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-07-01T17:06:56.885Z",
+  "sourceDir": "personal_blog",
+  "outputDir": "personal_blog_public",
+  "includedPostSlugs": [
+    "median-of-means-estimator",
+    "hr-analytics-eda"
+  ],
+  "emittedPosts": [
+    {
+      "slug": "median-of-means-estimator",
+      "title": "Median-of-Means Estimator: A Mean That Refuses to Panic",
+      "category": "Statistics",
+      "source": "writing-posts.js"
+    },
+    {
+      "slug": "hr-analytics-eda",
+      "title": "HR Analytics EDA: Employee Attrition and Workforce Insights",
+      "category": "Data Analysis",
+      "source": "writing-posts.js"
+    }
+  ],
+  "copiedAssetCount": 0,
+  "copiedAssets": []
+}
