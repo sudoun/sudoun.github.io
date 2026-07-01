@@ -3,59 +3,77 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Median-of-Means Estimator | Dale Anfer</title>
-    <meta name="description" content="A Quarto-style technical article on median-of-means, contaminated noise, and Monte Carlo estimation error.">
+    <title>Median-of-Means Estimator: Robust Mean Under Heavy-Tailed Noise | Dale Anfer</title>
+    <meta name="description" content="A notebook-style technical article on median-of-means, robust estimation, contaminated noise, Monte Carlo error distributions, and estimation tail risk.">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["\\(", "\\)"]],
+          displayMath: [["\\[", "\\]"], ["$$", "$$"]],
+          processEscapes: true
+        },
+        options: {
+          skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+        }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
       :root {
-        --bg: #fbfaf7;
-        --paper: #ffffff;
-        --text: #191919;
-        --muted: #66645e;
-        --faint: #e6e0d8;
-        --accent: #1f7a68;
-        --accent-soft: #eaf4f0;
+        --bg: #fcfbf8;
+        --surface: #ffffff;
+        --surface-soft: #f7f5f0;
+        --text: #1c1c1a;
+        --muted: #62615c;
+        --faint: #e5ded3;
+        --accent: #0f7662;
+        --accent-2: #0b5e50;
         --red: #c85b5b;
-        --blue: #617089;
-        --code-bg: #151515;
-        --code-text: #f3f1ea;
-        --shadow: 0 18px 55px rgba(20, 20, 20, 0.08);
-        --header-height: 64px;
+        --blue: #536a8a;
+        --code-bg: #171717;
+        --code-text: #f4f1e8;
+        --max: 1120px;
+        --measure: 760px;
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         margin: 0;
-        background:
-          linear-gradient(180deg, color-mix(in srgb, #f4f3ef 58%, var(--bg)) 0, var(--bg) 320px);
+        background: linear-gradient(180deg, #f7f5f0 0, var(--bg) 420px);
         color: var(--text);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        line-height: 1.65;
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 17px;
+        line-height: 1.72;
       }
 
       a {
-        color: var(--accent);
+        color: inherit;
         text-decoration: none;
       }
 
       a:hover {
-        text-decoration: underline;
+        color: var(--accent);
       }
 
-      .site-header {
+      .topbar {
         position: sticky;
         top: 0;
-        z-index: 10;
-        display: grid;
-        min-height: var(--header-height);
-        grid-template-columns: minmax(170px, 1fr) auto;
+        z-index: 50;
+        display: flex;
+        min-height: 54px;
         align-items: center;
+        justify-content: space-between;
         gap: 18px;
-        padding: 0 max(20px, calc((100vw - 1080px) / 2));
+        padding: 0 max(22px, calc((100vw - var(--max)) / 2));
         border-bottom: 1px solid var(--faint);
-        background: color-mix(in srgb, var(--bg) 92%, transparent);
+        background: rgba(252, 251, 248, 0.9);
         backdrop-filter: blur(14px);
       }
 
@@ -63,186 +81,243 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        color: var(--text);
+        font-size: 0.94rem;
         font-weight: 760;
       }
 
       .brand-mark {
-        display: inline-grid;
-        width: 32px;
-        height: 32px;
+        display: grid;
+        width: 28px;
+        height: 28px;
         place-items: center;
         border: 1px solid var(--faint);
         border-radius: 8px;
-        background: var(--paper);
+        background: var(--surface);
+        color: var(--accent-2);
+        font-weight: 800;
       }
 
-      .nav-actions {
+      .top-actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 16px;
         align-items: center;
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-
-      .nav-actions a {
-        border: 1px solid var(--accent);
-        border-radius: 8px;
-        color: var(--accent);
-        padding: 7px 10px;
-        font-weight: 760;
-      }
-
-      .article-shell {
-        display: grid;
-        grid-template-columns: minmax(0, 760px) minmax(160px, 220px);
-        gap: clamp(18px, 4vw, 46px);
-        width: min(1040px, calc(100% - 36px));
-        margin: 0 auto;
-        padding: 28px 0 72px;
-      }
-
-      .toc {
-        position: sticky;
-        top: 22px;
-        align-self: start;
-      }
-
-      .toc {
-        display: grid;
-        gap: 10px;
-        border-left: 1px solid var(--faint);
-        padding-left: 16px;
         color: var(--muted);
         font-size: 0.86rem;
       }
 
-      .toc strong {
-        color: var(--text);
-        font-size: 0.76rem;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+      .shell {
+        width: min(var(--max), calc(100% - 48px));
+        margin: 0 auto;
       }
 
-      .paper {
-        min-width: 0;
-        border: 1px solid var(--faint);
-        background: var(--paper);
-        box-shadow: var(--shadow);
-      }
-
-      header,
-      section {
-        padding: clamp(22px, 5vw, 44px);
-      }
-
-      header {
+      .hero {
+        padding: 78px 0 48px;
         border-bottom: 1px solid var(--faint);
       }
 
       .eyebrow {
-        margin: 0 0 12px;
+        margin: 0 0 14px;
         color: var(--accent);
         font-size: 0.78rem;
-        font-weight: 760;
-        letter-spacing: 0.06em;
+        font-weight: 850;
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
-      h1 {
+      h1,
+      h2,
+      h3,
+      p {
+        overflow-wrap: anywhere;
+      }
+
+      h1,
+      h2,
+      h3 {
         margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(2.2rem, 7vw, 4.8rem);
-        line-height: 0.98;
+        line-height: 1.12;
         letter-spacing: 0;
       }
 
-      .subtitle {
-        max-width: 640px;
-        margin: 18px 0 0;
-        color: var(--muted);
-        font-size: clamp(1rem, 2vw, 1.18rem);
-      }
-
-      .meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 22px;
-      }
-
-      .meta span,
-      .badge {
-        border: 1px solid var(--faint);
-        background: var(--bg);
-        padding: 4px 8px;
-        color: var(--muted);
-        font-size: 0.78rem;
-      }
-
-      section {
-        display: grid;
-        gap: 18px;
-        border-bottom: 1px solid var(--faint);
-      }
-
-      section:last-child {
-        border-bottom: 0;
-      }
-
-      h2 {
-        margin: 0;
-        font-size: clamp(1.3rem, 3vw, 1.75rem);
-        line-height: 1.2;
-      }
-
-      p {
-        margin: 0;
+      h1 {
+        max-width: 960px;
+        font-size: 4.55rem;
+        font-weight: 850;
       }
 
       .lead {
-        color: var(--text);
-        font-size: 1.08rem;
+        max-width: 850px;
+        margin: 24px 0 0;
+        color: #4d4c48;
+        font-size: 1.14rem;
       }
 
-      .note {
-        border-left: 3px solid var(--accent);
-        background: var(--accent-soft);
-        padding: 14px 16px;
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
       }
 
-      .formula {
-        overflow-x: auto;
+      .meta-pill {
+        display: inline-flex;
+        min-height: 34px;
+        align-items: center;
+        gap: 7px;
         border: 1px solid var(--faint);
-        background: var(--bg);
-        padding: 16px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.76);
+        padding: 7px 13px;
+        font-size: 0.92rem;
+        font-weight: 680;
+      }
+
+      .meta-pill b {
+        color: var(--accent-2);
+        font-weight: 820;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, var(--measure)) 250px;
+        gap: 64px;
+        align-items: start;
+        padding: 48px 0 90px;
+      }
+
+      .article {
+        min-width: 0;
+      }
+
+      .toc {
+        position: sticky;
+        top: 82px;
+        max-height: calc(100vh - 104px);
+        overflow: auto;
+        border-left: 1px solid var(--faint);
+        padding-left: 22px;
+        color: var(--muted);
+      }
+
+      .toc strong {
+        display: block;
+        margin-bottom: 14px;
         color: var(--text);
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(1.06rem, 2vw, 1.3rem);
-        text-align: center;
-        white-space: nowrap;
+        font-size: 0.86rem;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .toc a {
+        display: block;
+        margin: 0 0 12px;
+        font-size: 0.9rem;
+        line-height: 1.28;
+      }
+
+      .editorial-panel,
+      .notebook-cell,
+      .chart-panel,
+      .article-end {
+        border: 1px solid var(--faint);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.78);
+      }
+
+      .editorial-panel {
+        margin: 0 0 42px;
+        padding: 24px;
+      }
+
+      .editorial-panel h2,
+      .markdown-cell h2,
+      .article-end h2 {
+        margin: 0 0 16px;
+        font-size: 2.1rem;
+        font-weight: 820;
+      }
+
+      .editorial-panel p,
+      .markdown-cell p,
+      .article-end p,
+      .article-end li {
+        color: #333330;
+        font-size: 1.03rem;
+      }
+
+      .finding-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .finding-grid article {
+        border: 1px solid var(--faint);
+        border-radius: 8px;
+        background: linear-gradient(180deg, #fff, #fbfaf7);
+        padding: 16px;
+      }
+
+      .finding-grid b {
+        display: inline-block;
+        margin-bottom: 8px;
+        color: var(--accent);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.78rem;
+      }
+
+      .finding-grid strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.98rem;
+      }
+
+      .finding-grid p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.93rem;
+        line-height: 1.58;
+      }
+
+      .markdown-cell {
+        margin: 0 0 34px;
+      }
+
+      .markdown-cell h2 {
+        margin-top: 42px;
+      }
+
+      .math-display {
+        overflow-x: auto;
+        margin: 22px 0;
+        border: 1px solid #dce8e4;
+        border-radius: 8px;
+        background: #f8fbfa;
+        padding: 18px 20px;
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
-        border: 1px solid var(--faint);
-        background: var(--paper);
+        background: var(--surface);
         font-size: 0.92rem;
       }
 
       th,
       td {
-        padding: 10px 12px;
         border-bottom: 1px solid var(--faint);
+        padding: 10px 12px;
         text-align: left;
         vertical-align: top;
       }
 
       th {
+        background: #faf9f5;
         color: var(--muted);
         font-size: 0.78rem;
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -250,103 +325,165 @@
         border-bottom: 0;
       }
 
-      .code-cell {
+      .method-table {
         overflow: hidden;
-        border: 1px solid #2a2a2a;
+        margin: 16px 0 0;
+        border: 1px solid var(--faint);
+        border-radius: 8px;
+      }
+
+      .notebook-cell {
+        overflow: hidden;
+        margin: 26px 0;
+        box-shadow: 0 12px 34px rgba(30, 28, 24, 0.06);
+      }
+
+      .cell-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        border-bottom: 1px solid var(--faint);
+        background: linear-gradient(180deg, #fff, #faf8f2);
+        padding: 12px 16px;
+      }
+
+      .cell-badge {
+        display: inline-flex;
+        margin-right: 10px;
+        color: var(--accent-2);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+
+      .cell-title {
+        color: #44423e;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.82rem;
+      }
+
+      .cell-output-count {
+        flex: 0 0 auto;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      .cell-function {
+        display: grid;
+        grid-template-columns: 86px minmax(0, 1fr);
+        gap: 14px;
+        border-bottom: 1px solid var(--faint);
+        background: #fffdf8;
+        padding: 12px 16px;
+      }
+
+      .cell-function b {
+        color: var(--accent);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .cell-function p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+
+      details summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        cursor: pointer;
+        list-style: none;
+        border-bottom: 1px solid var(--faint);
+        background: #fff;
+        padding: 10px 16px;
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 760;
+      }
+
+      details summary::-webkit-details-marker {
+        display: none;
+      }
+
+      details summary::before {
+        display: grid;
+        width: 21px;
+        height: 21px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid var(--faint);
+        border-radius: 50%;
+        color: var(--accent);
+        content: "+";
+        font-weight: 800;
+      }
+
+      details[open] summary::before {
+        content: "-";
+      }
+
+      details summary small {
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 600;
+      }
+
+      .code-block {
+        overflow-x: auto;
         background: var(--code-bg);
         color: var(--code-text);
       }
 
-      .code-caption {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-        padding: 8px 12px;
-        color: rgba(243, 241, 234, 0.72);
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 0.76rem;
-      }
-
       pre {
         margin: 0;
-        overflow-x: auto;
-        padding: 16px;
+        padding: 18px 20px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        font-size: 0.88rem;
+        line-height: 1.65;
       }
 
       code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 0.84rem;
-        line-height: 1.6;
+        font-family: inherit;
       }
 
-      .output {
-        border: 1px solid var(--faint);
-        background: color-mix(in srgb, var(--bg) 66%, var(--paper));
+      .output-content {
+        overflow: auto;
+        background: #fff;
       }
 
-      .output .code-caption {
-        border-bottom-color: var(--faint);
-        background: var(--bg);
-        color: var(--muted);
+      .output-content table {
+        min-width: 600px;
       }
 
-      .chart-card {
+      .callout {
+        margin: 18px 0 0;
+        border-left: 4px solid var(--accent);
+        border-radius: 8px;
+        background: #eff8f5;
+        padding: 16px 18px;
+        color: #253c36;
+      }
+
+      .chart-panel {
         display: grid;
-        gap: 14px;
-        border: 1px solid var(--faint);
-        background: var(--paper);
-        padding: 14px;
+        gap: 16px;
+        margin: 26px 0 42px;
+        padding: 18px;
       }
 
-      .chart-card svg {
+      .chart-panel svg {
         width: 100%;
-        min-height: 280px;
-        background: #ffffff;
-      }
-
-      .controls {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .controls label {
-        display: grid;
-        gap: 6px;
-        color: var(--muted);
-        font-size: 0.86rem;
-      }
-
-      input[type="range"] {
-        width: 100%;
-        accent-color: var(--accent);
-      }
-
-      .stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-      }
-
-      .stats span {
-        display: grid;
-        gap: 4px;
+        min-height: 300px;
         border: 1px solid var(--faint);
-        background: var(--bg);
-        padding: 10px;
-      }
-
-      .stats b {
-        font-size: 0.84rem;
-      }
-
-      .stats em,
-      .stats small {
-        color: var(--muted);
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 0.76rem;
-        font-style: normal;
+        border-radius: 8px;
+        background: #fff;
       }
 
       .legend {
@@ -378,112 +515,274 @@
         background: var(--accent);
       }
 
-      @media (max-width: 920px) {
-        .article-shell {
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .controls label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .stats span {
+        display: grid;
+        gap: 4px;
+        border: 1px solid var(--faint);
+        border-radius: 8px;
+        background: #fbfaf7;
+        padding: 10px;
+      }
+
+      .stats b {
+        font-size: 0.84rem;
+      }
+
+      .stats em,
+      .stats small {
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.76rem;
+        font-style: normal;
+      }
+
+      .article-end {
+        margin-top: 54px;
+        padding: 22px;
+        color: var(--muted);
+      }
+
+      .article-end ul {
+        margin: 12px 0 0;
+        padding-left: 22px;
+      }
+
+      @media (max-width: 980px) {
+        h1 {
+          font-size: 3.45rem;
+        }
+
+        .layout {
           grid-template-columns: 1fr;
+          gap: 28px;
         }
 
         .toc {
           position: static;
+          max-height: none;
+          border-top: 1px solid var(--faint);
+          border-left: 0;
+          padding: 20px 0 0;
         }
 
-        .toc {
-          display: none;
+        .finding-grid {
+          grid-template-columns: 1fr;
         }
       }
 
       @media (max-width: 620px) {
-        .site-header {
+        body {
+          font-size: 16px;
+        }
+
+        h1 {
+          font-size: 2.62rem;
+        }
+
+        .shell {
+          width: min(100% - 28px, var(--max));
+        }
+
+        .hero {
+          padding-top: 52px;
+        }
+
+        .topbar {
+          display: grid;
           grid-template-columns: 1fr;
           gap: 8px;
           padding-block: 10px;
         }
 
-        .nav-actions {
-          gap: 10px;
-        }
-
-        .article-shell {
-          width: min(100% - 20px, 760px);
-          padding-top: 12px;
-        }
-
-        header,
-        section {
-          padding: 22px 16px;
-        }
-
         .controls,
-        .stats {
+        .stats,
+        .cell-function {
           grid-template-columns: 1fr;
-        }
-
-        table {
-          font-size: 0.84rem;
         }
       }
     </style>
   </head>
   <body>
-    <header class="site-header" aria-label="Article navigation">
-      <a class="brand" href="../../">
-        <span class="brand-mark">D</span>
-        <span>Dale Anfer</span>
-      </a>
-      <nav class="nav-actions" aria-label="Article links">
-        <a href="../../">← 返回主页</a>
-      </nav>
-    </header>
+    <nav class="topbar" aria-label="Article navigation">
+      <a aria-label="Back to homepage" class="brand" href="../../index.html"><span class="brand-mark">D</span><span>Dale Anfer</span></a>
+      <div class="top-actions">
+        <a href="#notebook">Notebook</a>
+        <a href="#interactive">Interactive chart</a>
+        <a href="../../index.html">← 返回主页</a>
+      </div>
+    </nav>
 
-    <div class="article-shell">
-      <main class="paper">
-        <header>
-          <p class="eyebrow">Statistics Notes / Robust Estimation</p>
-          <h1>Median-of-Means Estimator</h1>
-          <p class="subtitle">A technical note on why ordinary means can become unstable under contaminated noise, and how median-of-means reduces estimation tail risk.</p>
-          <div class="meta">
-            <span>2026-06-30</span>
-            <span>8 min read</span>
-            <span class="badge">Quarto-style note</span>
-          </div>
-        </header>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Technical article / Robust statistics</p>
+        <h1>Median-of-Means Estimator</h1>
+        <p class="lead">
+          This article starts from a single extreme value, then turns the intuition into a notebook-style Monte Carlo experiment.
+          The goal is not to claim that Median-of-Means is always best; the goal is to show how it reduces tail risk of estimation error under contaminated or heavy-tailed noise.
+        </p>
+        <div class="meta-row">
+          <span class="meta-pill"><b>Date</b> 2026-06-30</span>
+          <span class="meta-pill"><b>Format</b> Notebook experiment</span>
+          <span class="meta-pill"><b>Concept</b> Robust estimation</span>
+          <span class="meta-pill"><b>Output</b> Code · tables · chart</span>
+        </div>
+      </section>
 
-        <section id="tiny-example">
-          <h2>A tiny example / 一个极简例子</h2>
-          <p class="lead">Suppose we want to estimate the true average level of a dataset. Most observations are near 10, but one record is 1000.</p>
-          <div class="code-cell">
-            <div class="code-caption"><span>python</span><span>input</span></div>
-            <pre><code>x = [10, 11, 9, 10, 12, 11, 10, 9, 10, 1000]</code></pre>
-          </div>
-          <div class="formula">(10 + 11 + 9 + 10 + 12 + 11 + 10 + 9 + 10 + 1000) / 10 = 109.2</div>
-          <p>这个结果明显被 1000 拉歪了。真实中心其实更接近 10。</p>
+      <div class="layout">
+        <article class="article" id="notebook-start">
+          <section class="editorial-panel" id="key-findings">
+            <p class="eyebrow">Before the notebook</p>
+            <h2>What this article is trying to prove</h2>
+            <p>
+              普通均值不是“坏”的估计器；它的问题是对数值大小完全信任。当样本里出现少量极端值时，均值可能偶尔错得很离谱。
+              Median-of-Means 的价值是把这个风险拆成两层：组内仍然求均值，组间用中位数聚合。
+            </p>
+            <div class="finding-grid">
+              <article>
+                <b>01</b>
+                <strong>One outlier can dominate the mean</strong>
+                <p>A single value 1000 moves the sample mean from the visual center near 10 to 109.2.</p>
+              </article>
+              <article>
+                <b>02</b>
+                <strong>MoM changes the aggregation question</strong>
+                <p>It asks for the typical average among blocks, not the average of all raw magnitudes at once.</p>
+              </article>
+              <article>
+                <b>03</b>
+                <strong>Monte Carlo makes the claim testable</strong>
+                <p>Repeated experiments compare the error distribution of mean, median, and median-of-means.</p>
+              </article>
+              <article>
+                <b>04</b>
+                <strong>The boundary matters</strong>
+                <p>MoM reduces tail risk under contamination; it is not a universal smaller-variance replacement for the mean.</p>
+              </article>
+            </div>
+          </section>
 
-          <table>
-            <thead>
-              <tr><th>Group</th><th>Data</th><th>Group mean</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>1</td><td>10, 11</td><td>10.5</td></tr>
-              <tr><td>2</td><td>9, 10</td><td>9.5</td></tr>
-              <tr><td>3</td><td>12, 11</td><td>11.5</td></tr>
-              <tr><td>4</td><td>10, 9</td><td>9.5</td></tr>
-              <tr><td>5</td><td>10, 1000</td><td>505.0</td></tr>
-            </tbody>
-          </table>
+          <section class="markdown-cell" id="tiny-example">
+            <p class="eyebrow">Step 01 / Tiny example</p>
+            <h2>Start with one contaminated sample</h2>
+            <p>
+              假设我们想估计一组数据的“真实平均水平”，大部分数据都在 10 附近，但有一个异常值 1000：
+            </p>
+            <article class="notebook-cell">
+              <div class="cell-header">
+                <div><span class="cell-badge">Step 01</span><span class="cell-title">Create the smallest useful example.</span></div>
+                <span class="cell-output-count">input</span>
+              </div>
+              <details open>
+                <summary><span>Code · contaminated sample</span><small>visible</small></summary>
+                <div class="code-block"><pre><code>x = [10, 11, 9, 10, 12, 11, 10, 9, 10, 1000]</code></pre></div>
+              </details>
+            </article>
+            <div class="math-display">
+              \[
+                \frac{10+11+9+10+12+11+10+9+10+1000}{10}=109.2
+              \]
+            </div>
+            <p>这个结果明显被 1000 拉歪了。数据的典型中心其实更接近 10。</p>
+          </section>
 
-          <div class="formula">median(10.5, 9.5, 11.5, 9.5, 505) = 10.5</div>
-          <div class="note">
-            <strong>Key intuition:</strong> ordinary mean asks, "What is the average of all points?" Median-of-means asks, "What is the typical average among many small groups?"
-          </div>
-        </section>
+          <section class="markdown-cell" id="grouping-rule">
+            <p class="eyebrow">Step 02 / Estimator idea</p>
+            <h2>Group first, then take the median</h2>
+            <p>
+              Median-of-Means 的做法是先分组，每组算均值，最后对这些组均值取中位数。这样异常值会污染其中一组，但只要被污染的组不到一半，中位数聚合就能把它压下去。
+            </p>
+            <div class="method-table">
+              <table>
+                <thead>
+                  <tr><th>Group</th><th>Data</th><th>Group mean</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>10, 11</td><td>10.5</td></tr>
+                  <tr><td>2</td><td>9, 10</td><td>9.5</td></tr>
+                  <tr><td>3</td><td>12, 11</td><td>11.5</td></tr>
+                  <tr><td>4</td><td>10, 9</td><td>9.5</td></tr>
+                  <tr><td>5</td><td>10, 1000</td><td>505.0</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="math-display">
+              \[
+                \operatorname{median}(10.5, 9.5, 11.5, 9.5, 505)=10.5
+              \]
+            </div>
+            <div class="callout">
+              <strong>核心问题变了：</strong>
+              ordinary mean asks, "What is the average of all points?"
+              Median-of-Means asks, "What is the typical average among many small groups?"
+            </div>
+          </section>
 
-        <section id="notebook">
-          <h2>Notebook experiment / 重复随机实验</h2>
-          <p>上面的例子只是一个手工构造的异常值案例。为了验证 Median-of-Means 是否真的能在随机数据中带来更稳定的估计，我们做一个 Monte Carlo 实验：每次生成 200 个样本，其中 95% 来自正常噪声，5% 来自极端噪声。真实中心设为 10，重复 5000 次。</p>
+          <section class="markdown-cell" id="definition">
+            <p class="eyebrow">Step 03 / General form</p>
+            <h2>Write the estimator explicitly</h2>
+            <p>
+              More generally, split the sample into \(k\) groups \(G_1,\ldots,G_k\), compute the mean inside each group, then take the median of those group means:
+            </p>
+            <div class="math-display">
+              \[
+                \hat\mu_{\mathrm{MOM}}
+                =
+                \operatorname{median}\left(\bar X_1,\ldots,\bar X_k\right),
+                \qquad
+                \bar X_j
+                =
+                \frac{1}{|G_j|}\sum_{i\in G_j} X_i
+              \]
+            </div>
+            <p>
+              This connects to heavy-tail intuition: when a distribution or a scraped dataset can produce extreme values, the ordinary mean can have a stable center in theory but an unstable finite-sample realization in practice.
+            </p>
+          </section>
 
-          <div class="code-cell">
-            <div class="code-caption"><span>python</span><span>In [1]</span></div>
-            <pre><code>import numpy as np
+          <section class="markdown-cell" id="notebook">
+            <p class="eyebrow">Notebook experiment</p>
+            <h2>Repeat the contamination process</h2>
+            <p>
+              单个异常值例子只能说明“可能出问题”；重复随机实验才能看到普通均值的误差分布是否真的更不稳定。
+              每次生成 200 个样本，其中 95% 来自以 10 为中心的正常噪声，5% 来自仍然以 10 为中心、但波动极大的极端噪声。重复 5000 次后，比较普通均值、普通中位数和 Median-of-Means。
+            </p>
+
+            <article class="notebook-cell">
+              <div class="cell-header">
+                <div><span class="cell-badge">Step 04</span><span class="cell-title">Simulate contaminated samples and compute three estimators.</span></div>
+                <span class="cell-output-count">In [1]</span>
+              </div>
+              <div class="cell-function">
+                <b>Purpose</b>
+                <p>Build a reproducible Monte Carlo table so the comparison is based on repeated error distributions, not one handcrafted outlier.</p>
+              </div>
+              <details open>
+                <summary><span>Code · run simulation</span><small>click to hide</small></summary>
+                <div class="code-block"><pre><code>import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -514,28 +813,39 @@ def run_experiment(repeats=5000, n=200, true_center=10):
     return pd.DataFrame(records)
 
 results = run_experiment()
-results.head()</code></pre>
-          </div>
+results.head()</code></pre></div>
+              </details>
+              <details open>
+                <summary><span>Output · first simulated rows</span><small>preview</small></summary>
+                <div class="output-content">
+                  <table>
+                    <thead>
+                      <tr><th>sample_mean</th><th>median</th><th>median_of_means</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>9.783</td><td>9.948</td><td>10.097</td></tr>
+                      <tr><td>10.869</td><td>9.924</td><td>10.114</td></tr>
+                      <tr><td>10.055</td><td>10.003</td><td>10.199</td></tr>
+                      <tr><td>8.829</td><td>9.903</td><td>9.872</td></tr>
+                      <tr><td>10.799</td><td>10.133</td><td>10.098</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            </article>
 
-          <div class="output">
-            <div class="code-caption"><span>Out [1]</span><span>first rows</span></div>
-            <table>
-              <thead>
-                <tr><th>sample_mean</th><th>median</th><th>median_of_means</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>9.783</td><td>9.948</td><td>10.097</td></tr>
-                <tr><td>10.869</td><td>9.924</td><td>10.114</td></tr>
-                <tr><td>10.055</td><td>10.003</td><td>10.199</td></tr>
-                <tr><td>8.829</td><td>9.903</td><td>9.872</td></tr>
-                <tr><td>10.799</td><td>10.133</td><td>10.098</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="code-cell">
-            <div class="code-caption"><span>python</span><span>In [2]</span></div>
-            <pre><code>true_center = 10
+            <article class="notebook-cell">
+              <div class="cell-header">
+                <div><span class="cell-badge">Step 05</span><span class="cell-title">Summarize estimator error, especially the tail.</span></div>
+                <span class="cell-output-count">In [2]</span>
+              </div>
+              <div class="cell-function">
+                <b>Purpose</b>
+                <p>Compare standard deviation, MSE, mean absolute error, 95% absolute error, and the rate of large mistakes.</p>
+              </div>
+              <details open>
+                <summary><span>Code · error summary</span><small>click to hide</small></summary>
+                <div class="code-block"><pre><code>true_center = 10
 summary = []
 
 for estimator in ["sample_mean", "median", "median_of_means"]:
@@ -550,62 +860,80 @@ for estimator in ["sample_mean", "median", "median_of_means"]:
     })
 
 summary = pd.DataFrame(summary)
-summary</code></pre>
-          </div>
+summary</code></pre></div>
+              </details>
+              <details open>
+                <summary><span>Output · error summary</span><small>portfolio result</small></summary>
+                <div class="output-content">
+                  <table>
+                    <thead>
+                      <tr><th>estimator</th><th>std</th><th>mse</th><th>mae</th><th>p95 abs error</th><th>|error| &gt; 1</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>sample_mean</td><td>0.790</td><td>0.624</td><td>0.625</td><td>1.550</td><td>19.6%</td></tr>
+                      <tr><td>median</td><td>0.092</td><td>0.008</td><td>0.073</td><td>0.183</td><td>0.0%</td></tr>
+                      <tr><td>median_of_means</td><td>0.155</td><td>0.024</td><td>0.117</td><td>0.296</td><td>0.1%</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            </article>
 
-          <div class="output">
-            <div class="code-caption"><span>Out [2]</span><span>error summary</span></div>
-            <table>
-              <thead>
-                <tr><th>estimator</th><th>std</th><th>mse</th><th>mae</th><th>p95 abs error</th><th>|error| &gt; 1</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>sample_mean</td><td>0.790</td><td>0.624</td><td>0.625</td><td>1.550</td><td>19.6%</td></tr>
-                <tr><td>median</td><td>0.092</td><td>0.008</td><td>0.073</td><td>0.183</td><td>0.0%</td></tr>
-                <tr><td>median_of_means</td><td>0.155</td><td>0.024</td><td>0.117</td><td>0.296</td><td>0.1%</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="note">
-            <strong>Interpretation:</strong> sample mean is not wrong every time, but it occasionally goes very wrong. Median-of-means is not claiming to have the smallest variance in every clean setting; its value is reducing tail risk of estimation error under heavy-tailed or contaminated noise.
-          </div>
-        </section>
-
-        <section id="interactive">
-          <h2>Interactive sampling distribution / 交互抽样分布</h2>
-          <p>Move the controls and watch the error tail change. The red distribution is the sample mean; green is median-of-means.</p>
-          <div class="chart-card">
-            <svg id="mcChart" viewBox="0 0 760 360" role="img" aria-label="Monte Carlo sampling distributions"></svg>
-            <div class="legend">
-              <span><i class="mean-key"></i>Sample Mean</span>
-              <span><i class="median-key"></i>Median</span>
-              <span><i class="mom-key"></i>Median-of-Means</span>
+            <div class="callout">
+              <strong>Interpretation:</strong>
+              sample mean is not wrong every time, but it occasionally goes very wrong.
+              Median-of-Means is not claiming to have the smallest variance in every clean setting; its value is reducing tail risk of estimation error under heavy-tailed or contaminated noise.
             </div>
-            <div class="controls">
-              <label>Contamination rate <input id="contaminationInput" type="range" min="0" max="12" step="1" value="5"></label>
-              <label>Extreme-noise scale <input id="scaleInput" type="range" min="10" max="80" step="5" value="50"></label>
+          </section>
+
+          <section class="markdown-cell" id="interactive">
+            <p class="eyebrow">Visual check</p>
+            <h2>Sampling distribution under tunable contamination</h2>
+            <p>
+              Use the controls to change contamination rate and extreme-noise scale. The point is not to upload new data; it is to change the assumptions and see how each estimator reacts.
+            </p>
+            <div class="chart-panel">
+              <svg id="mcChart" viewBox="0 0 760 360" role="img" aria-label="Monte Carlo sampling distributions"></svg>
+              <div class="legend">
+                <span><i class="mean-key"></i>Sample Mean</span>
+                <span><i class="median-key"></i>Median</span>
+                <span><i class="mom-key"></i>Median-of-Means</span>
+              </div>
+              <div class="controls">
+                <label>Contamination rate <input id="contaminationInput" type="range" min="0" max="12" step="1" value="5"></label>
+                <label>Extreme-noise scale <input id="scaleInput" type="range" min="10" max="80" step="5" value="50"></label>
+              </div>
+              <div id="stats" class="stats"></div>
+              <p id="readout" class="callout"></p>
             </div>
-            <div id="stats" class="stats"></div>
-            <p id="readout" class="note"></p>
-          </div>
-        </section>
+          </section>
 
-        <section id="takeaway">
-          <h2>Takeaway</h2>
-          <p><strong>Median-of-Means 降低的是重尾噪声下的估计尾部风险，而不只是普通意义上的方差。</strong></p>
-          <p>This matters in salary data, abnormal transactions, long-tail response times, and noisy scraped records: first ask what assumptions make the mean stable.</p>
-        </section>
-      </main>
+          <section class="article-end" id="limitations">
+            <h2>Limitations and practical use</h2>
+            <p>
+              Median-of-Means 降低的是重尾噪声下的估计尾部风险，而不只是普通意义上的方差。它适合提醒我们：在薪资 outlier、异常交易金额、长尾响应时间或 noisy scraped records 中，先问均值稳定需要什么假设。
+            </p>
+            <ul>
+              <li>MoM depends on the number of groups \(k\); bad grouping or too many contaminated groups can still hurt.</li>
+              <li>The sample median can look best for estimating a center, but it is not estimating the mean target in the same way.</li>
+              <li>The article is a reasoning demo, not a universal estimator recommendation.</li>
+            </ul>
+            <p><strong>Conclusion:</strong> the useful habit is to inspect the tail risk of an estimator, not only its average-case error.</p>
+          </section>
+        </article>
 
-      <nav class="toc" aria-label="Article table of contents">
-        <strong>Contents</strong>
-        <a href="#tiny-example">Tiny example</a>
-        <a href="#notebook">Notebook experiment</a>
-        <a href="#interactive">Interactive distribution</a>
-        <a href="#takeaway">Takeaway</a>
-      </nav>
-    </div>
+        <aside aria-label="Table of contents" class="toc">
+          <strong>Contents</strong>
+          <a href="#key-findings">Key findings</a>
+          <a href="#tiny-example">Tiny example</a>
+          <a href="#grouping-rule">Grouping rule</a>
+          <a href="#definition">Estimator definition</a>
+          <a href="#notebook">Notebook experiment</a>
+          <a href="#interactive">Interactive chart</a>
+          <a href="#limitations">Limitations</a>
+        </aside>
+      </div>
+    </main>
 
     <script>
       const chart = document.querySelector("#mcChart");
@@ -621,17 +949,21 @@ summary</code></pre>
         seed = (seed * 1664525 + 1013904223) >>> 0;
         return seed / 4294967296;
       };
+
       const normal = (rng, mean, sd) => {
         const u1 = Math.max(rng(), 1e-12);
         const u2 = rng();
         return mean + sd * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
       };
+
       const average = (values) => values.reduce((sum, value) => sum + value, 0) / values.length;
+
       const median = (values) => {
         const sorted = [...values].sort((a, b) => a - b);
         const mid = Math.floor(sorted.length / 2);
         return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
       };
+
       const quantile = (values, q) => {
         const sorted = [...values].sort((a, b) => a - b);
         const pos = (sorted.length - 1) * q;
@@ -639,12 +971,14 @@ summary</code></pre>
         const rest = pos - base;
         return sorted[base + 1] === undefined ? sorted[base] : sorted[base] + rest * (sorted[base + 1] - sorted[base]);
       };
+
       const shuffle = (values, rng) => {
         for (let index = values.length - 1; index > 0; index -= 1) {
           const swapIndex = Math.floor(rng() * (index + 1));
           [values[index], values[swapIndex]] = [values[swapIndex], values[index]];
         }
       };
+
       const medianOfMeans = (values, groups, rng) => {
         const shuffled = [...values];
         shuffle(shuffled, rng);
@@ -656,6 +990,7 @@ summary</code></pre>
         }
         return median(groupMeans);
       };
+
       const summarize = (values) => {
         const absErrors = values.map((value) => Math.abs(value - trueCenter));
         return {
@@ -698,8 +1033,8 @@ summary</code></pre>
         const bins = 42;
         const series = [
           { key: "mean", label: "Sample mean", color: "#c85b5b", counts: histogram(values.mean, min, max, bins), stats: summarize(values.mean) },
-          { key: "median", label: "Median", color: "#617089", counts: histogram(values.median, min, max, bins), stats: summarize(values.median) },
-          { key: "mom", label: "Median-of-means", color: "#1f7a68", counts: histogram(values.mom, min, max, bins), stats: summarize(values.mom) }
+          { key: "median", label: "Median", color: "#536a8a", counts: histogram(values.median, min, max, bins), stats: summarize(values.median) },
+          { key: "mom", label: "Median-of-means", color: "#0f7662", counts: histogram(values.mom, min, max, bins), stats: summarize(values.mom) }
         ];
         const maxCount = Math.max(...series.flatMap((item) => item.counts));
         const plot = { x: 70, y: 38, width: 634, height: 254 };
@@ -709,7 +1044,7 @@ summary</code></pre>
           const height = count / maxCount * (plot.height - 18);
           const x = plot.x + index * barWidth + seriesIndex * (barWidth / 3);
           const y = plot.y + plot.height - height;
-          return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(1.8, barWidth / 3.4).toFixed(1)}" height="${height.toFixed(1)}" fill="${item.color}" opacity="0.35"></rect>`;
+          return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(1.8, barWidth / 3.4).toFixed(1)}" height="${height.toFixed(1)}" fill="${item.color}" opacity="0.36"></rect>`;
         }).join("")).join("");
         const trueX = toX(trueCenter);
         chart.innerHTML = `
@@ -726,7 +1061,7 @@ summary</code></pre>
             <small>|error| &gt; 1: ${(item.stats.badRate * 100).toFixed(1)}%</small>
           </span>
         `).join("");
-        readout.textContent = `污染比例 ${(contamination * 100).toFixed(0)}%，极端噪声标准差 ${scale}。重点看 sample mean 的右尾/左尾是否变厚，以及 MoM 的 tail-risk control。`;
+        readout.textContent = `污染比例 ${(contamination * 100).toFixed(0)}%，极端噪声标准差 ${scale}。重点看 sample mean 的尾部是否变厚，以及 Median-of-Means 的 tail-risk control。`;
       }
 
       [contaminationInput, scaleInput].forEach((input) => input.addEventListener("input", updateChart));
