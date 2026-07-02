@@ -303,8 +303,10 @@ function activeProfile() {
   const base = currentLang === "zh" ? zhProfile : profile;
   const override = siteLang().profile || {};
   const github = override.github || base.links.find((link) => link.label === "GitHub")?.href || "https://github.com/sudoun";
+  const email = override.email || base.email || "";
   const links = [
     { label: "GitHub", href: github },
+    ...(email ? [{ label: currentLang === "zh" ? "邮箱" : "Email", href: `mailto:${email}` }] : []),
     ...base.links.filter((link) => link.label !== "GitHub")
   ];
   return {
