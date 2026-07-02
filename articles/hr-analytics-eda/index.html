@@ -6033,11 +6033,18 @@ window.articleI18n = {
     "# Candidate categorical variables": { zh: "# 候选类别变量" },
     "# skip constant columns": { zh: "# 跳过常量列" },
     "Feature representation note": { zh: "特征表示说明" },
+    "Kaggle HR Analytics Dataset": { zh: "Kaggle HR Analytics 数据集" },
     "This dataset mixes categorical grouping labels and numerical employee attributes. For readable EDA, I keep labels such as department, job role, overtime, age group, and salary slab as interpretable categories. For modeling, nominal categories should be one-hot encoded rather than label-encoded, because label encoding would create artificial ordinal structure.": {
       zh: "这个数据集混合了类别分组标签和数值型员工属性。为了让 EDA 可读，我保留 department、job role、overtime、age group、salary slab 等标签；建模时，名义类别应使用 one-hot encoding，而不是 label encoding，以避免制造不存在的顺序。"
     },
+    "This dataset mixes categorical group labels and numerical employee attributes. For readable EDA, I keep labels such as department, job role, overtime, age group, and salary slab; for modeling, nominal categories should be one-hot encoded rather than label-encoded to avoid fake ordering.": {
+      zh: "这个数据集同时包含类别分组标签和数值型员工属性。为了让 EDA 可读，我保留 department、job role、overtime、age group、salary slab 等标签；建模时，名义类别应使用 one-hot encoding，而不是 label encoding，以避免制造虚假的顺序关系。"
+    },
     "Dimensionality reduction is a future option for exploratory representation, but it is not used as final evidence in this article.": {
       zh: "降维在本文中只是未来探索选项，不作为最终证据。"
+    },
+    "Dimensionality reduction is treated as a future exploratory option, not as final evidence in this article.": {
+      zh: "降维在本文中被视为未来的探索选项，而不是最终证据。"
     },
     "Feature engineering note: zero-inflated tenure variables": { zh: "特征工程说明：零膨胀任职变量" },
     "Some tenure-related variables contain many zeros. Instead of treating this as a plotting nuisance, I create an explicit indicator so the model can preserve the information that an employee has not experienced a recent promotion while keeping the original tenure scale available for EDA.": {
@@ -6050,11 +6057,44 @@ window.articleI18n = {
     "The attrition rate provides the baseline context for the rest of the analysis. A low attrition rate is not necessarily a data problem; it may reflect the natural base rate of employee turnover. But it creates a modeling challenge because the positive class is under-represented.": {
       zh: "员工流失率为整个分析提供基线背景。低流失率不一定是数据问题；它可能反映员工流动的正常基准率。但它会带来建模挑战，因为流失样本代表性不足。"
     },
+    "The attrition rate provides the baseline context for the entire analysis. A low attrition rate is not necessarily a data problem; it may reflect the normal base rate of employee turnover. However, it creates a modeling challenge because attrition cases may be underrepresented.": {
+      zh: "员工流失率为整个分析提供基线背景。低流失率不一定是数据问题；它可能反映员工流动的正常基准率。但它也会带来建模挑战，因为离职样本可能代表性不足。"
+    },
     "From an HR perspective, the goal is not simply to maximize prediction accuracy. The goal is to identify meaningful patterns among employees who actually leave while avoiding over-generalization from small subgroups.": {
+      zh: "从 HR 角度看，目标不只是最大化预测准确率，而是在避免从小样本子群过度概括的前提下，识别真正离职员工中的有意义模式。"
+    },
+    "From an HR perspective, the goal is not only to maximize prediction accuracy, but to identify meaningful patterns among employees who actually leave, while avoiding overgeneralization from a small subgroup.": {
       zh: "从 HR 角度看，目标不只是最大化预测准确率，而是在避免从小样本子群过度概括的前提下，识别真正离职员工中的有意义模式。"
     },
     "Before making statistical inference, I first inspect the data graphically. Visual diagnostics often reveal structure that summary statistics hide. For example, a Q-Q plot compares empirical quantiles with theoretical Gaussian quantiles; it can diagnose skewness, outliers, and heavy-tail behavior, but it should be treated as a visual diagnostic rather than an exact estimator of tail decay.": {
       zh: "在做统计推断之前，我先看图形诊断。图表经常能揭示 summary statistics 不明显的结构。例如 Q-Q plot 将经验分位数与理论高斯分位数比较，可用于诊断偏度、异常值和重尾行为。但它应该被当作视觉诊断，而不是尾部衰减率的精确估计器。"
+    },
+    "Before making statistical inference, I first inspect the data graphically. Plots often reveal structure that is not obvious from summary statistics alone. For example, a Q-Q plot compares empirical quantiles with theoretical Gaussian quantiles, making it useful for diagnosing skewness, outliers, and heavy-tailed behavior. However, it should be interpreted as a visual diagnostic rather than a precise estimator of the tail decay rate.": {
+      zh: "在做统计推断之前，我先进行图形检查。图表经常能揭示 summary statistics 不明显的结构。例如，Q-Q plot 会把经验分位数与理论高斯分位数比较，因此适合诊断偏度、异常值和重尾行为。但它应被解释为视觉诊断，而不是尾部衰减率的精确估计器。"
+    },
+    "Optional modeling note: dimensionality reduction": { zh: "可选建模说明：降维" },
+    "Employee records can be represented as high-dimensional vectors after encoding categorical variables and combining numerical features:": {
+      zh: "在对类别变量编码并合并数值特征后，员工记录可以表示为高维向量："
+    },
+    "A projection method would seek a lower-dimensional representation:": {
+      zh: "投影方法会寻找一个更低维的表示："
+    },
+    "These methods are not used as final evidence here. They are mentioned only as future tools for visualizing encoded employee structure after the core EDA and baseline modeling steps are stable.": {
+      zh: "这些方法在这里不作为最终证据，只作为未来工具：当核心 EDA 和基线建模步骤稳定后，可用于可视化编码后的员工结构。"
+    },
+    "For each categorical group, the attrition rate is estimated as a binomial proportion:": {
+      zh: "对于每个类别组，流失率可以估计为一个二项比例："
+    },
+    "is the number of attrition cases and": { zh: "是离职样本数量，" },
+    "is the group size.": { zh: "是该组样本量。" },
+    "By the central limit theorem, the standard error of this estimate is approximately:": {
+      zh: "根据中心极限定理，这个估计量的标准误近似为："
+    },
+    "Therefore, the estimation error decreases at rate": {
+      zh: "因此，估计误差会按如下速率下降："
+    },
+    ". Small groups may show high or low attrition rates simply due to sampling noise. For this reason, I report Wilson confidence intervals, event counts, and sample-size adequacy flags rather than interpreting raw attrition rates alone.": {
+      zh: "。小样本组可能只是因为抽样噪声而显示出偏高或偏低的流失率。因此，我报告 Wilson 置信区间、事件数和样本量充分性标记，而不是只解释原始流失率。"
     },
     "Summary of Categorical Attrition Analysis": { zh: "类别特征流失分析总结" },
     "Overall attrition is about 16.1%, so all subgroup comparisons should be interpreted against this base rate.": {
@@ -6072,8 +6112,42 @@ window.articleI18n = {
     "Gender has a much weaker association in this dataset. This does not mean it is irrelevant in every HR context; it only means this dataset does not show a strong marginal attrition separation by gender.": {
       zh: "Gender 在这个数据集中的关联较弱。这不代表它在所有 HR 场景中都无关，只说明该数据集没有显示出强烈的性别边际流失差异。"
     },
+    "The overall attrition rate is approximately 16.1%. Among categorical variables, overtime, job role, age group, marital status, salary slab, and business travel show the strongest marginal associations with attrition.": {
+      zh: "整体流失率约为 16.1%。在类别变量中，加班、岗位角色、年龄组、婚姻状态、薪资分层和出差情况与员工流失的边际关联最强。"
+    },
+    "Overtime shows the largest observed marginal separation: employees who worked overtime have an attrition rate of 30.6%, compared with 10.4% for employees without overtime. This suggests workload pressure or burnout-related factors may be useful retention signals, but it is not causal proof.": {
+      zh: "加班显示出最大的观察边际差异：加班员工的流失率为 30.6%，而不加班员工为 10.4%。这说明工作负荷压力或倦怠相关因素可能是有用的留存信号，但这不是因果证明。"
+    },
+    "Job role also shows a strong association with attrition. Sales Representatives and Laboratory Technicians have relatively high attrition rates, although some job-role categories require interval checks because of smaller sample sizes.": {
+      zh: "岗位角色也与员工流失有较强关联。销售代表和实验室技术员的流失率相对较高，但部分岗位类别样本量较小，因此需要结合置信区间检查。"
+    },
+    "Age group shows a clear descriptive pattern: younger employees, especially those aged 18–25, have much higher attrition rates than mid-career groups. This may reflect early-career mobility or weaker organizational attachment.": {
+      zh: "年龄组呈现出清晰的描述性模式：年轻员工，尤其是 18–25 岁员工，流失率明显高于职业中期群体。这可能反映早期职业流动性较强，或组织联结较弱。"
+    },
+    "Business travel, marital status, and salary slab also show meaningful associations, but they may proxy other factors such as age, tenure, job role, and career stage. Gender does not show a meaningful marginal association in this dataset.": {
+      zh: "出差情况、婚姻状态和薪资分层也显示出有意义的关联，但它们可能代理了年龄、任职时间、岗位角色和职业阶段等其他因素。性别在这个数据集中没有显示出明显的边际关联。"
+    },
+    "Overall, these are marginal associations rather than causal effects. The next step is to fit stratified multivariate baselines and check whether these variables remain informative after controlling for salary, tenure, role, age, and travel.": {
+      zh: "总体而言，这些都是边际关联，而不是因果效应。下一步应拟合分层的多变量基线模型，并检查在控制薪资、任职时间、岗位、年龄和出差情况后，这些变量是否仍然有信息量。"
+    },
     "Part 3: Numerical Feature Visualization": { zh: "第三部分：数值特征可视化" },
     "Numerical Feature Interpretation": { zh: "数值特征解释" },
+    "After analyzing categorical variables, I inspect numerical variables. Numerical features may include continuous variables such as age, income, distance from home, and years at company, as well as ordinal score variables such as job satisfaction, environment satisfaction, and work-life balance.": {
+      zh: "分析完类别变量后，我继续检查数值变量。数值特征包括年龄、收入、通勤距离、在公司年限等连续变量，也包括工作满意度、环境满意度、工作生活平衡等有序评分变量。"
+    },
+    "The goals of this section are:": { zh: "这一节的目标是：" },
+    "To inspect distributional shape, skewness, outliers, and heavy-tailed behavior.": {
+      zh: "检查分布形状、偏度、异常值和重尾行为。"
+    },
+    "To compare numerical feature distributions between attrition and non-attrition groups.": {
+      zh: "比较离职组与非离职组之间的数值特征分布。"
+    },
+    "To identify numerical variables that show strong marginal association with attrition.": {
+      zh: "识别与员工流失显示出较强边际关联的数值变量。"
+    },
+    "To check whether Gaussian-based methods such as LDA are reasonable approximations.": {
+      zh: "检查 LDA 等基于高斯假设的方法是否是合理近似。"
+    },
     "The numerical plots are used to answer four questions:": { zh: "数值图表用于回答四个问题：" },
     "Do leavers and stayers differ in central tendency?": { zh: "离职者和留任者的中心趋势是否不同？" },
     "Are numerical distributions skewed or heavy-tailed?": { zh: "数值分布是否偏斜或具有重尾？" },
@@ -6084,15 +6158,125 @@ window.articleI18n = {
     "The skewness check identifies several right-skewed variables, especially income and tenure-related variables. This matters because tree models can often handle skewness directly, while linear models may benefit from log transformations, winsorization, or robust scaling.": {
       zh: "偏度检查显示若干变量右偏，尤其是收入和任职相关变量。这很重要，因为树模型通常能直接处理偏态，而线性模型可能需要 log 变换、winsorization 或 robust scaling。"
     },
+    "The numerical summaries show several consistent patterns. Employees who left tend to be younger, have lower monthly income, live farther from the workplace, and have fewer total working years, fewer years at the company, fewer years in the current role, and fewer years with the current manager.": {
+      zh: "数值摘要显示出几个一致模式。离职员工往往更年轻、月收入更低、离工作地点更远，并且总工作年限、在公司年限、当前岗位年限以及与当前经理共事年限都更短。"
+    },
+    "Satisfaction-related variables also show lower average scores among employees who left, especially job satisfaction and environment satisfaction. However, these score variables are ordinal rather than truly continuous, so they should be interpreted as ordered survey indicators instead of Gaussian numerical variables.": {
+      zh: "满意度相关变量在离职员工中也显示出较低平均分，尤其是工作满意度和环境满意度。不过这些评分变量是有序变量，而不是真正连续变量，因此应解释为有序问卷指标，而不是高斯型数值变量。"
+    },
+    "For strongly right-skewed variables, I compare the original scale with a log-transformed scale. This does not mean the log transform must be used in every model, but it helps diagnose whether extreme values dominate the distribution.": {
+      zh: "对于明显右偏的变量，我会比较原始尺度和 log 变换后的尺度。这不代表每个模型都必须使用 log 变换，但它有助于诊断极端值是否主导了分布。"
+    },
     "Categorical Effect Size Ranking": { zh: "类别效应量排序" },
+    "The skewness check identifies several right-skewed variables: monthly income, total working years, years at company, and years since last promotion. This is expected in HR data because income, tenure, and promotion-related variables often have long right tails. Most employees are concentrated in lower or middle ranges, while a smaller number of senior or long-tenured employees create extreme high values.": {
+      zh: "偏度检查识别出几个明显右偏的变量：月收入、总工作年限、在公司年限以及距上次晋升年限。这在 HR 数据中是符合预期的，因为收入、任职时间和晋升相关变量往往有较长的右尾。大多数员工集中在较低或中间区间，少数资深或长期任职员工会形成极高值。"
+    },
     "Cramér’s V is used as a compact effect-size measure for categorical association with attrition. Unlike p-values, it gives a scale for comparing features, but it still does not imply causality.": {
       zh: "Cramér’s V 被用作类别特征与流失关联的紧凑效应量指标。与 p-value 不同，它提供了比较特征的尺度，但仍然不代表因果关系。"
+    },
+    "I rank categorical variables using Cramér’s V. Overtime and job role show the strongest marginal association with attrition, followed by age group, marital status, salary slab, and business travel. Gender shows little marginal association in this dataset.": {
+      zh: "我使用 Cramér’s V 对类别变量进行排序。加班和岗位角色与员工流失的边际关联最强，其次是年龄组、婚姻状态、薪资分层和出差情况。性别在这个数据集中只显示出很弱的边际关联。"
     },
     "Classification Framework": { zh: "分类建模框架" },
     "The EDA naturally frames attrition as a binary classification problem. The target is whether an employee left the company, and the features are employee attributes observed before or during employment.": {
       zh: "这个 EDA 自然把员工流失定义为二分类问题。目标变量是员工是否离职，特征是入职前或在职期间观察到的员工属性。"
     },
+    "The EDA prepares the data for simple baseline classifiers rather than claiming a finished predictive system. Because attrition is imbalanced, the relevant evaluation metrics are recall, F1-score, ROC-AUC, and PR-AUC rather than accuracy alone.": {
+      zh: "这次 EDA 的目标是为简单基线分类器准备数据，而不是宣称已经完成预测系统。由于员工流失类别不平衡，相关评估指标应包括 recall、F1-score、ROC-AUC 和 PR-AUC，而不能只看 accuracy。"
+    },
+    "Baseline": { zh: "基线模型" },
+    "Why it is useful": { zh: "为什么有用" },
+    "Assumption or check": { zh: "假设或检查" },
+    "Majority baseline": { zh: "多数类基线" },
+    "Shows why accuracy is misleading in an imbalanced attrition task.": {
+      zh: "说明在类别不平衡的流失任务中，accuracy 为什么具有误导性。"
+    },
+    "Predicts no leavers, so recall for attrition is zero.": {
+      zh: "预测不到离职员工，因此流失类别的 recall 为 0。"
+    },
+    "Logistic regression": { zh: "逻辑回归" },
+    "Provides an interpretable discriminative baseline for estimating attrition probability.": {
+      zh: "提供可解释的判别式基线，用于估计员工流失概率。"
+    },
+    "Needs encoded categories, imputation, and leakage checks.": {
+      zh: "需要完成类别编码、缺失插补和信息泄漏检查。"
+    },
+    "LDA": { zh: "LDA" },
+    "Tests whether a simple Gaussian class-conditional approximation is informative.": {
+      zh: "检验简单的高斯类条件近似是否能提供有效信息。"
+    },
+    "Requires caution because several numerical variables are skewed.": {
+      zh: "由于多个数值变量存在偏态，需要谨慎解释。"
+    },
+    "FDA + logistic regression": { zh: "FDA + 逻辑回归" },
+    "Uses a projection that emphasizes class separation before classification.": {
+      zh: "在分类前使用强调类别分离的投影。"
+    },
+    "Useful as an exploratory linear separation baseline, not a final decision rule.": {
+      zh: "适合作为探索性的线性分离基线，而不是最终决策规则。"
+    },
     "Classification theory note": { zh: "分类理论说明" },
+    "This section gives the mathematical context for the baseline classifiers; it explains assumptions rather than reporting final production-model performance.": {
+      zh: "本节给出基线分类器背后的数学背景，重点解释模型假设，而不是报告最终生产模型的表现。"
+    },
+    "The theoretically optimal decision rule for a classification problem is the Bayes classifier.": {
+      zh: "在分类问题中，理论上的最优决策规则是 Bayes 分类器。"
+    },
+    "Let": { zh: "令" },
+    "denote the feature vector and": { zh: "表示特征向量，" },
+    "denote the class label. For a": { zh: "表示类别标签。对于一个" },
+    "-class classification problem, the Bayes classifier assigns each observation to the class with the largest posterior probability:": {
+      zh: "类分类问题，Bayes 分类器会把每个观测分配给后验概率最大的类别："
+    },
+    "For binary classification, where": { zh: "对于二分类问题，其中" },
+    ", the rule becomes:": { zh: "，规则变为：" },
+    "and otherwise:": { zh: "否则：" },
+    "However, in real applications, the true data-generating distribution is unknown, so the Bayes classifier is usually unattainable. In practice, classification problems are commonly approached through several modeling strategies.": {
+      zh: "但在真实应用中，真正的数据生成分布通常未知，因此 Bayes 分类器一般无法直接得到。实践里，分类问题通常会通过几类建模策略来近似处理。"
+    },
+    "Generative classification methods model the joint distribution of features and labels by estimating the class prior": {
+      zh: "生成式分类方法通过估计类别先验"
+    },
+    "and the class-conditional density": { zh: "以及类条件密度" },
+    ". Given these quantities, the posterior probability can be estimated through Bayes' rule:": {
+      zh: "。给定这些量后，可以通过 Bayes 公式估计后验概率："
+    },
+    "Linear Discriminant Analysis, or LDA, is a classical generative method. It assumes that each class follows a Gaussian distribution with a shared covariance matrix:": {
+      zh: "线性判别分析 LDA 是经典的生成式方法。它假设每个类别服从高斯分布，并共享同一个协方差矩阵："
+    },
+    "Under this assumption, the resulting decision boundary is linear.": {
+      zh: "在这个假设下，得到的决策边界是线性的。"
+    },
+    "Fisher's discriminant analysis takes a projection-based perspective. It seeks a direction": {
+      zh: "Fisher 判别分析采用基于投影的视角。它寻找一个方向"
+    },
+    "that maximizes between-class separation while minimizing within-class variation: (Mathematically, Fisher's criterion belongs to a common family of optimization problems known as generalized Rayleigh quotient problems.)": {
+      zh: "使类间分离最大，同时使类内变异最小。（从数学上看，Fisher 准则属于广义 Rayleigh 商这一类常见优化问题。）"
+    },
+    "Here,": { zh: "这里，" },
+    "is the between-class scatter matrix and": { zh: "是类间散度矩阵，" },
+    "is the within-class scatter matrix. In the binary case, the solution has the form:": {
+      zh: "是类内散度矩阵。在二分类情况下，解具有如下形式："
+    },
+    "Discriminative methods, such as logistic regression, model the posterior probability": {
+      zh: "判别式方法，例如逻辑回归，会直接建模后验概率"
+    },
+    "directly. For binary classification, logistic regression assumes:": {
+      zh: "。对于二分类，逻辑回归假设："
+    },
+    "Another broad perspective is empirical risk minimization. Instead of explicitly estimating the true Bayes rule, we choose a function": {
+      zh: "另一个更一般的视角是经验风险最小化。我们不直接估计真实的 Bayes 规则，而是从模型类中选择一个函数"
+    },
+    "from a model class by minimizing the empirical loss:": {
+      zh: "使经验损失最小："
+    },
+    "is a loss function and": { zh: "是损失函数，" },
+    "is a regularization term. Many models, including support vector machines, neural networks, and tree-based methods, can be understood under this framework.": {
+      zh: "是正则化项。许多模型，包括支持向量机、神经网络和树模型，都可以放在这个框架下理解。"
+    },
+    "These methods rely on different assumptions and are useful in different situations. In this HR analytics project, I use them as exploratory tools to understand which employee features are associated with attrition, rather than as automatic decision systems.": {
+      zh: "这些方法依赖不同假设，适用于不同情境。在这个 HR analytics 项目中，我把它们作为探索工具，用来理解哪些员工特征与流失相关，而不是作为自动化决策系统。"
+    },
     "A classifier estimates a decision rule that maps employee features \\(X\\) to an attrition label \\(Y\\in\\{0,1\\}\\). In probabilistic terms, many models estimate \\(P(Y=1\\mid X)\\), then choose a threshold to convert probability into a class label.": {
       zh: "分类器估计的是一个决策规则，把员工特征 \\(X\\) 映射到流失标签 \\(Y\\in\\{0,1\\}\\)。从概率角度看，许多模型估计 \\(P(Y=1\\mid X)\\)，再选择阈值把概率转成类别标签。"
     },
