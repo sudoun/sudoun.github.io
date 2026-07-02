@@ -5709,6 +5709,329 @@ window.articleI18n = {
     "Import the analysis stack and widen dataframe display so audit tables are easier to inspect.": {
       zh: "导入分析工具栈，并放宽 dataframe 显示宽度，便于检查审计表。"
     },
+    "Install the Kaggle helper package in a fresh runtime.": {
+      zh: "在全新运行环境中安装 Kaggle 辅助包。"
+    },
+    "Import the analysis stack and configure readable notebook output.": {
+      zh: "导入分析工具栈，并配置更易读的 notebook 输出。"
+    },
+    "Notebook step number in this article": { zh: "本文中的 Notebook 步骤编号" },
+    "Install Kaggle helper": { zh: "安装 Kaggle 辅助包" },
+    "Load libraries": { zh: "加载库" },
+    "Find dataset file": { zh: "查找数据文件" },
+    "Load and preview data": { zh: "加载并预览数据" },
+    "Standardize columns": { zh: "标准化字段名" },
+    "Check duplicates": { zh: "检查重复行" },
+    "Missingness audit": { zh: "缺失审计" },
+    "Missingness vs attrition": { zh: "缺失与流失对比" },
+    "Create model table": { zh: "创建建模表" },
+    "Impute manager tenure": { zh: "插补直属经理任职时间" },
+    "Verify missingness": { zh: "验证缺失保留情况" },
+    "Column profile": { zh: "字段画像" },
+    "Descriptive stats": { zh: "描述统计" },
+    "Feature type split": { zh: "特征类型划分" },
+    "Detect target": { zh: "识别目标列" },
+    "Encode target": { zh: "编码目标变量" },
+    "Target base rate": { zh: "目标基准率" },
+    "Drop identifiers": { zh: "删除标识符字段" },
+    "Normalize travel label": { zh: "规范出差标签" },
+    "Promotion flag": { zh: "晋升标记" },
+    "Categorical plot helper": { zh: "类别绘图函数" },
+    "Select non-constant categorical features": { zh: "选择非常量类别特征" },
+    "Generate gallery": { zh: "生成图表集" },
+    "Wilson interval helper": { zh: "Wilson 区间函数" },
+    "Wilson plots": { zh: "Wilson 区间图" },
+    "Numeric feature list": { zh: "数值特征列表" },
+    "Numeric role split": { zh: "数值变量角色划分" },
+    "Numeric summary": { zh: "数值变量摘要" },
+    "Numeric plot helper": { zh: "数值绘图函数" },
+    "Numeric diagnostics": { zh: "数值诊断图" },
+    "Q-Q helper": { zh: "Q-Q 图函数" },
+    "Q-Q diagnostics": { zh: "Q-Q 诊断图" },
+    "Log-transform helper": { zh: "对数变换函数" },
+    "Skewness diagnostics": { zh: "偏度诊断" },
+    "Cramér's V helper": { zh: "Cramér's V 函数" },
+    "Rank categorical effects": { zh: "类别效应排序" },
+    "Plot effect-size ranking": { zh: "绘制效应量排序" },
+    "Locate the downloaded HR Analytics data file.": { zh: "定位已下载的 HR Analytics 数据文件。" },
+    "Search the Kaggle download folder for CSV or spreadsheet files before loading the dataset.": {
+      zh: "在加载数据集之前，先在 Kaggle 下载目录中查找 CSV 或电子表格文件。"
+    },
+    "Find the downloaded HR Analytics data file before loading it.": {
+      zh: "加载前先找到已下载的 HR Analytics 数据文件。"
+    },
+    "Load the raw HR table and confirm its structure.": { zh: "加载原始 HR 表并确认其结构。" },
+    "Read the detected file, report its shape, and preview the first rows to validate the raw table.": {
+      zh: "读取检测到的文件，报告表格形状，并预览前几行以验证原始表。"
+    },
+    "Load the raw HR table and verify its shape and first rows.": {
+      zh: "加载原始 HR 表，并验证其形状和前几行。"
+    },
+    "Standardize the working dataframe schema.": { zh: "标准化工作 dataframe 的字段结构。" },
+    "Create the working dataframe and normalize column names for consistent downstream references.": {
+      zh: "创建工作 dataframe，并规范字段名，保证后续引用一致。"
+    },
+    "Normalize column names and create stable working dataframes.": {
+      zh: "规范字段名，并创建稳定的工作 dataframe。"
+    },
+    "Check exact duplicate rows before cleaning.": { zh: "清洗前先检查完全重复行。" },
+    "Count duplicated records so cleaning decisions are documented before any row is removed.": {
+      zh: "在删除任何行之前统计重复记录，确保清洗决策有记录。"
+    },
+    "Audit exact duplicate records before making cleaning decisions.": {
+      zh: "做清洗决策前审计完全重复记录。"
+    },
+    "Audit missingness, data types, and cardinality.": { zh: "审计缺失、数据类型和唯一值数量。" },
+    "Build a missing-value summary with counts, rates, dtypes, and unique-value counts for each feature.": {
+      zh: "为每个特征建立缺失值摘要，包括缺失数量、缺失率、数据类型和唯一值数量。"
+    },
+    "Summarize missingness, data types, and feature cardinality.": {
+      zh: "汇总缺失情况、数据类型和特征唯一值数量。"
+    },
+    "Test whether manager-tenure missingness relates to attrition.": {
+      zh: "检验直属经理任职时间的缺失是否与员工流失相关。"
+    },
+    "Compare attrition patterns for missing versus observed manager-tenure values before imputation.": {
+      zh: "插补前比较直属经理任职时间缺失与非缺失样本的流失模式。"
+    },
+    "Check whether missing manager-tenure records have different attrition rates.": {
+      zh: "检查直属经理任职时间缺失记录是否具有不同的流失率。"
+    },
+    "Create a model-ready copy with a missingness flag.": {
+      zh: "创建带缺失标记的建模用副本。"
+    },
+    "Separate the modeling table from the EDA table and preserve manager-tenure missingness as a feature.": {
+      zh: "将建模表与 EDA 表分离，并把直属经理任职时间缺失作为特征保留。"
+    },
+    "Create a model table and preserve manager-tenure missingness as a feature.": {
+      zh: "创建建模表，并将直属经理任职时间缺失保留为特征。"
+    },
+    "Impute manager tenure with grouped medians.": { zh: "用分组中位数插补直属经理任职时间。" },
+    "Fill manager-tenure values using role and department medians, with the global median as fallback.": {
+      zh: "使用岗位和部门中位数填补直属经理任职时间，并用全局中位数作为兜底。"
+    },
+    "Impute manager tenure using role/department medians with a global fallback.": {
+      zh: "使用岗位/部门中位数插补直属经理任职时间，并设置全局兜底值。"
+    },
+    "Re-check preserved missingness in the EDA table.": { zh: "重新检查 EDA 表中保留的原始缺失。" },
+    "Confirm that df_eda still preserves original missingness for audit; imputation belongs in the model table.": {
+      zh: "确认 df_eda 仍保留原始缺失用于审计；插补只属于建模表。"
+    },
+    "Confirm that the readable EDA table still preserves original missingness.": {
+      zh: "确认可读 EDA 表仍保留原始缺失。"
+    },
+    "Profile columns by type, cardinality, and examples.": {
+      zh: "按类型、唯一值数量和样例值为字段画像。"
+    },
+    "Summarize each feature so identifiers, categorical variables, and numeric variables can be separated.": {
+      zh: "汇总每个特征，便于区分标识符、类别变量和数值变量。"
+    },
+    "Profile feature roles using dtype, cardinality, and sample values.": {
+      zh: "用 dtype、唯一值数量和样例值判断特征角色。"
+    },
+    "Generate descriptive statistics as a compact reference.": { zh: "生成描述统计作为紧凑参考。" },
+    "Create a broad describe table for numeric and categorical fields without making it the main narrative.": {
+      zh: "为数值和类别字段生成整体描述统计表，但不把它作为主要叙事。"
+    },
+    "Generate descriptive statistics as a reference, not as the main narrative.": {
+      zh: "生成描述统计作为参考，而不是作为主要叙事。"
+    },
+    "Split features into numeric and categorical groups.": { zh: "将特征划分为数值组和类别组。" },
+    "Separate variable types so each feature receives an appropriate plot and statistical treatment.": {
+      zh: "区分变量类型，使每个特征获得合适的图表和统计处理方式。"
+    },
+    "Split variables into numeric and categorical feature groups.": {
+      zh: "把变量划分为数值特征组和类别特征组。"
+    },
+    "Detect the attrition target column.": { zh: "检测员工流失目标列。" },
+    "Find the target field from common attrition-related column names before encoding it.": {
+      zh: "编码前从常见流失相关字段名中找到目标字段。"
+    },
+    "Identify the attrition target column before encoding.": { zh: "编码前识别员工流失目标列。" },
+    "Encode attrition as a binary modeling target.": { zh: "将员工流失编码为二分类建模目标。" },
+    "Map employees who left to 1 and employees who stayed to 0 for later group comparisons and models.": {
+      zh: "将离职员工映射为 1、留任员工映射为 0，用于后续组间比较和建模。"
+    },
+    "Encode employee attrition as a binary target flag.": { zh: "将员工流失编码为二元目标标记。" },
+    "Summarize the attrition base rate and class imbalance.": {
+      zh: "汇总流失基准率和类别不平衡。"
+    },
+    "Compute and plot the target distribution so later results are interpreted against the baseline rate.": {
+      zh: "计算并绘制目标分布，使后续结果能放在基准率下解释。"
+    },
+    "Summarize target imbalance and visualize the class base rate.": {
+      zh: "汇总目标类别不平衡，并可视化类别基准率。"
+    },
+    "Remove identifier fields from the analysis table.": { zh: "从分析表中移除标识符字段。" },
+    "Drop ID-like columns so charts and association checks do not treat identifiers as predictive variables.": {
+      zh: "删除类似 ID 的字段，避免图表和关联检查把标识符当成预测变量。"
+    },
+    "Remove identifier-like fields from analysis features.": { zh: "从分析特征中移除类似标识符的字段。" },
+    "Normalize inconsistent business-travel labels.": { zh: "规范不一致的出差标签。" },
+    "Clean label spelling so business-travel categories aggregate correctly in plots and summaries.": {
+      zh: "清理标签拼写，使出差类别能在图表和摘要中正确聚合。"
+    },
+    "Normalize business-travel labels so categories aggregate correctly.": {
+      zh: "规范出差标签，使类别能正确聚合。"
+    },
+    "Create a recent-promotion feature for tenure interpretation.": {
+      zh: "创建近期晋升特征，用于解释任职相关变量。"
+    },
+    "Convert a zero-heavy promotion-tenure variable into a simpler binary descriptive signal.": {
+      zh: "把零值很多的晋升间隔变量转成更简单的二元描述信号。"
+    },
+    "Create a binary recent-promotion indicator from a zero-heavy tenure field.": {
+      zh: "从零膨胀任职字段创建二元近期晋升指示变量。"
+    },
+    "Define the categorical attrition-rate plotter.": { zh: "定义类别特征流失率绘图函数。" },
+    "Create a reusable function for comparing group sample size and attrition rate across categorical features.": {
+      zh: "创建可复用函数，用于比较类别特征下各组样本量和流失率。"
+    },
+    "Define a reusable table-and-chart diagnostic for categorical attrition rates.": {
+      zh: "定义可复用的类别流失率表格与图表诊断。"
+    },
+    "Select interpretable categorical variables for analysis.": { zh: "选择可解释的类别变量进入分析。" },
+    "Keep interpretable HR grouping variables while excluding identifiers, the target, and constant fields.": {
+      zh: "保留可解释的 HR 分组变量，同时排除标识符、目标列和常量字段。"
+    },
+    "Select interpretable, non-constant HR grouping variables for categorical EDA.": {
+      zh: "为类别 EDA 选择可解释、非常量的 HR 分组变量。"
+    },
+    "Generate the categorical attrition-rate chart gallery.": { zh: "生成类别特征流失率图表集。" },
+    "Loop through selected non-constant categorical features; the useful evidence is the labeled table/chart output below.": {
+      zh: "遍历选中的非常量类别特征；真正有用的证据是下方带标签的表格和图表输出。"
+    },
+    "Run categorical attrition-rate diagnostics on selected non-constant HR groups.": {
+      zh: "对选中的非常量 HR 分组运行类别流失率诊断。"
+    },
+    "Define Wilson intervals for group attrition rates.": { zh: "为分组流失率定义 Wilson 区间。" },
+    "Add uncertainty intervals so small groups are not overinterpreted from raw attrition rates alone.": {
+      zh: "加入不确定性区间，避免只凭原始流失率过度解读小样本组。"
+    },
+    "Define Wilson intervals for uncertainty-aware group attrition rates.": {
+      zh: "为带不确定性的分组流失率定义 Wilson 区间。"
+    },
+    "Generate uncertainty-aware categorical rate plots.": { zh: "生成带不确定性的类别流失率图。" },
+    "Plot non-constant categorical attrition rates with Wilson intervals to compare groups more responsibly.": {
+      zh: "用 Wilson 区间绘制非常量类别特征的流失率，从而更谨慎地比较组间差异。"
+    },
+    "Run Wilson-interval diagnostics on selected non-constant HR groups.": {
+      zh: "对选中的非常量 HR 分组运行 Wilson 区间诊断。"
+    },
+    "Build a filtered numeric feature list.": { zh: "构建筛选后的数值特征列表。" },
+    "Exclude identifiers, constants, and the target from numeric EDA candidate variables.": {
+      zh: "从数值 EDA 候选变量中排除标识符、常量和目标列。"
+    },
+    "Build a numeric feature list excluding identifiers, constants, and the target.": {
+      zh: "构建排除标识符、常量和目标列后的数值特征列表。"
+    },
+    "Separate continuous-like and ordinal-like numeric variables.": {
+      zh: "区分近似连续变量和近似有序变量。"
+    },
+    "Classify numeric variables by measurement role so distribution plots are interpreted correctly.": {
+      zh: "按测量角色划分数值变量，使分布图解释更准确。"
+    },
+    "Separate continuous-like and ordinal-like variables before plotting.": {
+      zh: "绘图前先区分近似连续变量和近似有序变量。"
+    },
+    "Summarize numeric distributions and skewness.": { zh: "汇总数值分布和偏度。" },
+    "Compute missingness, center, spread, range, cardinality, and skewness for numeric variables.": {
+      zh: "计算数值变量的缺失、中心、离散程度、范围、唯一值数量和偏度。"
+    },
+    "Summarize numeric center, spread, missingness, skewness, and tails.": {
+      zh: "汇总数值变量的中心、离散程度、缺失、偏度和尾部情况。"
+    },
+    "Define the numeric distribution diagnostic plotter.": { zh: "定义数值分布诊断绘图函数。" },
+    "Create a reusable histogram, boxplot, and group-summary diagnostic for numeric features.": {
+      zh: "为数值特征创建可复用的直方图、箱线图和分组摘要诊断。"
+    },
+    "Define the numeric histogram, boxplot, and group-summary diagnostic.": {
+      zh: "定义数值直方图、箱线图和分组摘要诊断。"
+    },
+    "Generate numeric diagnostics for key HR features.": { zh: "为关键 HR 特征生成数值诊断图。" },
+    "Compare attrition groups across age, income, commute, tenure, and satisfaction-related variables.": {
+      zh: "在年龄、收入、通勤距离、任职时间和满意度相关变量上比较流失组与留任组。"
+    },
+    "Run numeric diagnostics for age, income, commute, tenure, and satisfaction.": {
+      zh: "对年龄、收入、通勤、任职和满意度变量运行数值诊断。"
+    },
+    "Define Q-Q diagnostics for Gaussian-assumption checks.": { zh: "定义用于高斯假设检查的 Q-Q 诊断。" },
+    "Create a helper that checks whether numeric variables look approximately Gaussian within each attrition group.": {
+      zh: "创建辅助函数，检查每个流失分组内数值变量是否近似高斯。"
+    },
+    "Define Q-Q diagnostics for Gaussian-assumption checks by attrition group.": {
+      zh: "按流失分组定义用于高斯假设检查的 Q-Q 诊断。"
+    },
+    "Generate Q-Q plots for selected numeric variables.": { zh: "为选定数值变量生成 Q-Q 图。" },
+    "Use Q-Q plots to support later discussion of LDA and Gaussian-style assumptions.": {
+      zh: "使用 Q-Q 图支持后续关于 LDA 和高斯类假设的讨论。"
+    },
+    "Run Q-Q diagnostics for selected continuous-like variables.": {
+      zh: "对选定的近似连续变量运行 Q-Q 诊断。"
+    },
+    "Define a log-transform comparison helper.": { zh: "定义对数变换对比函数。" },
+    "Create a helper that compares original and log scales for strongly right-skewed variables.": {
+      zh: "创建辅助函数，对强右偏变量比较原始尺度和对数尺度。"
+    },
+    "Define a log-transform diagnostic for strongly right-skewed variables.": {
+      zh: "为强右偏变量定义对数变换诊断。"
+    },
+    "Compare skewed variables before and after log transform.": { zh: "比较偏态变量在对数变换前后的表现。" },
+    "Identify skewed features and test whether log scaling reduces visual dominance by extreme values.": {
+      zh: "识别偏态特征，并测试对数缩放是否降低极端值在视觉上的主导性。"
+    },
+    "Compare original and log-scaled views of highly skewed features.": {
+      zh: "比较高偏度特征的原始视图和对数缩放视图。"
+    },
+    "Define Cramér’s V for categorical association strength.": {
+      zh: "定义用于类别关联强度的 Cramér’s V。"
+    },
+    "Implement Cramér’s V to measure marginal association between categorical features and attrition.": {
+      zh: "实现 Cramér’s V，用于度量类别特征与流失之间的边际关联。"
+    },
+    "Define Cramér's V for categorical association strength.": {
+      zh: "定义用于类别关联强度的 Cramér's V。"
+    },
+    "Rank categorical variables by association with attrition.": {
+      zh: "按与员工流失的关联强度排序类别变量。"
+    },
+    "Compute Cramér’s V for categorical variables and surface the strongest descriptive signals.": {
+      zh: "计算类别变量的 Cramér’s V，并展示最强的描述性信号。"
+    },
+    "Rank categorical variables by Cramér's V against attrition.": {
+      zh: "按相对流失的 Cramér's V 排序类别变量。"
+    },
+    "Plot the categorical effect-size ranking.": { zh: "绘制类别效应量排序图。" },
+    "Visualize the Cramér’s V ranking so categorical attrition signals are easy to compare.": {
+      zh: "可视化 Cramér’s V 排序，使类别流失信号更容易比较。"
+    },
+    "Plot the Cramér's V ranking as a compact effect-size chart.": {
+      zh: "将 Cramér's V 排序绘制成紧凑的效应量图。"
+    },
+    "# fallback: 如果某些 group 全缺失，再用全局 median 补": {
+      zh: "# 兜底：如果某些分组全缺失，再用全局中位数补"
+    },
+    "# Wilson confidence interval": { zh: "# Wilson 置信区间" },
+    "# Normal approximation / CLT-based standard error": {
+      zh: "# 正态近似 / 基于 CLT 的标准误"
+    },
+    "# CLT convergence proxy: error scale shrinks like 1 / sqrt(n)": {
+      zh: "# CLT 收敛代理：误差尺度按 1 / sqrt(n) 缩小"
+    },
+    "# Operational sample size requirement for desired margin of error": {
+      zh: "# 给定目标误差边界时的操作性样本量要求"
+    },
+    "# Use global attrition rate as a practical reference.": {
+      zh: "# 使用整体流失率作为实际参考。"
+    },
+    "# A simple quality flag based on event count and CI width": {
+      zh: "# 基于事件数量和置信区间宽度的简单质量标记"
+    },
+    "# Chi-square test for association": { zh: "# 用卡方检验检查关联" },
+    "# Plot with Wilson CI": { zh: "# 使用 Wilson 置信区间绘图" },
+    "# Clean known inconsistent category label": { zh: "# 清理已知不一致的类别标签" },
+    "# Candidate categorical variables": { zh: "# 候选类别变量" },
+    "# skip constant columns": { zh: "# 跳过常量列" },
     "Feature representation note": { zh: "特征表示说明" },
     "This dataset mixes categorical grouping labels and numerical employee attributes. For readable EDA, I keep labels such as department, job role, overtime, age group, and salary slab as interpretable categories. For modeling, nominal categories should be one-hot encoded rather than label-encoded, because label encoding would create artificial ordinal structure.": {
       zh: "这个数据集混合了类别分组标签和数值型员工属性。为了让 EDA 可读，我保留 department、job role、overtime、age group、salary slab 等标签；建模时，名义类别应使用 one-hot encoding，而不是 label encoding，以避免制造不存在的顺序。"
@@ -5717,6 +6040,9 @@ window.articleI18n = {
       zh: "降维在本文中只是未来探索选项，不作为最终证据。"
     },
     "Feature engineering note: zero-inflated tenure variables": { zh: "特征工程说明：零膨胀任职变量" },
+    "Some tenure-related variables contain many zeros. Instead of treating this as a plotting nuisance, I create an explicit indicator so the model can preserve the information that an employee has not experienced a recent promotion while keeping the original tenure scale available for EDA.": {
+      zh: "一些任职相关变量包含大量 0。与其把它当作绘图上的麻烦，我会创建一个显式指示变量，让模型保留“员工近期没有晋升经历”这一信息，同时让 EDA 仍然保留原始任职时间尺度。"
+    },
     "Some tenure-related variables contain many zeros. Instead of treating this only as a plotting inconvenience, I create explicit indicator variables so a model can preserve the information that an employee has no recent promotion event while the EDA still keeps the original tenure scale readable.": {
       zh: "一些任职相关变量包含大量 0。与其把它只当作绘图麻烦，我会创建显式指示变量，让模型保留“员工近期没有晋升经历”这一信息，同时在 EDA 中保留原始任职尺度。"
     },
