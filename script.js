@@ -6,7 +6,7 @@ const profile = {
   location: "Personal technical blog",
   email: "",
   tagline:
-    "I use mathematical intuition to audit data, unpack assumptions, and write analysis as reviewable technical essays.",
+    "I write technical notes on reading data structure, spotting anomalies and definition gaps, and turning analysis into clear explanations.",
   bio:
     "I am looking for internships related to HR, data analysis, and product operations. My core strength is an intuitive understanding of data: I can read what fields, distributions, anomalies, missingness, and hidden assumptions imply, then turn those judgments into clear and reviewable analysis.",
   contact:
@@ -23,14 +23,14 @@ const siteLayout = window.siteLayout || {};
 const writingSettings = window.personalWritingSettings || {};
 const publicSlugs = new Set(writingSettings.publicSlugs || []);
 const posts = (window.personalWritingPosts || []).filter((post) => publicSlugs.has(post.slug));
-const defaultSectionOrder = ["intro", "writing", "workflow", "about"];
+const defaultSectionOrder = ["intro", "writing", "about"];
 
 const zhProfile = {
   ...profile,
   title: "个人技术博客",
   availability: "统计学习 / 数据分析 / 可解释建模",
   location: "个人技术博客",
-  tagline: "用数学直觉审计数据、拆解假设，并把分析写成可复核的技术文章。",
+  tagline: "记录我如何理解数据结构、识别异常与口径差异，并把分析过程整理成清晰的技术笔记。",
   bio: "我正在寻找 HR、数据分析和产品运营相关实习机会。我的核心优势是对数据性质的直观理解：能快速判断字段、分布、异常、缺失和隐含假设意味着什么，并把这些判断整理成清晰、可复核的分析输出。",
   contact: "个人技术写作：统计学习、数据分析和可解释建模。",
   links: [
@@ -102,16 +102,6 @@ const uiText = {
     implementationDecisionText: "Separate descriptive patterns from causal claims and keep assumptions visible.",
     implementationWorkspaceTitle: "Output",
     implementationWorkspaceText: "Turn analysis into readable notes, tables, figures, and concise explanations.",
-    flowKicker: "Writing method",
-    flowTitle: "From Observation to Explanation",
-    flowInputTitle: "Observe",
-    flowInputText: "Inspect field definitions, sample size, missingness, abnormal values, and uncertainty.",
-    flowProcessTitle: "Structure",
-    flowProcessText: "Turn loose information into variables, categories, assumptions, and comparable records.",
-    flowAnalysisTitle: "Interpret",
-    flowAnalysisText: "Use mathematical intuition to judge relationships, tradeoffs, hidden signals, and result reasonableness.",
-    flowOutputTitle: "Explain",
-    flowOutputText: "Produce notes, tables, rankings, and explanations that can be reviewed by other people.",
     snapshotRole: "Robust estimation",
     snapshotRoleValue: "Understand estimators through outliers, tail risk, and assumption boundaries",
     snapshotTools: "EDA notes",
@@ -211,16 +201,6 @@ const uiText = {
     implementationDecisionText: "区分描述性模式和因果判断，并把假设写清楚。",
     implementationWorkspaceTitle: "输出",
     implementationWorkspaceText: "把分析整理成可读的笔记、表格、图表和简洁说明。",
-    flowKicker: "写作方法",
-    flowTitle: "从观察到解释",
-    flowInputTitle: "观察",
-    flowInputText: "先看字段定义、样本量、缺失、异常值和不确定性。",
-    flowProcessTitle: "结构化",
-    flowProcessText: "把松散信息变成变量、类别、假设和可比较记录。",
-    flowAnalysisTitle: "解释",
-    flowAnalysisText: "用数学直觉判断关系、取舍、隐含信号和结果合理性。",
-    flowOutputTitle: "表达",
-    flowOutputText: "产出别人能复核的笔记、表格、排序和解释。",
     snapshotRole: "稳健估计",
     snapshotRoleValue: "用异常值、尾部风险和假设边界理解估计器",
     snapshotTools: "EDA 笔记",
@@ -506,16 +486,6 @@ function applyProfile() {
   setText("#implementationDecisionText", text("implementationDecisionText"));
   setText("#implementationWorkspaceTitle", text("implementationWorkspaceTitle"));
   setText("#implementationWorkspaceText", text("implementationWorkspaceText"));
-  setText("#flowKicker", text("flowKicker"));
-  setText("#flowTitle", text("flowTitle"));
-  setText("#flowInputTitle", text("flowInputTitle"));
-  setText("#flowInputText", text("flowInputText"));
-  setText("#flowProcessTitle", text("flowProcessTitle"));
-  setText("#flowProcessText", text("flowProcessText"));
-  setText("#flowAnalysisTitle", text("flowAnalysisTitle"));
-  setText("#flowAnalysisText", text("flowAnalysisText"));
-  setText("#flowOutputTitle", text("flowOutputTitle"));
-  setText("#flowOutputText", text("flowOutputText"));
   setText("#snapshotRole", text("snapshotRole"));
   setText("#snapshotRoleValue", text("snapshotRoleValue"));
   setText("#snapshotTools", text("snapshotTools"));
