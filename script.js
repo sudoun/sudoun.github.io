@@ -8,7 +8,7 @@ const profile = {
   tagline:
     "I use mathematical intuition to audit data, unpack assumptions, and write analysis as reviewable technical essays.",
   bio:
-    "This blog is a place for my statistics, data analysis, and modeling notes. I care about how a problem is defined, audited, tested, and interpreted.",
+    "I am looking for internships related to HR, data analysis, and product operations. My core strength is an intuitive understanding of data: I can read what fields, distributions, anomalies, missingness, and hidden assumptions imply, then turn those judgments into clear and reviewable analysis.",
   contact:
     "Personal technical writing in statistics, data analysis, and explainable modeling.",
   links: [
@@ -31,7 +31,7 @@ const zhProfile = {
   availability: "统计学习 / 数据分析 / 可解释建模",
   location: "个人技术博客",
   tagline: "用数学直觉审计数据、拆解假设，并把分析写成可复核的技术文章。",
-  bio: "这个博客用来沉淀我的统计学习、数据分析和建模笔记。相比展示结论，我更在意问题如何被定义、数据如何被审计、假设如何影响解释。",
+  bio: "我正在寻找 HR、数据分析和产品运营相关实习机会。我的核心优势是对数据性质的直观理解：能快速判断字段、分布、异常、缺失和隐含假设意味着什么，并把这些判断整理成清晰、可复核的分析输出。",
   contact: "个人技术写作：统计学习、数据分析和可解释建模。",
   links: [
     { label: "GitHub", href: "https://github.com/sudoun" }
@@ -61,7 +61,7 @@ const uiText = {
     postCount: "{count} posts",
     openPost: "Open",
     aboutEyebrow: "About",
-    aboutTitle: "Math Intuition, Data Sense, Explainable Output",
+    aboutTitle: "Internship Direction and Core Strength",
     footerLabel: "Personal technical blog",
     primaryWork: "Read Essays",
     primaryProjects: "GitHub Profile",
@@ -170,7 +170,7 @@ const uiText = {
     postCount: "{count} 篇文章",
     openPost: "阅读",
     aboutEyebrow: "关于",
-    aboutTitle: "数学直觉、数据理解、可解释输出",
+    aboutTitle: "实习方向与核心优势",
     footerLabel: "个人技术博客",
     primaryWork: "阅读文章",
     primaryProjects: "GitHub 主页",

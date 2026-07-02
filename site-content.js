@@ -9,7 +9,7 @@ window.siteContent = {
       "title": "个人技术博客",
       "availability": "统计学习 / 数据分析 / 可解释建模",
       "tagline": "用数学直觉审计数据、拆解假设，并把分析写成可复核的技术文章。",
-      "bio": "这个博客用来沉淀统计学习、数据分析和建模笔记。相比直接给结论，我更在意问题如何被定义，数据如何被检查，假设如何影响解释。",
+      "bio": "我正在寻找 HR、数据分析和产品运营相关实习机会。我的核心优势是对数据性质的直观理解：能快速判断字段、分布、异常、缺失和隐含假设意味着什么，并把这些判断整理成清晰、可复核的分析输出。",
       "email": "",
       "github": "https://github.com/sudoun"
     },
@@ -79,7 +79,7 @@ window.siteContent = {
       "flowOutputTitle": "表达",
       "flowOutputText": "产出别人能复核的笔记、表格、排序和解释。",
       "aboutEyebrow": "关于",
-      "aboutTitle": "数学直觉、数据理解、可解释输出",
+      "aboutTitle": "实习方向与核心优势",
       "footerLabel": "个人技术博客",
     }
   },
@@ -90,7 +90,7 @@ window.siteContent = {
       "title": "Personal Technical Blog",
       "availability": "Statistics / Data Analysis / Explainable Modeling",
       "tagline": "I use mathematical intuition to audit data, unpack assumptions, and write analysis as reviewable technical essays.",
-      "bio": "This blog is a place for my statistics, data analysis, and modeling notes. I care less about jumping to conclusions than about how a problem is defined, how data is checked, and how assumptions shape interpretation.",
+      "bio": "I am looking for internships related to HR, data analysis, and product operations. My core strength is an intuitive understanding of data: I can read what fields, distributions, anomalies, missingness, and hidden assumptions imply, then turn those judgments into clear and reviewable analysis.",
       "email": "",
       "github": "https://github.com/sudoun"
     },
@@ -160,8 +160,8 @@ window.siteContent = {
       "flowOutputTitle": "Explain",
       "flowOutputText": "Produce notes, tables, rankings, and explanations that can be reviewed by other people.",
       "aboutEyebrow": "About",
-      "aboutTitle": "Math Intuition, Data Sense, Explainable Output",
-      "footerLabel": "Personal technical blog card"
+      "aboutTitle": "Internship Direction and Core Strength",
+      "footerLabel": "Personal technical blog"
     }
   }
 };
