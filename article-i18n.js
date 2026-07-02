@@ -8,7 +8,7 @@
   const codeCommentNodes = [];
   const originalCodeCommentText = new WeakMap();
   const originalAttributes = [];
-  const skipSelector = "script, style, textarea, pre, code, svg, mjx-container";
+  const skipSelector = "script, style, textarea, pre, code, svg, mjx-container, .math-display, .math-inline";
 
   const normalize = (value) => String(value || "").replace(/\s+/g, " ").trim();
 
@@ -261,9 +261,8 @@
     if (typeof config.onLanguageChange === "function") {
       config.onLanguageChange(nextLang);
     }
-    if (window.MathJax?.typesetPromise) {
-      window.MathJax.typesetPromise();
-    }
+    // MathJax owns its rendered nodes after initial page load. Retypesetting on
+    // language switches can duplicate formulas, so math blocks are skipped above.
   };
 
   document.addEventListener("click", (event) => {

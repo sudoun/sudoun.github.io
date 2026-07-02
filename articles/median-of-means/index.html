@@ -319,11 +319,16 @@
 
       .math-display {
         overflow-x: auto;
+        overflow-y: hidden;
         margin: 22px 0;
         border: 1px solid #dce8e4;
         border-radius: 8px;
         background: #f8fbfa;
         padding: 18px 20px;
+      }
+
+      .math-display mjx-container {
+        margin: 0 !important;
       }
 
       table {
@@ -680,7 +685,7 @@
           <span class="meta-pill"><b>Date</b> 2026-06-30</span>
           <span class="meta-pill"><b>Format</b> Notebook experiment</span>
           <span class="meta-pill"><b>Concept</b> Robust estimation</span>
-          <span class="meta-pill"><b>Output</b> Code · tables · chart</span>
+          <span class="meta-pill"><b>Output</b> 代码 · 表格 · 图表</span>
         </div>
       </section>
 
@@ -691,45 +696,45 @@
             <h2>What this article is trying to prove</h2>
             <p>
               普通均值不是“坏”的估计器；它的问题是对数值大小完全信任。当样本里出现少量极端值时，均值可能偶尔错得很离谱。
-              Median-of-Means 的价值是把这个风险拆成两层：组内仍然求均值，组间用中位数聚合。
+              MoM（分组均值中位数）的价值是把这个风险拆成两层：组内仍然求均值，组间用中位数聚合。
             </p>
             <div class="finding-grid">
               <article>
                 <b>01</b>
-                <strong>One outlier can dominate the mean</strong>
-                <p>A single value 1000 moves the sample mean from the visual center near 10 to 109.2.</p>
+                <strong>一个异常值可以支配均值</strong>
+                <p>单个 1000 会把样本均值从接近 10 的视觉中心拉到 109.2。</p>
               </article>
               <article>
                 <b>02</b>
-                <strong>MoM changes the aggregation question</strong>
-                <p>It asks for the typical average among blocks, not the average of all raw magnitudes at once.</p>
+                <strong>MoM 改变聚合问题</strong>
+                <p>它问的是“分组均值里典型的均值是什么”，而不是一次性平均所有原始数值。</p>
               </article>
               <article>
                 <b>03</b>
-                <strong>Monte Carlo makes the claim testable</strong>
-                <p>Repeated experiments compare the error distribution of mean, median, and median-of-means.</p>
+                <strong>蒙特卡洛让判断可检验</strong>
+                <p>重复实验可以比较普通均值、中位数和 MoM 的误差分布。</p>
               </article>
               <article>
                 <b>04</b>
-                <strong>The boundary matters</strong>
-                <p>MoM reduces tail risk under contamination; it is not a universal smaller-variance replacement for the mean.</p>
+                <strong>边界条件很重要</strong>
+                <p>MoM 降低污染噪声下的尾部风险；它不是在所有干净场景里方差都更小的通用替代品。</p>
               </article>
             </div>
           </section>
 
           <section class="markdown-cell" id="tiny-example">
-            <p class="eyebrow">Step 01 / Tiny example</p>
-            <h2>Start with one contaminated sample</h2>
+            <p class="eyebrow">步骤 01 / 极简例子</p>
+            <h2>从一个被污染的样本开始</h2>
             <p>
               假设我们想估计一组数据的“真实平均水平”，大部分数据都在 10 附近，但有一个异常值 1000：
             </p>
             <article class="notebook-cell">
               <div class="cell-header">
-                <div><span class="cell-badge">Step 01</span><span class="cell-title">Create the smallest useful example.</span></div>
-                <span class="cell-output-count">input</span>
+                <div><span class="cell-badge">Step 01</span><span class="cell-title">构造最小但有解释力的例子。</span></div>
+                <span class="cell-output-count">输入</span>
               </div>
               <details open>
-                <summary><span>Code · contaminated sample</span><small>visible</small></summary>
+                <summary><span>代码 · 被污染样本</span><small>可见</small></summary>
                 <div class="code-block"><pre><code>x = [10, 11, 9, 10, 12, 11, 10, 9, 10, 1000]</code></pre></div>
               </details>
             </article>
@@ -742,15 +747,15 @@
           </section>
 
           <section class="markdown-cell" id="grouping-rule">
-            <p class="eyebrow">Step 02 / Estimator idea</p>
-            <h2>Group first, then take the median</h2>
+            <p class="eyebrow">步骤 02 / 估计器思路</p>
+            <h2>先分组，再取中位数</h2>
             <p>
-              Median-of-Means 的做法是先分组，每组算均值，最后对这些组均值取中位数。这样异常值会污染其中一组，但只要被污染的组不到一半，中位数聚合就能把它压下去。
+              MoM（分组均值中位数）的做法是先分组，每组算均值，最后对这些组均值取中位数。这样异常值会污染其中一组，但只要被污染的组不到一半，中位数聚合就能把它压下去。
             </p>
             <div class="method-table">
               <table>
                 <thead>
-                  <tr><th>Group</th><th>Data</th><th>Group mean</th></tr>
+                  <tr><th>组</th><th>数据</th><th>组均值</th></tr>
                 </thead>
                 <tbody>
                   <tr><td>1</td><td>10, 11</td><td>10.5</td></tr>
@@ -768,16 +773,16 @@
             </div>
             <div class="callout">
               <strong>核心问题变了：</strong>
-              ordinary mean asks, "What is the average of all points?"
-              Median-of-Means asks, "What is the typical average among many small groups?"
+              普通均值问：“所有点的平均值是多少？”
+              MoM 问：“许多小组里的典型平均值是多少？”
             </div>
           </section>
 
           <section class="markdown-cell" id="definition">
-            <p class="eyebrow">Step 03 / General form</p>
-            <h2>Write the estimator explicitly</h2>
+            <p class="eyebrow">步骤 03 / 一般形式</p>
+            <h2>把估计器写清楚</h2>
             <p>
-              More generally, split the sample into \(k\) groups \(G_1,\ldots,G_k\), compute the mean inside each group, then take the median of those group means:
+              更一般地，把样本分成 \(k\) 个组 \(G_1,\ldots,G_k\)，先计算每组内部均值，再对这些组均值取中位数：
             </p>
             <div class="math-display">
               \[
@@ -791,29 +796,29 @@
               \]
             </div>
             <p>
-              This connects to heavy-tail intuition: when a distribution or a scraped dataset can produce extreme values, the ordinary mean can have a stable center in theory but an unstable finite-sample realization in practice.
+              这和重尾分布的直觉相连：当一个分布或抓取来的数据集可能产生极端值时，普通均值在理论上可能有稳定中心，但在有限样本里会出现很不稳定的实现。
             </p>
           </section>
 
           <section class="markdown-cell" id="notebook">
-            <p class="eyebrow">Notebook experiment</p>
-            <h2>Repeat the contamination process</h2>
+            <p class="eyebrow">笔记实验</p>
+            <h2>重复污染过程</h2>
             <p>
               单个异常值例子只能说明“可能出问题”；重复随机实验才能看到普通均值的误差分布是否真的更不稳定。
-              每次生成 200 个样本，其中 95% 来自以 10 为中心的正常噪声，5% 来自仍然以 10 为中心、但波动极大的极端噪声。重复 5000 次后，比较普通均值、普通中位数和 Median-of-Means。
+              每次生成 200 个样本，其中 95% 来自以 10 为中心的正常噪声，5% 来自仍然以 10 为中心、但波动极大的极端噪声。重复 5000 次后，比较普通均值、普通中位数和 MoM。
             </p>
 
             <article class="notebook-cell">
               <div class="cell-header">
-                <div><span class="cell-badge">Step 04</span><span class="cell-title">Simulate contaminated samples and compute three estimators.</span></div>
-                <span class="cell-output-count">In [1]</span>
+                <div><span class="cell-badge">Step 04</span><span class="cell-title">模拟被污染样本，并计算三个估计器。</span></div>
+                <span class="cell-output-count">输入 [1]</span>
               </div>
               <div class="cell-function">
-                <b>Purpose</b>
-                <p>Build a reproducible Monte Carlo table so the comparison is based on repeated error distributions, not one handcrafted outlier.</p>
+                <b>目的</b>
+                <p>构造一个可复现的蒙特卡洛表，让比较基于重复误差分布，而不是单个手工异常值。</p>
               </div>
               <details open>
-                <summary><span>Code · run simulation</span><small>click to hide</small></summary>
+                <summary><span>代码 · 运行模拟</span><small>点击隐藏</small></summary>
                 <div class="code-block"><pre><code>import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -848,11 +853,11 @@ results = run_experiment()
 results.head()</code></pre></div>
               </details>
               <details open>
-                <summary><span>Output · first simulated rows</span><small>preview</small></summary>
+                <summary><span>输出 · 前几行模拟结果</span><small>预览</small></summary>
                 <div class="output-content">
                   <table>
                     <thead>
-                      <tr><th>sample_mean</th><th>median</th><th>median_of_means</th></tr>
+                      <tr><th>普通均值</th><th>中位数</th><th>MoM</th></tr>
                     </thead>
                     <tbody>
                       <tr><td>9.783</td><td>9.948</td><td>10.097</td></tr>
@@ -868,15 +873,15 @@ results.head()</code></pre></div>
 
             <article class="notebook-cell">
               <div class="cell-header">
-                <div><span class="cell-badge">Step 05</span><span class="cell-title">Summarize estimator error, especially the tail.</span></div>
-                <span class="cell-output-count">In [2]</span>
+                <div><span class="cell-badge">Step 05</span><span class="cell-title">汇总估计误差，尤其关注尾部。</span></div>
+                <span class="cell-output-count">输入 [2]</span>
               </div>
               <div class="cell-function">
-                <b>Purpose</b>
-                <p>Compare standard deviation, MSE, mean absolute error, 95% absolute error, and the rate of large mistakes.</p>
+                <b>目的</b>
+                <p>比较标准差、MSE、平均绝对误差、95% 绝对误差和大误差比例。</p>
               </div>
               <details open>
-                <summary><span>Code · error summary</span><small>click to hide</small></summary>
+                <summary><span>代码 · 误差摘要</span><small>点击隐藏</small></summary>
                 <div class="code-block"><pre><code>true_center = 10
 summary = []
 
@@ -895,16 +900,16 @@ summary = pd.DataFrame(summary)
 summary</code></pre></div>
               </details>
               <details open>
-                <summary><span>Output · error summary</span><small>portfolio result</small></summary>
+                <summary><span>输出 · 误差摘要</span><small>展示结果</small></summary>
                 <div class="output-content">
                   <table>
                     <thead>
-                      <tr><th>estimator</th><th>std</th><th>mse</th><th>mae</th><th>p95 abs error</th><th>|error| &gt; 1</th></tr>
+                      <tr><th>估计器</th><th>标准差</th><th>MSE</th><th>MAE</th><th>95% 绝对误差</th><th>|误差| &gt; 1</th></tr>
                     </thead>
                     <tbody>
-                      <tr><td>sample_mean</td><td>0.790</td><td>0.624</td><td>0.625</td><td>1.550</td><td>19.6%</td></tr>
-                      <tr><td>median</td><td>0.092</td><td>0.008</td><td>0.073</td><td>0.183</td><td>0.0%</td></tr>
-                      <tr><td>median_of_means</td><td>0.155</td><td>0.024</td><td>0.117</td><td>0.296</td><td>0.1%</td></tr>
+                      <tr><td>普通均值</td><td>0.790</td><td>0.624</td><td>0.625</td><td>1.550</td><td>19.6%</td></tr>
+                      <tr><td>中位数</td><td>0.092</td><td>0.008</td><td>0.073</td><td>0.183</td><td>0.0%</td></tr>
+                      <tr><td>MoM</td><td>0.155</td><td>0.024</td><td>0.117</td><td>0.296</td><td>0.1%</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -912,28 +917,28 @@ summary</code></pre></div>
             </article>
 
             <div class="callout">
-              <strong>Interpretation:</strong>
-              sample mean is not wrong every time, but it occasionally goes very wrong.
-              Median-of-Means is not claiming to have the smallest variance in every clean setting; its value is reducing tail risk of estimation error under heavy-tailed or contaminated noise.
+              <strong>解释：</strong>
+              普通均值不是每次都错，但它偶尔会错得很离谱。
+              MoM 并不是宣称自己在所有干净数据场景下方差最小；它的价值是降低重尾或污染噪声下估计误差的尾部风险。
             </div>
           </section>
 
           <section class="markdown-cell" id="interactive">
-            <p class="eyebrow">Visual check</p>
-            <h2>Sampling distribution under tunable contamination</h2>
+            <p class="eyebrow">可视化检查</p>
+            <h2>可调污染噪声下的抽样分布</h2>
             <p>
-              Use the controls to change contamination rate and extreme-noise scale. The point is not to upload new data; it is to change the assumptions and see how each estimator reacts.
+              使用控件调整污染比例和极端噪声尺度。这里不是上传新数据，而是改变假设，观察每个估计器如何反应。
             </p>
             <div class="chart-panel">
               <svg id="mcChart" viewBox="0 0 760 360" role="img" aria-label="Monte Carlo sampling distributions"></svg>
               <div class="legend">
-                <span><i class="mean-key"></i>Sample Mean</span>
-                <span><i class="median-key"></i>Median</span>
-                <span><i class="mom-key"></i>Median-of-Means</span>
+                <span><i class="mean-key"></i>普通均值</span>
+                <span><i class="median-key"></i>中位数</span>
+                <span><i class="mom-key"></i>MoM 分组均值中位数</span>
               </div>
               <div class="controls">
-                <label>Contamination rate <input id="contaminationInput" type="range" min="0" max="12" step="1" value="5"></label>
-                <label>Extreme-noise scale <input id="scaleInput" type="range" min="10" max="80" step="5" value="50"></label>
+                <label>污染比例 <input id="contaminationInput" type="range" min="0" max="12" step="1" value="5"></label>
+                <label>极端噪声尺度 <input id="scaleInput" type="range" min="10" max="80" step="5" value="50"></label>
               </div>
               <div id="stats" class="stats"></div>
               <p id="readout" class="callout"></p>
@@ -941,16 +946,16 @@ summary</code></pre></div>
           </section>
 
           <section class="article-end" id="limitations">
-            <h2>Limitations and practical use</h2>
+            <h2>限制与实际使用</h2>
             <p>
-              Median-of-Means 降低的是重尾噪声下的估计尾部风险，而不只是普通意义上的方差。它适合提醒我们：在薪资 outlier、异常交易金额、长尾响应时间或 noisy scraped records 中，先问均值稳定需要什么假设。
+              MoM 降低的是重尾噪声下的估计尾部风险，而不只是普通意义上的方差。它适合提醒我们：在薪资异常值、异常交易金额、长尾响应时间或带噪声的网页抓取记录中，先问均值稳定需要什么假设。
             </p>
             <ul>
-              <li>MoM depends on the number of groups \(k\); bad grouping or too many contaminated groups can still hurt.</li>
-              <li>The sample median can look best for estimating a center, but it is not estimating the mean target in the same way.</li>
-              <li>The article is a reasoning demo, not a universal estimator recommendation.</li>
+              <li>MoM 依赖组数 \(k\)；分组不佳或被污染的组过多时仍然会受影响。</li>
+              <li>样本中位数在估计中心时可能看起来最好，但它和均值目标并不完全相同。</li>
+              <li>这篇文章是推理演示，不是通用估计器推荐。</li>
             </ul>
-            <p><strong>Conclusion:</strong> the useful habit is to inspect the tail risk of an estimator, not only its average-case error.</p>
+            <p><strong>结论：</strong>有用的习惯是检查估计器的尾部风险，而不仅是平均误差。</p>
           </section>
         </article>
 
@@ -996,9 +1001,13 @@ summary</code></pre></div>
           "Robust estimation": { zh: "稳健估计" },
           "Output": { zh: "输出" },
           "Code · tables · chart": { zh: "代码 · 表格 · 图表" },
+          "代码 · 表格 · 图表": { en: "Code · tables · chart" },
           "Before the notebook": { zh: "进入实验前" },
           "What this article is trying to prove": { zh: "这篇文章想说明什么" },
           "普通均值不是“坏”的估计器；它的问题是对数值大小完全信任。当样本里出现少量极端值时，均值可能偶尔错得很离谱。 Median-of-Means 的价值是把这个风险拆成两层：组内仍然求均值，组间用中位数聚合。": {
+            en: "The ordinary mean is not a “bad” estimator; its issue is that it fully trusts magnitude. When a few extreme values appear, the mean can occasionally make a very large mistake. Median-of-Means splits this risk into two layers: average within each block, then aggregate block means by the median."
+          },
+          "普通均值不是“坏”的估计器；它的问题是对数值大小完全信任。当样本里出现少量极端值时，均值可能偶尔错得很离谱。 MoM（分组均值中位数）的价值是把这个风险拆成两层：组内仍然求均值，组间用中位数聚合。": {
             en: "The ordinary mean is not a “bad” estimator; its issue is that it fully trusts magnitude. When a few extreme values appear, the mean can occasionally make a very large mistake. Median-of-Means splits this risk into two layers: average within each block, then aggregate block means by the median."
           },
           "One outlier can dominate the mean": { zh: "一个异常值可以支配均值" },
@@ -1006,6 +1015,7 @@ summary</code></pre></div>
           "MoM changes the aggregation question": { zh: "MoM 改变了聚合问题" },
           "It asks for the typical average among blocks, not the average of all raw magnitudes at once.": { zh: "它问的是“许多分组均值中典型的均值是什么”，而不是一次性平均所有原始数值。" },
           "Monte Carlo makes the claim testable": { zh: "Monte Carlo 让这个判断可检验" },
+          "蒙特卡洛让判断可检验": { en: "Monte Carlo makes the claim testable" },
           "Repeated experiments compare the error distribution of mean, median, and median-of-means.": { zh: "重复实验可以比较普通均值、中位数和 Median-of-Means 的误差分布。" },
           "The boundary matters": { zh: "边界条件很重要" },
           "MoM reduces tail risk under contamination; it is not a universal smaller-variance replacement for the mean.": { zh: "MoM 降低污染噪声下的尾部风险；它不是在所有干净场景中方差都更小的通用替代品。" },
@@ -1024,6 +1034,9 @@ summary</code></pre></div>
           "Step 02 / Estimator idea": { zh: "步骤 02 / 估计器思路" },
           "Group first, then take the median": { zh: "先分组，再取中位数" },
           "Median-of-Means 的做法是先分组，每组算均值，最后对这些组均值取中位数。这样异常值会污染其中一组，但只要被污染的组不到一半，中位数聚合就能把它压下去。": {
+            en: "Median-of-Means first divides the data into groups, computes the mean inside each group, and finally takes the median of those group means. The outlier contaminates one group, but as long as contaminated groups are fewer than half, the median aggregation can suppress it."
+          },
+          "MoM（分组均值中位数）的做法是先分组，每组算均值，最后对这些组均值取中位数。这样异常值会污染其中一组，但只要被污染的组不到一半，中位数聚合就能把它压下去。": {
             en: "Median-of-Means first divides the data into groups, computes the mean inside each group, and finally takes the median of those group means. The outlier contaminates one group, but as long as contaminated groups are fewer than half, the median aggregation can suppress it."
           },
           "Group": { zh: "组" },
@@ -1079,6 +1092,110 @@ summary</code></pre></div>
           "the useful habit is to inspect the tail risk of an estimator, not only its average-case error.": {
             zh: "有用的习惯是检查估计器的尾部风险，而不仅是平均误差。"
           },
+          "一个异常值可以支配均值": { en: "One outlier can dominate the mean" },
+          "单个 1000 会把样本均值从接近 10 的视觉中心拉到 109.2。": {
+            en: "A single value 1000 moves the sample mean from the visual center near 10 to 109.2."
+          },
+          "MoM 改变聚合问题": { en: "MoM changes the aggregation question" },
+          "它问的是“分组均值里典型的均值是什么”，而不是一次性平均所有原始数值。": {
+            en: "It asks for the typical average among blocks, not the average of all raw magnitudes at once."
+          },
+          "Monte Carlo 让判断可检验": { en: "Monte Carlo makes the claim testable" },
+          "重复实验可以比较普通均值、中位数和 MoM 的误差分布。": {
+            en: "Repeated experiments compare the error distribution of the mean, median, and Median-of-Means."
+          },
+          "边界条件很重要": { en: "The boundary matters" },
+          "MoM 降低污染噪声下的尾部风险；它不是在所有干净场景里方差都更小的通用替代品。": {
+            en: "MoM reduces tail risk under contamination; it is not a universal smaller-variance replacement for the mean."
+          },
+          "步骤 01 / 极简例子": { en: "Step 01 / Tiny example" },
+          "从一个被污染的样本开始": { en: "Start with one contaminated sample" },
+          "构造最小但有解释力的例子。": { en: "Create the smallest useful example." },
+          "输入": { en: "input" },
+          "代码 · 被污染样本": { en: "Code · contaminated sample" },
+          "可见": { en: "visible" },
+          "步骤 02 / 估计器思路": { en: "Step 02 / Estimator idea" },
+          "先分组，再取中位数": { en: "Group first, then take the median" },
+          "组": { en: "Group" },
+          "数据": { en: "Data" },
+          "组均值": { en: "Group mean" },
+          "普通均值问：“所有点的平均值是多少？” MoM 问：“许多小组里的典型平均值是多少？”": {
+            en: "The ordinary mean asks, “What is the average of all points?” Median-of-Means asks, “What is the typical average among many small groups?”"
+          },
+          "步骤 03 / 一般形式": { en: "Step 03 / General form" },
+          "把估计器写清楚": { en: "Write the estimator explicitly" },
+          "更一般地，把样本分成 \\(k\\) 个组 \\(G_1,\\ldots,G_k\\)，先计算每组内部均值，再对这些组均值取中位数：": {
+            en: "More generally, split the sample into \\(k\\) groups \\(G_1,\\ldots,G_k\\), compute the mean inside each group, then take the median of those group means:"
+          },
+          "这和重尾分布的直觉相连：当一个分布或抓取来的数据集可能产生极端值时，普通均值在理论上可能有稳定中心，但在有限样本里会出现很不稳定的实现。": {
+            en: "This connects to heavy-tail intuition: when a distribution or a scraped dataset can produce extreme values, the ordinary mean can have a stable center in theory but an unstable finite-sample realization in practice."
+          },
+          "Notebook 实验": { en: "Notebook experiment" },
+          "笔记实验": { en: "Notebook experiment" },
+          "重复污染过程": { en: "Repeat the contamination process" },
+          "单个异常值例子只能说明“可能出问题”；重复随机实验才能看到普通均值的误差分布是否真的更不稳定。 每次生成 200 个样本，其中 95% 来自以 10 为中心的正常噪声，5% 来自仍然以 10 为中心、但波动极大的极端噪声。重复 5000 次后，比较普通均值、普通中位数和 MoM。": {
+            en: "A single outlier example only shows that failure is possible; repeated random experiments show whether the error distribution of the ordinary mean is truly less stable. Each run generates 200 samples: 95% from normal noise centered at 10 and 5% from extreme noise, still centered at 10 but with much larger variance. After 5000 repetitions, we compare the sample mean, sample median, and Median-of-Means."
+          },
+          "模拟被污染样本，并计算三个估计器。": {
+            en: "Simulate contaminated samples and compute three estimators."
+          },
+          "输入 [1]": { en: "In [1]" },
+          "目的": { en: "Purpose" },
+          "构造一个可复现的 Monte Carlo 表，让比较基于重复误差分布，而不是单个手工异常值。": {
+            en: "Build a reproducible Monte Carlo table so the comparison is based on repeated error distributions, not one handcrafted outlier."
+          },
+          "构造一个可复现的蒙特卡洛表，让比较基于重复误差分布，而不是单个手工异常值。": {
+            en: "Build a reproducible Monte Carlo table so the comparison is based on repeated error distributions, not one handcrafted outlier."
+          },
+          "代码 · 运行模拟": { en: "Code · run simulation" },
+          "点击隐藏": { en: "click to hide" },
+          "输出 · 前几行模拟结果": { en: "Output · first simulated rows" },
+          "预览": { en: "preview" },
+          "汇总估计误差，尤其关注尾部。": {
+            en: "Summarize estimator error, especially the tail."
+          },
+          "输入 [2]": { en: "In [2]" },
+          "比较标准差、MSE、平均绝对误差、95% 绝对误差和大误差比例。": {
+            en: "Compare standard deviation, MSE, mean absolute error, 95% absolute error, and the rate of large mistakes."
+          },
+          "代码 · 误差摘要": { en: "Code · error summary" },
+          "输出 · 误差摘要": { en: "Output · error summary" },
+          "展示结果": { en: "portfolio result" },
+          "解释：": { en: "Interpretation:" },
+          "普通均值不是每次都错，但它偶尔会错得很离谱。 MoM 并不是宣称自己在所有干净数据场景下方差最小；它的价值是降低重尾或污染噪声下估计误差的尾部风险。": {
+            en: "The sample mean is not wrong every time, but it occasionally goes very wrong. Median-of-Means is not claiming to have the smallest variance in every clean setting; its value is reducing tail risk of estimation error under heavy-tailed or contaminated noise."
+          },
+          "可视化检查": { en: "Visual check" },
+          "可调污染噪声下的抽样分布": { en: "Sampling distribution under tunable contamination" },
+          "使用控件调整污染比例和极端噪声尺度。这里不是上传新数据，而是改变假设，观察每个估计器如何反应。": {
+            en: "Use the controls to change contamination rate and extreme-noise scale. The point is not to upload new data; it is to change the assumptions and see how each estimator reacts."
+          },
+          "普通均值": { en: "Sample Mean" },
+          "中位数": { en: "Median" },
+          "MoM 分组均值中位数": { en: "Median-of-Means" },
+          "MoM": { en: "Median-of-Means" },
+          "估计器": { en: "estimator" },
+          "标准差": { en: "std" },
+          "95% 绝对误差": { en: "p95 abs error" },
+          "污染比例": { en: "Contamination rate" },
+          "极端噪声尺度": { en: "Extreme-noise scale" },
+          "限制与实际使用": { en: "Limitations and practical use" },
+          "MoM 降低的是重尾噪声下的估计尾部风险，而不只是普通意义上的方差。它适合提醒我们：在薪资异常值、异常交易金额、长尾响应时间或带噪声的网页抓取记录中，先问均值稳定需要什么假设。": {
+            en: "Median-of-Means reduces the tail risk of estimation error under heavy-tailed noise, not just variance in the ordinary sense. It is useful as a reminder: with salary outliers, abnormal transaction amounts, long-tail response times, or noisy scraped records, first ask which assumptions make the mean stable."
+          },
+          "MoM 依赖组数 \\(k\\)；分组不佳或被污染的组过多时仍然会受影响。": {
+            en: "MoM depends on the number of groups \\(k\\); bad grouping or too many contaminated groups can still hurt."
+          },
+          "样本中位数在估计中心时可能看起来最好，但它和均值目标并不完全相同。": {
+            en: "The sample median can look best for estimating a center, but it is not estimating the mean target in the same way."
+          },
+          "这篇文章是推理演示，不是通用估计器推荐。": {
+            en: "The article is a reasoning demo, not a universal estimator recommendation."
+          },
+          "结论：": { en: "Conclusion:" },
+          "有用的习惯是检查估计器的尾部风险，而不仅是平均误差。": {
+            en: "The useful habit is to inspect the tail risk of an estimator, not only its average-case error."
+          },
           "Contents": { zh: "目录" },
           "Key findings": { zh: "核心发现" },
           "Tiny example": { zh: "极简例子" },
@@ -1111,11 +1228,11 @@ summary</code></pre></div>
         zh: {
           mean: "普通均值",
           median: "中位数",
-          mom: "Median-of-Means",
+          mom: "MoM 分组均值中位数",
           trueCenter: "真实中心 10",
           p95: "95% 绝对误差",
           bad: "|误差| > 1",
-          readout: (contamination, scale) => `污染比例 ${(contamination * 100).toFixed(0)}%，极端噪声标准差 ${scale}。重点看普通均值的尾部是否变厚，以及 Median-of-Means 的尾部风险控制。`
+          readout: (contamination, scale) => `污染比例 ${(contamination * 100).toFixed(0)}%，极端噪声标准差 ${scale}。重点看普通均值的尾部是否变厚，以及 MoM 对尾部风险的控制。`
         },
         en: {
           mean: "Sample mean",
