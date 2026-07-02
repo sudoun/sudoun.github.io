@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-01T17:49:40.947Z",
+  "generatedAt": "2026-07-02T00:27:23.454Z",
   "sourceDir": "personal_blog",
   "outputDir": "personal_blog_public",
   "includedPostSlugs": [
@@ -9,13 +9,13 @@
   "emittedPosts": [
     {
       "slug": "median-of-means-estimator",
-      "title": "Median-of-Means Estimator: A Mean That Refuses to Panic",
+      "title": "Median-of-Means Estimator: Robust Mean Under Heavy-Tailed Noise",
       "category": "Statistics",
       "source": "writing-posts.js"
     },
     {
       "slug": "hr-analytics-eda",
-      "title": "HR Analytics EDA: Employee Attrition and Workforce Insights",
+      "title": "HR Analytics EDA: From Data Audit to Attrition Classification",
       "category": "Data Analysis",
       "source": "writing-posts.js"
     }

@@ -15,7 +15,7 @@ window.personalWritingSettings = {
 window.personalWritingPosts = [
   {
     "slug": "median-of-means-estimator",
-    "title": "Median-of-Means Estimator: A Mean That Refuses to Panic",
+    "title": "Median-of-Means Estimator: Robust Mean Under Heavy-Tailed Noise",
     "category": "Statistics",
     "date": "2026-06-30",
     "readingTime": "8 min read",
@@ -24,7 +24,7 @@ window.personalWritingPosts = [
     "visibility": "public",
     "series": "Statistics Notes",
     "articlePath": "articles/median-of-means/index.html",
-    "summary": "A compact statistics note that starts with one outlier, then uses a Monte Carlo experiment to show why median-of-means reduces estimation tail risk under contaminated noise.",
+    "summary": "A compact statistics note that starts with one outlier, then uses a Monte Carlo experiment to compare the tail risk of sample mean, median, and median-of-means.",
     "tags": [
       "Statistics",
       "Robust Estimation",
@@ -305,16 +305,16 @@ window.personalWritingPosts = [
   },
   {
     "slug": "hr-analytics-eda",
-    "title": "HR Analytics EDA: Employee Attrition and Workforce Insights",
+    "title": "HR Analytics EDA: From Data Audit to Attrition Classification",
     "category": "Data Analysis",
     "date": "2026-07-02",
     "readingTime": "18 min read",
     "level": "Project article",
     "status": "published",
     "visibility": "public",
-    "series": "Data Analysis Portfolio",
+    "series": "EDA Notes",
     "articlePath": "articles/hr-analytics-eda/index.html",
-    "summary": "A notebook-style EDA article that turns a Kaggle HR table into a reproducible analysis path: shape checks, missingness, duplicates, df_eda / df_model separation, chart interpretation, and classification framing.",
+    "summary": "A notebook-style EDA article that turns a Kaggle HR table into a reproducible workflow: data audit, missingness and duplicate checks, df_eda / df_model separation, chart interpretation, and classification boundaries.",
     "tags": [
       "EDA",
       "HR Analytics",
@@ -347,12 +347,12 @@ window.personalWritingPosts = [
 
 window.zhPersonalWritingPosts = {
   "median-of-means-estimator": {
-    "title": "Median-of-Means Estimator：一个不容易被极端值吓到的均值",
+    "title": "Median-of-Means Estimator：重尾噪声下的稳健均值",
     "category": "统计学",
     "readingTime": "8 分钟阅读",
     "level": "公开笔记",
-    "series": "统计学习笔记",
-    "summary": "从一个 1000 的异常值开始，再用 Monte Carlo 实验展示 median-of-means 如何在污染噪声下降低估计误差的尾部风险。",
+    "series": "统计笔记",
+    "summary": "从一个异常值例子出发，用 Monte Carlo 实验比较普通均值、中位数和 median-of-means 的误差尾部风险。",
     "tags": [
       "统计学",
       "稳健估计",
@@ -603,8 +603,8 @@ window.zhPersonalWritingPosts = {
     "category": "数据分析",
     "readingTime": "18 分钟阅读",
     "level": "项目文章",
-    "series": "数据分析作品集",
-    "summary": "一篇 notebook 风格的 EDA 文章：把 Kaggle HR 表格整理成可复现分析链路，依次展示 shape 检查、缺失、重复项、df_eda / df_model 分离、图表解释和分类问题框架。",
+    "series": "EDA 笔记",
+    "summary": "把 Kaggle HR 表格整理成可复现 EDA 流程：数据审计、缺失与重复检查、df_eda / df_model 分离、图表解释和分类建模边界。",
     "tags": [
       "EDA",
       "HR Analytics",
