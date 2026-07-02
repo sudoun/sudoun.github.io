@@ -286,7 +286,7 @@ function activeProfile() {
   const email = override.email || base.email || "";
   const links = [
     { label: "GitHub", href: github },
-    ...(email ? [{ label: currentLang === "zh" ? "邮箱" : "Email", href: `mailto:${email}` }] : []),
+    ...(email ? [{ label: currentLang === "zh" ? "邮箱" : "Email", text: email }] : []),
     ...base.links.filter((link) => link.label !== "GitHub")
   ];
   return {
@@ -528,7 +528,12 @@ function applyProfile() {
 
   if (linkList) {
     linkList.innerHTML = p.links
-      .map((link) => `<a href="${link.href}">${link.label}</a>`)
+      .map((link) => {
+        const value = link.text || link.href;
+        return link.href
+          ? `<a href="${link.href}">${link.label}</a>`
+          : `<span><b>${link.label}</b>${value}</span>`;
+      })
       .join("");
   }
 }
