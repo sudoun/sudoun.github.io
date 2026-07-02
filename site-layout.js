@@ -6,7 +6,6 @@ window.siteLayout = {
     "intro",
     "writing",
     "workflow",
-    "proof",
     "about"
   ],
   "blockOffsets": {},

@@ -23,7 +23,7 @@ const siteLayout = window.siteLayout || {};
 const writingSettings = window.personalWritingSettings || {};
 const publicSlugs = new Set(writingSettings.publicSlugs || []);
 const posts = (window.personalWritingPosts || []).filter((post) => publicSlugs.has(post.slug));
-const defaultSectionOrder = ["intro", "writing", "workflow", "proof", "about"];
+const defaultSectionOrder = ["intro", "writing", "workflow", "about"];
 
 const zhProfile = {
   ...profile,
@@ -112,15 +112,6 @@ const uiText = {
     flowAnalysisText: "Use mathematical intuition to judge relationships, tradeoffs, hidden signals, and result reasonableness.",
     flowOutputTitle: "Explain",
     flowOutputText: "Produce notes, tables, rankings, and explanations that can be reviewed by other people.",
-    proofKicker: "Writing focus",
-    proofTitle: "What These Essays Care About",
-    proofSubtitle: "Each essay tries to leave a clear reasoning trail: where the concept comes from, what the data can and cannot say, and which assumptions support the conclusion.",
-    proofCleanTitle: "Concept Intuition",
-    proofCleanText: "Start from a small example, then translate the intuition into formulas, experiments, or charts.",
-    proofAnalysisTitle: "Data Definition",
-    proofAnalysisText: "State fields, samples, missingness, outliers, and preprocessing choices before interpretation.",
-    proofDecisionTitle: "Interpretation Boundary",
-    proofDecisionText: "Separate description, estimation, and judgment, and make the required assumptions visible.",
     snapshotRole: "Robust estimation",
     snapshotRoleValue: "Understand estimators through outliers, tail risk, and assumption boundaries",
     snapshotTools: "EDA notes",
@@ -230,15 +221,6 @@ const uiText = {
     flowAnalysisText: "用数学直觉判断关系、取舍、隐含信号和结果合理性。",
     flowOutputTitle: "表达",
     flowOutputText: "产出别人能复核的笔记、表格、排序和解释。",
-    proofKicker: "写作关注",
-    proofTitle: "这些文章关心什么",
-    proofSubtitle: "我希望每篇文章都能留下清楚的推理路径：概念从哪里来，数据有什么限制，结论依赖哪些假设。",
-    proofCleanTitle: "概念直觉",
-    proofCleanText: "从一个小例子进入主题，再把直觉翻译成公式、实验或图表。",
-    proofAnalysisTitle: "数据口径",
-    proofAnalysisText: "先说明字段、样本、缺失、异常值和预处理选择，再进入解释。",
-    proofDecisionTitle: "解释边界",
-    proofDecisionText: "区分描述、估计和判断，把结论成立所需要的条件写清楚。",
     snapshotRole: "稳健估计",
     snapshotRoleValue: "用异常值、尾部风险和假设边界理解估计器",
     snapshotTools: "EDA 笔记",
@@ -532,15 +514,6 @@ function applyProfile() {
   setText("#flowAnalysisText", text("flowAnalysisText"));
   setText("#flowOutputTitle", text("flowOutputTitle"));
   setText("#flowOutputText", text("flowOutputText"));
-  setText("#proofKicker", text("proofKicker"));
-  setText("#proofTitle", text("proofTitle"));
-  setText("#proofSubtitle", text("proofSubtitle"));
-  setText("#proofCleanTitle", text("proofCleanTitle"));
-  setText("#proofCleanText", text("proofCleanText"));
-  setText("#proofAnalysisTitle", text("proofAnalysisTitle"));
-  setText("#proofAnalysisText", text("proofAnalysisText"));
-  setText("#proofDecisionTitle", text("proofDecisionTitle"));
-  setText("#proofDecisionText", text("proofDecisionText"));
   setText("#snapshotRole", text("snapshotRole"));
   setText("#snapshotRoleValue", text("snapshotRoleValue"));
   setText("#snapshotTools", text("snapshotTools"));
