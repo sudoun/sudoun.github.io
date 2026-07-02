@@ -9,7 +9,7 @@ window.siteContent = {
       "title": "个人技术博客",
       "availability": "统计学习 / 数据分析 / 可解释建模",
       "tagline": "记录我如何理解数据结构、识别异常与口径差异，并把分析过程整理成清晰的技术笔记。",
-      "bio": "我正在寻找 HR、数据分析和产品运营相关实习机会。我的核心优势是对数据性质的直观理解：能快速判断字段、分布、异常、缺失和隐含假设意味着什么，并把这些判断整理成清晰、可复核的分析输出。",
+      "bio": "我正在寻找人力资源（HR/HR Analytics）相关的实习机会。我致力于用数据赋能人力资源管理，核心优势在于出色的结构化思维与数据敏感度：能快速对人力数据进行清洗、分布特征识别及异常诊断，精准捕捉底层问题，并转化为清晰、可复核的分析输出，为组织决策提供数据支撑。",
       "email": "catalogicalism@gmail.com",
       "github": "https://github.com/sudoun"
     },
@@ -80,7 +80,7 @@ window.siteContent = {
       "title": "Personal Technical Blog",
       "availability": "Statistics / Data Analysis / Explainable Modeling",
       "tagline": "I write technical notes on reading data structure, spotting anomalies and definition gaps, and turning analysis into clear explanations.",
-      "bio": "I am looking for internships related to HR, data analysis, and product operations. My core strength is an intuitive understanding of data: I can read what fields, distributions, anomalies, missingness, and hidden assumptions imply, then turn those judgments into clear and reviewable analysis.",
+      "bio": "I am looking for internship opportunities related to Human Resources and HR Analytics. I am interested in using data to support people management, with strengths in structured thinking and data sensitivity: cleaning HR data, recognizing distributional patterns, diagnosing anomalies, capturing underlying issues, and turning the analysis into clear, reviewable outputs for organizational decisions.",
       "email": "catalogicalism@gmail.com",
       "github": "https://github.com/sudoun"
     },
