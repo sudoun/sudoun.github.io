@@ -1,7 +1,11 @@
 import { safePublicUrl, buildInterestSummary, buildMailto } from "./site-core.js";
 import "./gallery.js";
-import "./sculpture.js";
 import "./work-demos.js";
+
+// Let the name, navigation and page layout paint before compiling WebGL shaders.
+if (document.querySelector("#kinetic-sculpture")) {
+  requestAnimationFrame(() => requestAnimationFrame(() => import("./sculpture.js")));
+}
 
 const profile = window.PERSONAL_SITE || {};
 const catalog = window.DALE_PRODUCTS || { products: [] };

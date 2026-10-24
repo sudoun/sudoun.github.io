@@ -28,6 +28,7 @@ function sync() {
       && ((!reduced.matches && !saveData && !demo.blocked) || demo.manual);
     if (shouldPlay) {
       if (!demo.video.getAttribute("src")) {
+        demo.video.poster = demo.product.preview;
         demo.video.src = demo.product.demo;
         demo.video.load();
       }
@@ -52,7 +53,6 @@ for (const stage of document.querySelectorAll("[data-work-demo]")) {
   video.loop = true;
   video.playsInline = true;
   video.preload = "none";
-  video.poster = product.preview;
   video.tabIndex = -1;
   video.setAttribute("aria-hidden", "true");
   stage.append(video);

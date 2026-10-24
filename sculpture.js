@@ -11,14 +11,18 @@ if (canvas) {
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const compact = matchMedia("(max-width: 800px)");
   if ((context || gl) && trigger) {
-    const geometries = SCULPTURE_FORMS.map((form) => buildSculptureGeometry(form, compact.matches ? 76 : 108, compact.matches ? 24 : 32));
-    const current = new Float32Array(geometries[0].positions);
-    const normals = new Float32Array(geometries[0].normals);
+    const geometries = SCULPTURE_FORMS.map(() => null);
+    function geometryFor(index) {
+      return geometries[index] ||= buildSculptureGeometry(SCULPTURE_FORMS[index], compact.matches ? 76 : 108, compact.matches ? 24 : 32);
+    }
+    const initial = geometryFor(0);
+    const current = new Float32Array(initial.positions);
+    const normals = new Float32Array(initial.normals);
     const from = new Float32Array(current);
     const fromNormals = new Float32Array(normals);
     const projected = new Float32Array(current.length);
     const rotated = new Float32Array(current.length);
-    const faces = geometries[0].faces;
+    const faces = initial.faces;
     const visibleFaces = [];
     const names = ["01 / CHROME KNOT", "02 / ORBIT STUDY", "03 / CURIOUS BLOOM"];
     const environmentBands = [[0, 34, 43, 52], [.19, 119, 132, 143], [.34, 239, 241, 234], [.43, 37, 43, 48], [.51, 16, 23, 31], [.62, 147, 160, 172], [.76, 237, 239, 232], [1, 255, 255, 249]];
@@ -234,7 +238,7 @@ if (canvas) {
       if (morphing) {
         const progress = Math.min(1, (time - morphStart) / 850);
         const mix = progress * progress * (3 - 2 * progress);
-        const target = geometries[form];
+        const target = geometryFor(form);
         for (let i = 0; i < current.length; i++) {
           current[i] = from[i] + (target.positions[i] - from[i]) * mix;
           normals[i] = fromNormals[i] + (target.normals[i] - fromNormals[i]) * mix;
@@ -248,11 +252,12 @@ if (canvas) {
     trigger.addEventListener("click", () => {
       if (suppressClick) { suppressClick = false; return; }
       form = (form + 1) % geometries.length;
+      const target = geometryFor(form);
       from.set(current); fromNormals.set(normals);
       morphStart = performance.now();
       morphing = !paused && !reduced.matches;
       canvas.dataset.morphing = String(morphing);
-      if (!morphing) { current.set(geometries[form].positions); normals.set(geometries[form].normals); }
+      if (!morphing) { current.set(target.positions); normals.set(target.normals); }
       label.textContent = names[form];
       canvas.dataset.form = SCULPTURE_FORMS[form];
       trigger.setAttribute("aria-label", "当前形态：" + SCULPTURE_FORMS[form] + "。点击切换形态，拖动旋转。");

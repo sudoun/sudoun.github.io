@@ -1,4 +1,4 @@
-@font-face { font-family: "Newsreader"; font-style: italic; font-weight: 400; font-display: swap; src: url("assets/newsreader-italic.ttf") format("truetype"); }
+@font-face { font-family: "Newsreader"; font-style: italic; font-weight: 400; font-display: swap; src: url("assets/newsreader-italic.woff2") format("woff2"); }
 :root { --canvas:#eeeee8; --ink:#20221f; --yellow:#e8ff57; }
 body.exhibit-home { background:var(--canvas); }
 .exhibit-header { height:76px; padding-inline:30px; }
