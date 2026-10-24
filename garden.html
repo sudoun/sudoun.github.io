@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f6f2">
+    <meta name="description" content="Dale Anfer 的个人工作室。探索阅读、学习与表达，慢慢构建 Margin、Portfolio Schema 和 FrameRead，记录沿途的产品思考。">
+    <title>Dale Anfer — Small tools, curious minds.</title>
+    <link rel="icon" type="image/svg+xml" href="assets/mark.svg">
+    <link rel="preload" href="assets/newsreader-regular.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="stylesheet" href="garden.css">
+    <script src="profile.js"></script>
+    <script src="products.js"></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <header class="site-header shell" id="top">
+      <a class="identity" href="index.html" aria-label="Dale Anfer 首页">
+        <img src="assets/mark.svg" width="36" height="36" alt="">
+        <span data-profile-name>Dale Anfer</span><span class="identity-period">.</span>
+      </a>
+      <nav aria-label="主导航">
+        <a href="#notes">构建手记</a>
+        <a href="#products">小小工作室</a>
+        <a href="#about">关于</a>
+        <a class="nav-letter" href="#contact" data-contact-open>聊聊 <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero shell" aria-labelledby="hero-title">
+        <p class="eyebrow">AN INDEPENDENT BUILDER'S CORNER OF THE INTERNET</p>
+        <h1 id="hero-title" lang="en">Dale builds small tools<br>for <em>curious minds.</em><span class="hero-asterisk" aria-hidden="true">✳</span></h1>
+        <div class="hero-intro">
+          <p>我是 <span data-profile-name>Dale Anfer</span>，一个独立开发者。<br>关注阅读、学习与表达，把好奇心慢慢做成用得上的东西。</p>
+          <p class="currently"><span class="small-sprout" aria-hidden="true">↟</span> 最近在打磨 <a href="#products" data-featured-name>Margin</a>，<br class="desktop-break">也在记录一路上的想法。</p>
+        </div>
+      </section>
+      <section class="garden shell" id="notes" aria-labelledby="garden-title">
+        <div class="section-intro">
+          <div class="heading-pair"><span class="section-flower" aria-hidden="true">✳</span><h2 id="garden-title" lang="en">A growing notebook.</h2></div>
+          <p>关于产品、阅读和更好的工具。一些想法已经成形，一些还在生长。</p>
+        </div>
+        <div class="garden-grid">
+          <div class="essays">
+            <div class="column-heading"><h3>长一点的思考</h3><span>ESSAYS & IDEAS</span></div>
+            <div class="essay-grid">
+              <article class="essay-card">
+                <a class="essay-image book-image" href="notes/why-evidence-matters.html" tabindex="-1" aria-hidden="true"><img src="assets/reading-garden.svg" width="720" height="500" alt="" fetchpriority="high"></a>
+                <div class="essay-meta"><span class="growth"><span aria-hidden="true">↟</span> 生长中</span><span>AI 与阅读</span></div>
+                <h4><a href="notes/why-evidence-matters.html">给 AI 的每个回答，<br>留一条回到原文的路。</a></h4>
+                <p>当阅读变得越来越快，为什么我反而更在意一个可以慢下来、重新核对的引用？</p>
+                <a class="text-link" href="notes/why-evidence-matters.html">继续阅读 <span aria-hidden="true">↗</span></a>
+              </article>
+              <article class="essay-card">
+                <a class="essay-image desk-image" href="notes/local-first.html" tabindex="-1" aria-hidden="true"><img src="assets/local-desk.svg" width="720" height="500" alt="" fetchpriority="high"></a>
+                <div class="essay-meta"><span class="growth"><span aria-hidden="true">↟</span> 生长中</span><span>工具与日常</span></div>
+                <h4><a href="notes/local-first.html">让工具离你近一点。</a></h4>
+                <p>文件、笔记与那些还没整理好的想法，值得拥有一个由自己掌握的家。</p>
+                <a class="text-link" href="notes/local-first.html">继续阅读 <span aria-hidden="true">↗</span></a>
+              </article>
+            </div>
+          </div>
+          <aside class="field-notes" aria-labelledby="field-notes-title">
+            <div class="column-heading"><h3 id="field-notes-title">随手记</h3><span>FIELD NOTES</span></div>
+            <p class="aside-intro">做东西时，想明白的一小步。</p>
+            <ul class="note-list">
+              <li><span class="note-symbol" aria-hidden="true">✧</span><div><a href="notes/editable-ai.html">比起一次生成，我更在意下一次修改。</a><span>产品设计 · 生长中</span></div></li>
+              <li><span class="note-symbol" aria-hidden="true">✧</span><div><a href="notes/build-in-public.html">公开构建，也可以安静一点。</a><span>独立开发 · 生长中</span></div></li>
+              <li><span class="note-symbol" aria-hidden="true">✧</span><div><a href="notes/why-evidence-matters.html#back-to-the-page">好的阅读工具，应该把人送回书里。</a><span>Margin · 阅读笔记</span></div></li>
+              <li><span class="note-symbol" aria-hidden="true">✧</span><div><a href="notes/local-first.html#keep-a-door">给数据留一扇可以带走的门。</a><span>本地优先 · 工具思考</span></div></li>
+            </ul>
+            <div class="margin-note">
+              <svg viewBox="0 0 150 90" width="124" height="76" aria-hidden="true"><path d="M23 68c23-8 42-29 43-54 0 0-22 12-13 32 1-19 23-25 23-25s2 22-19 33c19-9 39-3 39-3S81 71 59 63c-10 5-23 8-36 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="m94 70 28-23m-6-1 7 1-1 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+              <p lang="en">Good things take<br><em>a little growing.</em></p>
+              <span>不急着长大，先认真生长。</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section class="workshop shell" id="products" aria-labelledby="products-title">
+        <div class="workshop-heading">
+          <div><div class="heading-pair"><span class="section-flower coral" aria-hidden="true">✳</span><h2 id="products-title" lang="en">The little workshop.</h2></div><p>把想法放进真实的产品里，看看它们能走多远。</p></div>
+          <span class="quiet-label">SMALL TOOLS, MADE WITH CARE</span>
+        </div>
+        <div class="product-list">
+          <article class="product-row" data-product-id="margin">
+            <div class="product-icon margin-icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M17 17c7-3 12-2 15 2 4-4 9-5 15-2v31c-6-3-11-2-15 1-4-3-9-4-15-1Z" fill="#f9f7ec" stroke="currentColor" stroke-width="1.5"/><path d="M32 19v30m-11-25 7 1m-7 5 7 1m9-7 6-1m-6 7 6-1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+            <div class="product-info"><div class="product-title"><h3><button type="button" data-product-open="margin">Margin</button></h3><span class="product-badge">正在打磨</span></div><p>一本书，一个更好的阅读伙伴。让 AI 的每个观点都有原文可循。</p><span class="product-category">AI 阅读 · 本地优先 · 听读同步</span></div>
+            <button class="product-explore" type="button" data-product-open="margin" aria-label="了解 Margin">了解产品 <span aria-hidden="true">↗</span></button>
+          </article>
+          <article class="product-row" data-product-id="portfolio-schema">
+            <div class="product-icon portfolio-icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="16" y="12" width="32" height="40" rx="3" fill="#f9f7ec" stroke="currentColor" stroke-width="1.5"/><path d="M16 23h32M22 18h2m3 0h2m3 0h2M23 30h18M23 35h10M23 43h5m5 0h8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+            <div class="product-info"><div class="product-title"><h3><button type="button" data-product-open="portfolio-schema">Portfolio Schema</button></h3><span class="product-badge">原型探索</span></div><p>从真实项目出发，搭一份可以反复修改、真正属于你的作品集。</p><span class="product-category">个人表达 · 可编辑输出</span></div>
+            <button class="product-explore" type="button" data-product-open="portfolio-schema" aria-label="了解 Portfolio Schema">了解产品 <span aria-hidden="true">↗</span></button>
+          </article>
+          <article class="product-row" data-product-id="frameread">
+            <div class="product-icon frame-icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="11" y="16" width="42" height="29" rx="3" fill="#f9f7ec" stroke="currentColor" stroke-width="1.5"/><path d="m28 24 11 7-11 7Z" fill="currentColor"/><path d="M17 51h30m-26-4v7m22-7v7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+            <div class="product-info"><div class="product-title"><h3><button type="button" data-product-open="frameread">FrameRead</button></h3><span class="product-badge">原型探索</span></div><p>把长视频里的字幕、画面与知识，变成可以回看的有据笔记。</p><span class="product-category">长视频学习 · 带引用的笔记</span></div>
+            <button class="product-explore" type="button" data-product-open="frameread" aria-label="了解 FrameRead">了解产品 <span aria-hidden="true">↗</span></button>
+          </article>
+        </div>
+        <noscript><p class="no-script-note">三个产品都还在开发中。你可以阅读上方手记，或在下方整理一段想与 Dale 分享的想法。</p></noscript>
+      </section>
+      <section class="about shell" id="about" aria-labelledby="about-title">
+        <div class="about-sketch" aria-hidden="true"><img src="assets/slow-growing.svg" width="260" height="230" alt="" loading="lazy"></div>
+        <div class="about-copy"><p class="eyebrow">A LITTLE ABOUT ME</p><h2 id="about-title">你好，我是 Dale。</h2><p>我喜欢从一个具体的小问题开始，慢慢把它做成顺手的工具。现在的探索围绕阅读、学习和表达，也关心人怎样在 AI 的帮助下保留自己的判断。</p><p>这里是我的小小工作室，也是一本不断补写的手记。产品会迭代，想法会改变，过程本身也值得留下来。</p><a class="text-link" href="#contact" data-contact-open>有想法，来聊聊 <span aria-hidden="true">↗</span></a></div>
+      </section>
+      <section class="contact shell" id="contact" aria-labelledby="contact-title">
+        <details id="contact-details">
+          <summary><span><span class="letter-icon" aria-hidden="true">✉</span><span id="contact-title">有意思的想法，总值得聊聊。</span></span><span class="contact-summary-link">写一段话 <span aria-hidden="true">↗</span></span></summary>
+          <div class="contact-inner">
+            <p id="contact-help">可以先把想法整理成一段文字。生成后复制给 Dale，不会自动发送。</p>
+            <form id="contact-form">
+              <div class="field-row"><label>怎么称呼你<input name="name" autocomplete="name" maxlength="80" placeholder="名字或昵称（可选）"></label><label>想聊什么<select name="type" required><option value="">请选择</option><option>Margin</option><option>Portfolio Schema</option><option>FrameRead</option><option>构建手记</option><option>其他合作</option></select></label></div>
+              <label>你的想法<textarea name="problem" required maxlength="1000" rows="4" placeholder="一个想解决的问题、一条产品建议，或只是打个招呼。"></textarea></label>
+              <div class="form-actions"><button class="solid-button" type="submit" id="contact-submit">生成并复制联系摘要 <span aria-hidden="true">↗</span></button><p id="form-status" role="status" aria-live="polite"></p></div>
+              <div id="summary-output" hidden><label>联系摘要<textarea id="summary-text" rows="6" readonly></textarea></label><p class="form-footnote">摘要只保存在当前页面，你可以复制后自行发送。</p></div>
+            </form>
+          </div>
+        </details>
+      </section>
+    </main>
+    <footer class="site-footer shell"><div><a class="footer-name" href="#top" data-profile-name>Dale Anfer</a><p lang="en">A small corner. A growing collection.</p></div><div class="footer-links"><a data-social="github" hidden>GitHub ↗</a><a data-social="x" hidden>X ↗</a><a data-social="newsletter" hidden>订阅 ↗</a><a href="#top">回到顶部 ↑</a></div><span class="footer-year">© <span id="year">2026</span></span></footer>
+    <dialog id="product-dialog" aria-labelledby="dialog-title">
+      <button class="dialog-close" type="button" aria-label="关闭产品介绍">×</button>
+      <span class="dialog-eyebrow" id="dialog-category"></span><h2 id="dialog-title"></h2><p class="dialog-tagline" id="dialog-tagline"></p><p id="dialog-description"></p><div class="dialog-note"><span class="small-sprout" aria-hidden="true">↟</span><p id="dialog-stage"></p></div><a class="solid-button" id="product-destination" href="#contact">聊聊这个产品 <span aria-hidden="true">↗</span></a>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eaeae8">
+  <meta name="description" content="Dale Anfer 的个人实验场。体验 SlideFetch、Soda Lab、FaceDrop、二条城与霍格沃茨空间探索，也看看正在构建的阅读工具与手记。">
+  <title>Dale Anfer — An independent playground.</title>
+  <link rel="icon" type="image/svg+xml" href="assets/exhibit-mark.svg">
+  <link rel="preload" href="assets/inter-tight-medium.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="exhibit.css">
+  <link rel="stylesheet" href="experience.css">
+  <script src="profile.js"></script>
+  <script src="products.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body class="exhibit-home">
+  <a class="skip-link" href="#main">跳到作品画廊</a>
+  <header class="exhibit-header" id="top">
+    <a class="exhibit-identity" href="index.html" aria-label="Dale Anfer 首页"><svg viewBox="0 0 32 32" width="25" height="25" aria-hidden="true"><path d="M16 1v30M1 16h30M5.4 5.4l21.2 21.2M5.4 26.6 26.6 5.4" stroke="currentColor" stroke-width="2"/></svg><span data-profile-name>Dale Anfer</span></a>
+    <label class="gallery-map header-map"><span class="sr-only">选择画廊页面</span><input type="range" id="gallery-position" min="0" max="10" value="0" step="1"></label>
+    <nav aria-label="主导航"><a href="#products" data-gallery-jump><span>01</span> 作品</a><a href="#notes" data-gallery-jump><span>02</span> 手记</a><a href="#about" data-gallery-jump><span>03</span> 关于</a><a href="#contact" data-contact-open>聊聊 ↗</a></nav>
+  </header>
+  <main id="main">
+    <div class="gallery" id="gallery" tabindex="0" role="region" aria-roledescription="横向作品画廊" aria-label="Dale Anfer 的个人介绍、五个在线作品、三个开发中项目和构建手记">
+      <section class="exhibit-panel cover-panel" id="cover" data-panel-name="Hello, I'm Dale." aria-labelledby="cover-title">
+        <div class="panel-index"><span>INDEPENDENT BUILDER & CURIOUS HUMAN</span><span>PERSONAL EXPERIMENTS / 001—008</span></div>
+        <div class="hero-halo" data-artwork aria-hidden="true"></div>
+        <h1 id="cover-title" class="hero-name" lang="en" aria-label="Dale Anfer"><span>Dale</span><span>Anfer<span class="hero-period">.</span></span></h1>
+        <button class="sculpture-trigger" id="sculpture-trigger" type="button" aria-label="当前形态：knot。点击切换形态，拖动旋转。" data-artwork>
+          <span class="sculpture-fallback" aria-hidden="true"></span>
+          <canvas id="kinetic-sculpture" width="720" height="720" aria-hidden="true"></canvas>
+        </button>
+        <div class="sculpture-caption"><span id="sculpture-name" aria-live="polite">01 / CHROME KNOT</span><span>拖动旋转 · 点击变形 ↗</span></div>
+        <div class="hero-introduction"><p lang="en">Turning curiosity<br>into <em>little worlds.</em></p><span>做顺手的工具，也做无用但有趣的实验。<br>你好，我是 Dale。欢迎来玩。</span></div>
+        <div class="cover-bottom"><span class="hero-small-note">A WORK IN PROGRESS.<br>JUST LIKE THE PERSON BEHIND IT.</span><button class="cover-explore" type="button" data-next-panel><span class="cover-explore-label">ENTER THE PLAYGROUND<br><b>探索 08 个作品</b></span><span aria-hidden="true">↗</span></button></div>
+      </section>
+
+      <section class="exhibit-panel live-work-panel slidefetch-panel" id="products" data-project-id="slidefetch" data-panel-name="SlideFetch" aria-labelledby="slidefetch-title">
+        <div class="panel-index"><span>01 / LEARNING TOOL</span><span class="work-status">ONLINE · 可体验</span></div>
+        <div class="work-preview" data-work-demo="slidefetch" role="group" aria-label="SlideFetch 动态作品展示">
+          <span class="preview-chrome" aria-hidden="true"><i></i><span>slidefetch.com</span><span>↗</span></span>
+          <img src="assets/works/slidefetch-demo.jpg" width="1120" height="700" alt="SlideFetch 的真实课程资料库与课程先修树，支持播放操作演示" loading="lazy" decoding="async">
+        </div>
+        <div class="product-panel-bottom"><div><span class="work-kicker">LESS SEARCHING. MORE LEARNING.</span><h2 id="slidefetch-title">SlideFetch</h2><p>粘贴课程链接，找到已入库的课件与讲义。<br>把找资料的时间，留给真正的学习。</p></div><a class="panel-link" data-work-link href="https://slidefetch.com/" target="_blank" rel="noopener noreferrer">打开 SlideFetch <span aria-hidden="true">↗</span></a></div>
+      </section>
+
+      <section class="exhibit-panel live-work-panel soda-panel" id="soda" data-project-id="soda" data-panel-name="Soda Lab" aria-labelledby="soda-title">
+        <div class="panel-index"><span>02 / 3D INTERACTION</span><span class="work-status">ONLINE · 可体验</span></div>
+        <div class="work-preview" data-work-demo="soda" role="group" aria-label="Soda Lab 动态作品展示">
+          <span class="preview-chrome" aria-hidden="true"><i></i><span>soda-flax.vercel.app</span><span>↗</span></span>
+          <img src="assets/works/soda-demo.jpg" width="1120" height="700" alt="Soda Lab 实际运行的三维气泡饮品、口味调饮台和小猫" loading="lazy" decoding="async">
+        </div>
+        <div class="product-panel-bottom"><div><span class="work-kicker">A LITTLE FIZZ. A LITTLE PLAY.</span><h2 id="soda-title">Soda Lab.</h2><p>选个口味，加一点冰，转一转手里的杯子。<br>一个关于气泡和好奇心的 3D 小实验。</p></div><a class="panel-link" data-work-link href="https://soda-flax.vercel.app/" target="_blank" rel="noopener noreferrer">调一杯看看 <span aria-hidden="true">↗</span></a></div>
+      </section>
+
+      <section class="exhibit-panel live-work-panel facedrop-panel" id="facedrop" data-project-id="facedrop" data-panel-name="FaceDrop" aria-labelledby="facedrop-title">
+        <div class="panel-index"><span>03 / BROWSER GAME</span><span class="work-status">ONLINE · 可体验</span></div>
+        <div class="work-preview" data-work-demo="facedrop" role="group" aria-label="FaceDrop 动态作品展示">
+          <span class="preview-chrome" aria-hidden="true"><i></i><span>facedrop-game.vercel.app</span><span>↗</span></span>
+          <img src="assets/works/facedrop-demo.jpg" width="1120" height="700" alt="FaceDrop 游戏中正在掉落的人物线索与挑战计时器" loading="lazy" decoding="async">
+        </div>
+        <div class="product-panel-bottom"><div><span class="work-kicker">A FACE. A CLUE. THAT AHA MOMENT.</span><h2 id="facedrop-title">FaceDrop</h2><p>看线索一点点出现，猜出熟悉的那张脸。<br>三分钟挑战，或者做一份自己的照片题库。</p></div><a class="panel-link" data-work-link href="https://facedrop-game.vercel.app/" target="_blank" rel="noopener noreferrer">来玩一局 <span aria-hidden="true">↗</span></a></div>
+      </section>
+
+      <section class="exhibit-panel live-work-panel nijo-panel" id="nijo-castle" data-project-id="nijo-castle" data-panel-name="二条城" aria-labelledby="nijo-title">
+        <div class="panel-index"><span>04 / 3D ARCHITECTURE</span><span class="work-status">ONLINE · 可探索</span></div>
+        <div class="work-preview" data-work-demo="nijo-castle" role="group" aria-label="二条城动态作品展示">
+          <span class="preview-chrome" aria-hidden="true"><i></i><span>nijo-castle.vercel.app</span><span>↗</span></span>
+          <img src="assets/works/nijo-castle-demo.jpg" width="1120" height="700" alt="二条城实际三维场景中的御殿、唐门与庭园" loading="lazy" decoding="async">
+        </div>
+        <div class="product-panel-bottom"><div><span class="work-kicker">KYOTO, FROM ANOTHER ANGLE.</span><h2 id="nijo-title">二条城<span lang="en">Nijō Castle</span></h2><p>从屋瓦、木构，到池泉庭园。<br>在浏览器里，换一个角度看看京都。</p></div><a class="panel-link" data-work-link href="https://nijo-castle.vercel.app/" target="_blank" rel="noopener noreferrer">走近二条城 <span aria-hidden="true">↗</span></a></div>
+      </section>
+
+      <section class="exhibit-panel live-work-panel hogwarts-panel" id="hogwarts-castle" data-project-id="hogwarts-castle" data-panel-name="霍格沃茨" aria-labelledby="hogwarts-title">
+        <div class="panel-index"><span>05 / 3D WORLD EXPLORATION</span><span class="work-status">FAN-MADE · 个人创作</span></div>
+        <div class="work-preview" data-work-demo="hogwarts-castle" role="group" aria-label="霍格沃茨动态作品展示">
+          <span class="preview-chrome" aria-hidden="true"><i></i><span>hogwarts-castle.vercel.app</span><span>↗</span></span>
+          <img src="assets/works/hogwarts-castle-demo.jpg" width="1120" height="700" alt="霍格沃茨原站提供的城堡与室内场景预览" loading="lazy" decoding="async">
+        </div>
+        <div class="product-panel-bottom"><div><span class="work-kicker">SOME WORLDS ARE WORTH WALKING INTO.</span><h2 id="hogwarts-title">霍格沃茨<span lang="en">Hogwarts</span></h2><p>从城堡全景，到楼梯厅和学院休息室。<br>一次让想象有了入口的非官方空间练习。</p></div><a class="panel-link" data-work-link href="https://hogwarts-castle.vercel.app/" target="_blank" rel="noopener noreferrer">进入城堡 <span aria-hidden="true">↗</span></a></div>
+      </section>
+
+      <section class="exhibit-panel margin-panel" id="margin" data-project-id="margin" data-panel-name="Margin" aria-labelledby="margin-title">
+        <div class="panel-index"><span>06 / AI READING</span><span>ALPHA · 正在打磨</span></div>
+        <div class="reader-concept" aria-label="Margin 阅读体验交互示意">
+          <div class="reader-top"><span class="reader-logo">m.</span><span>A quieter place to read.</span><span class="concept-label">交互示意</span></div>
+          <div class="reader-pages">
+            <div class="reader-paper"><span class="reader-chapter">FROM DALE'S NOTEBOOK / 01</span><h3>读懂，<br>不止是读完。</h3><p>阅读的价值，不只在于得到答案，<mark id="reading-mark">也在于知道自己为什么接受它。</mark></p><div class="paper-lines" aria-hidden="true"><i></i><i></i><i></i></div><button class="annotation-button" type="button" id="highlight-toggle" aria-pressed="false">试着留一道划线 <span>＋</span></button></div>
+            <div class="reader-annotation"><span class="annotation-number">↳ 01</span><p>每一个回答，<br>都有一条回到<br><strong>原文的路。</strong></p><span class="annotation-line" aria-hidden="true"></span><span class="annotation-source">A THOUGHT, WITH A SOURCE.</span></div>
+          </div>
+        </div>
+        <div class="product-panel-bottom"><div><h2 id="margin-title">Margin.</h2><p>本地优先的 AI 阅读伙伴。<br>让阅读、思考和原文保持联系。</p></div><button class="panel-link" type="button" data-product-open="margin">了解 Margin <span aria-hidden="true">↗</span></button></div>
+      </section>
+
+      <section class="exhibit-panel portfolio-panel" id="portfolio" data-project-id="portfolio-schema" data-panel-name="Portfolio Schema" aria-labelledby="portfolio-title">
+        <div class="panel-index"><span>07 / PERSONAL EXPRESSION</span><span>MVP · 原型探索</span></div>
+        <div class="portfolio-concept" id="portfolio-concept" aria-label="Portfolio Schema 主题交互示意">
+          <div class="portfolio-toolbar"><span>YOUR OWN CORNER</span><div class="theme-choices" role="group" aria-label="预览作品集配色"><button type="button" class="theme-swatch blue-swatch" data-demo-theme="blue" aria-pressed="true" aria-label="蓝色主题"></button><button type="button" class="theme-swatch coral-swatch" data-demo-theme="coral" aria-pressed="false" aria-label="珊瑚色主题"></button><button type="button" class="theme-swatch yellow-swatch" data-demo-theme="yellow" aria-pressed="false" aria-label="黄色主题"></button></div></div>
+          <div class="portfolio-sheet"><div class="portfolio-sheet-top"><span>Dale / Selected work</span><span>↗</span></div><div class="portfolio-shape" aria-hidden="true"><span></span><span></span><span></span><span></span></div><h3 lang="en">Your work,<br>in focus.</h3><span class="portfolio-sheet-caption">A SPACE THAT FEELS LIKE YOU.</span></div>
+          <div class="portfolio-demo-caption">切换右上角的颜色试试看 <span>↗</span></div>
+        </div>
+        <div class="product-panel-bottom"><div><h2 id="portfolio-title">Portfolio<br>Schema</h2><p>从真实项目出发，<br>做一份可以继续编辑的作品集。</p></div><button class="panel-link" type="button" data-product-open="portfolio-schema">了解产品 <span aria-hidden="true">↗</span></button></div>
+      </section>
+
+      <section class="exhibit-panel frame-panel" id="frameread" data-project-id="frameread" data-panel-name="FrameRead" aria-labelledby="frame-title">
+        <div class="panel-index"><span>08 / VIDEO → KNOWLEDGE</span><span>MVP · 原型探索</span></div>
+        <div class="frame-concept" aria-label="FrameRead 时间轴交互示意">
+          <div class="frame-screen"><div class="frame-geometry" aria-hidden="true"><div></div><span></span><i></i></div><span class="frame-screen-label">A MOMENT WORTH KEEPING.</span><span class="frame-count" id="frame-time">04:48</span><span class="concept-label">交互示意</span></div>
+          <div class="frame-timeline"><div class="frame-thumbnails" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><label class="frame-scrubber"><span class="sr-only">拖动时间轴，预览不同的学习笔记</span><input id="frame-scrubber" type="range" min="0" max="100" value="40"></label></div>
+          <div class="frame-evidence"><span>↳ NOTE <b id="frame-note-index">02</b></span><p id="frame-note">把重要画面留作笔记的证据。</p><span class="frame-hint">拖动时间轴 ↗</span></div>
+        </div>
+        <div class="product-panel-bottom"><div><h2 id="frame-title">FrameRead</h2><p>把长视频，变成有据可循的笔记。<br>让值得记住的内容，都能再次找到。</p></div><button class="panel-link" type="button" data-product-open="frameread">了解 FrameRead <span aria-hidden="true">↗</span></button></div>
+      </section>
+
+      <section class="exhibit-panel notes-panel" id="notes" data-panel-name="Field notes" aria-labelledby="notes-title">
+        <div class="panel-index"><span>09 / THINKING IN PUBLIC</span><span>NOTES THAT KEEP GROWING</span></div>
+        <h2 id="notes-title" lang="en">Thinking<br>out loud<span>↗</span></h2>
+        <div class="exhibit-notes">
+          <a href="notes/why-evidence-matters.html"><span>01</span><div><h3>给 AI 的每个回答，留一条回到原文的路。</h3><p>AI 与阅读 · 生长中</p></div><b aria-hidden="true">↗</b></a>
+          <a href="notes/local-first.html"><span>02</span><div><h3>让工具离你近一点。</h3><p>本地优先 · 生长中</p></div><b aria-hidden="true">↗</b></a>
+          <a href="notes/editable-ai.html"><span>03</span><div><h3>比起一次生成，我更在意下一次修改。</h3><p>产品设计 · 生长中</p></div><b aria-hidden="true">↗</b></a>
+          <a href="notes/build-in-public.html"><span>04</span><div><h3>公开构建，也可以安静一点。</h3><p>独立开发 · 生长中</p></div><b aria-hidden="true">↗</b></a>
+        </div>
+      </section>
+
+      <section class="exhibit-panel about-panel" id="about" data-panel-name="A little about Dale" aria-labelledby="about-title">
+        <div class="panel-index"><span>10 / THE PERSON BEHIND THE TOOLS</span><span>STILL EXPLORING.</span></div>
+        <h2 id="about-title" lang="en">Keep it<br>curious.<br><span>Make it useful.</span></h2>
+        <div class="about-panel-bottom"><p>你好，我是 <span data-profile-name>Dale Anfer</span>。<br><br>我做学习和阅读的工具，也做小游戏和可以探索的 3D 空间。这里放着可以打开的作品、正在构建的产品，也放着还没想完的思考。<br><br>如果某个作品让你停留了一会儿，我们可以聊聊。</p><a class="about-contact" href="#contact" data-contact-open>Say hello <span aria-hidden="true">↗</span></a></div>
+        <div class="about-links"><a data-social="github" hidden>GitHub ↗</a><a data-social="x" hidden>X ↗</a><a data-social="newsletter" hidden>订阅 ↗</a><a href="garden.html">书刊版本 ↗</a><span>© <span id="year">2026</span></span></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="exhibit-controls">
+    <div class="gallery-position"><span id="gallery-count" aria-live="polite">01 / 11</span><span id="gallery-current">Hello, I'm Dale.</span></div>
+    <div class="experience-actions"><button type="button" id="motion-toggle" aria-pressed="false">暂停动效 Ⅱ</button><button type="button" data-index-open aria-label="打开作品索引">作品索引 <span>08 ↗</span></button></div>
+    <div class="gallery-actions"><span class="gallery-hint">滚动 / 拖动 <span aria-hidden="true">↔</span></span><button type="button" id="gallery-prev" aria-label="上一页" disabled>←</button><button type="button" id="gallery-next" aria-label="下一页">→</button></div>
+  </footer>
+  <noscript><p class="no-script-note">向右滑动或使用底部滚动条浏览作品，手记页面可直接打开阅读。</p></noscript>
+
+  <dialog id="work-index" aria-labelledby="work-index-title"><div class="index-heading"><span>THE PLAYGROUND / 08 SELECTED WORKS</span><button class="index-close" type="button" aria-label="关闭作品索引">关闭 ×</button></div><div class="index-layout"><div><h2 id="work-index-title" lang="en">A few things<br>I've <em>made.</em></h2><div id="work-index-list" aria-label="作品列表"></div></div><figure class="index-preview"><img id="index-preview-image" src="assets/works/slidefetch.jpg" width="1440" height="960" alt="SlideFetch 作品预览"><figcaption><span id="index-preview-name">SlideFetch</span><span id="index-preview-status">在线作品 ↗</span></figcaption></figure></div></dialog>
+
+  <dialog id="demo-player" aria-labelledby="demo-player-title" aria-describedby="demo-player-description"><div class="demo-dialog-heading"><div><span>PROJECT IN MOTION / 作品演示</span><h2 id="demo-player-title">作品演示</h2></div><button type="button" data-demo-close aria-label="关闭作品演示">关闭 ×</button></div><video id="demo-player-video" controls muted playsinline loop preload="none"></video><p id="demo-player-error" role="status" hidden>视频暂不可播放，你仍然可以打开原站体验。</p><div class="demo-dialog-footer"><div><p id="demo-player-description"></p><small>无声循环预览 · 完整交互请进入原站</small></div><a id="demo-player-destination" target="_blank" rel="noopener noreferrer">打开原站 ↗</a></div></dialog>
+
+  <dialog id="product-dialog" aria-labelledby="dialog-title"><button class="dialog-close" type="button" aria-label="关闭产品介绍">×</button><span class="dialog-eyebrow" id="dialog-category"></span><h2 id="dialog-title"></h2><p class="dialog-tagline" id="dialog-tagline"></p><p id="dialog-description"></p><div class="dialog-note"><span aria-hidden="true">↳</span><p id="dialog-stage"></p></div><a class="solid-button" id="product-destination" href="#contact">聊聊这个产品 ↗</a></dialog>
+  <dialog id="contact" aria-labelledby="contact-title"><button type="button" class="contact-close" aria-label="关闭联系窗口">×</button><details id="contact-details" open><summary id="contact-title">Let's talk.</summary><div class="contact-inner"><p id="contact-help">可以先把想法整理成一段文字。生成后复制给 Dale，不会自动发送。</p><form id="contact-form"><div class="field-row"><label>怎么称呼你<input name="name" autocomplete="name" maxlength="80" placeholder="名字或昵称（可选）"></label><label>想聊什么<select name="type" required><option value="">请选择</option><option>Margin</option><option>Portfolio Schema</option><option>FrameRead</option><option>构建手记</option><option>其他合作</option></select></label></div><label>你的想法<textarea name="problem" required maxlength="1000" rows="4" placeholder="一个想解决的问题、一条产品建议，或只是打个招呼。"></textarea></label><div class="form-actions"><button class="solid-button" type="submit" id="contact-submit">生成并复制联系摘要 ↗</button><p id="form-status" role="status" aria-live="polite"></p></div><div id="summary-output" hidden><label>联系摘要<textarea id="summary-text" rows="6" readonly></textarea></label><p class="form-footnote">摘要只保存在当前页面，你可以复制后自行发送。</p></div></form></div></details></dialog>
+</body>
+</html>
