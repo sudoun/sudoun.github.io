@@ -22,8 +22,10 @@ function updateControls(demo) {
 }
 function sync() {
   const modalOpen = Boolean(document.querySelector("dialog[open]"));
+  const targetPanel = document.querySelector("#gallery")?.dataset.targetPanel;
   for (const demo of demos) {
-    const eligible = demo.visible && demo.panel.classList.contains("is-current") && !document.hidden && !modalOpen;
+    const eligible = demo.visible && demo.panel.classList.contains("is-current")
+      && (!targetPanel || demo.panel.id === targetPanel) && !document.hidden && !modalOpen;
     const poster = demo.stage.querySelector("img[data-src]");
     if (eligible && poster && !poster.getAttribute("src")) {
       poster.src = poster.dataset.src;
@@ -154,6 +156,7 @@ const changes = new MutationObserver(sync);
 changes.observe(document.body, { attributes: true, attributeFilter: ["class"] });
 document.querySelectorAll("dialog").forEach((dialog) => changes.observe(dialog, { attributes: true, attributeFilter: ["open"] }));
 document.addEventListener("gallery:change", sync);
+document.addEventListener("gallery:settled", sync);
 document.addEventListener("visibilitychange", () => { if (document.hidden) fullVideo?.pause(); sync(); });
 reduced.addEventListener("change", sync);
 window.addEventListener("pagehide", () => { demos.forEach((demo) => demo.video.pause()); fullVideo?.pause(); });

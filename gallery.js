@@ -64,6 +64,8 @@ if (gallery) {
   function goTo(index, smooth = true) {
     const target = clampGalleryIndex(index, panels.length);
     targetIndex = target;
+    gallery.dataset.targetPanel = panels[target].id;
+    if (smooth) history.replaceState(null, "", "#" + panels[target].id);
     const behavior = smooth && !reducedMotion.matches ? "smooth" : "instant";
     if (stacked.matches) {
       panels[target].scrollIntoView({ behavior, block: "start" });
@@ -109,7 +111,11 @@ if (gallery) {
   function queuePosition() {
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updatePosition);
     clearTimeout(scrollEndTimer);
-    scrollEndTimer = setTimeout(() => { targetIndex = null; }, 160);
+    scrollEndTimer = setTimeout(() => {
+      targetIndex = null;
+      delete gallery.dataset.targetPanel;
+      document.dispatchEvent(new Event("gallery:settled"));
+    }, 160);
   }
   gallery.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("scroll", queuePosition, { passive: true });
@@ -146,6 +152,7 @@ if (gallery) {
     if (!canScroll) return;
     event.preventDefault();
     targetIndex = null;
+    delete gallery.dataset.targetPanel;
     gallery.scrollLeft += delta;
   }, { passive: false });
   gallery.addEventListener("keydown", (event) => {
@@ -158,6 +165,7 @@ if (gallery) {
     const control = event.target.closest("button,a,input,textarea,select");
     if (stacked.matches || event.pointerType !== "mouse" || event.button !== 0 || (control && !control.matches(".work-preview"))) return;
     targetIndex = null;
+    delete gallery.dataset.targetPanel;
     dragging = { id: event.pointerId, x: event.clientX, left: gallery.scrollLeft, moved: false };
   });
   gallery.addEventListener("pointermove", (event) => {
