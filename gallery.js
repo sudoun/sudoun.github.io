@@ -112,6 +112,9 @@ if (gallery) {
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updatePosition);
     clearTimeout(scrollEndTimer);
     scrollEndTimer = setTimeout(() => {
+      if (scrollFrame) cancelAnimationFrame(scrollFrame);
+      updatePosition();
+      if (targetIndex !== null && active !== targetIndex) return;
       targetIndex = null;
       delete gallery.dataset.targetPanel;
       document.dispatchEvent(new Event("gallery:settled"));
@@ -144,6 +147,7 @@ if (gallery) {
   }
   window.addEventListener("hashchange", restoreHash);
   gallery.addEventListener("wheel", (event) => {
+    if (!event.ctrlKey) { targetIndex = null; delete gallery.dataset.targetPanel; }
     if (stacked.matches || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.target.closest("input,textarea,select")) return;
     const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? gallery.clientWidth : 1);
     const canScroll = delta > 0
@@ -162,6 +166,8 @@ if (gallery) {
     goTo(event.key === "Home" ? 0 : event.key === "End" ? panels.length - 1 : (targetIndex ?? active) + (event.key === "ArrowRight" ? 1 : -1));
   });
   gallery.addEventListener("pointerdown", (event) => {
+    targetIndex = null;
+    delete gallery.dataset.targetPanel;
     const control = event.target.closest("button,a,input,textarea,select");
     if (stacked.matches || event.pointerType !== "mouse" || event.button !== 0 || (control && !control.matches(".work-preview"))) return;
     targetIndex = null;

@@ -11,10 +11,11 @@ function globallyPaused() {
   return !reduced.matches && document.body.classList.contains("motion-paused");
 }
 function updateControls(demo) {
-  const playing = !demo.video.paused;
-  demo.stage.dataset.playback = demo.failed ? "error" : playing ? "playing" : "paused";
+  const playing = !demo.video.paused && demo.video.readyState >= 2;
+  const loading = !demo.userPaused && (demo.posterPending || (!demo.video.paused && demo.video.readyState < 2));
+  demo.stage.dataset.playback = demo.failed ? "error" : loading ? "loading" : playing ? "playing" : "paused";
   const label = demo.failed ? "演示不可用" : playing ? "暂停" : "播放";
-  demo.toggle.textContent = (playing ? "Ⅱ  " : "▶  ") + label + (demo.failed ? "" : "预览");
+  demo.toggle.textContent = loading && !demo.failed ? "动效加载中…" : (playing ? "Ⅱ  " : "▶  ") + label + (demo.failed ? "" : "预览");
   demo.toggle.setAttribute("aria-label", (playing ? "暂停" : "播放") + demo.product.name + "操作演示");
   demo.toggle.setAttribute("aria-pressed", String(playing));
   demo.toggle.disabled = demo.failed || globallyPaused();
@@ -27,15 +28,27 @@ function sync() {
     const eligible = demo.visible && demo.panel.classList.contains("is-current")
       && (!targetPanel || demo.panel.id === targetPanel) && !document.hidden && !modalOpen;
     const poster = demo.stage.querySelector("img[data-src]");
-    if (eligible && poster && !poster.getAttribute("src")) {
-      poster.src = poster.dataset.src;
-      poster.loading = "eager";
+    if (eligible && poster && !demo.posterRequested) {
+      demo.posterRequested = true;
+      demo.posterPending = true;
+      const image = new Image();
+      image.fetchPriority = "high";
+      image.onload = async () => {
+        try { await image.decode(); } catch { /* A decoded inline preview remains visible. */ }
+        poster.src = image.src;
+        demo.posterReady = true;
+        demo.posterPending = false;
+        sync();
+      };
+      image.onerror = () => { demo.posterPending = false; demo.posterFailed = true; sync(); };
+      image.src = poster.dataset.src;
     }
     const shouldPlay = eligible && !demo.failed && !demo.userPaused && !globallyPaused()
+      && (demo.posterReady || demo.posterFailed || demo.manual)
       && ((!reduced.matches && !saveData && !demo.blocked) || demo.manual);
     if (shouldPlay) {
       if (!demo.video.getAttribute("src")) {
-        demo.video.poster = demo.product.preview;
+        demo.video.poster = poster?.getAttribute("src") || demo.product.preview;
         demo.video.src = demo.product.demo;
         demo.video.load();
       }
@@ -94,6 +107,7 @@ for (const stage of document.querySelectorAll("[data-work-demo]")) {
   stage.append(fallback);
 
   const demo = { stage, product, video, toggle, panel, visible: false,
+    posterRequested: false, posterPending: false, posterReady: false, posterFailed: false,
     userPaused: false, manual: false, blocked: false, failed: false, pending: false };
   demos.push(demo);
   toggle.addEventListener("click", () => {
@@ -121,7 +135,7 @@ function openPlayer(demo) {
   const destination = document.querySelector("#demo-player-destination");
   destination.href = safePublicUrl(demo.product.url);
   document.querySelector("#demo-player-error").hidden = true;
-  fullVideo.poster = demo.product.preview;
+  fullVideo.poster = demo.stage.querySelector("img")?.getAttribute("src") || demo.product.preview;
   fullVideo.muted = true;
   fullVideo.src = demo.product.demo;
   fullVideo.currentTime = demo.video.currentTime;
