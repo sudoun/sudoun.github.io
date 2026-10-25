@@ -52,6 +52,36 @@ window.DALE_PRODUCTS = {
       url: "https://nearstage-three.vercel.app/"
     },
     {
+      id: "quant",
+      name: "Million",
+      category: "QUANT RESEARCH",
+      status: "DEMO",
+      tagline: "让每一次研究，都有证据可循",
+      description: "量化研究工作台：检索实验，复核报告与验证门禁，追溯研究记录。",
+      preview: "assets/works/quant-quick.webp",
+      demo: "assets/works/quant-demo.webm",
+      demoType: "interface",
+      autoplay: false,
+      demoDescription: "实际研究界面的操作录屏：实验检索、报告阅读、验证与方法检查、判定与工件筛选。使用现有合成数据，仅展示软件功能。",
+      demoNote: "界面演示 · 合成数据，不代表投资表现。",
+      url: ""
+    },
+    {
+      id: "film",
+      name: "AI Clip",
+      category: "FILM & ANIMATION",
+      status: "DEMO",
+      tagline: "从一个分镜，到一部小小的电影",
+      description: "本地影视与动画制作：原创短片、分镜组织和逐帧审看。",
+      preview: "assets/works/film-quick.webp",
+      demo: "assets/works/film-demo.webm",
+      demoType: "film",
+      autoplay: false,
+      demoDescription: "原创 24 秒像素短片《借一盏光》，接上原生分镜选择、事件跳转和八镜审看界面的实际录屏。美术、动画、程序配乐与音效均来自原项目。",
+      demoNote: "原创短片＋制作审看界面 · 可在播放器中开启声音。",
+      url: ""
+    },
+    {
       id: "margin",
       name: "Margin",
       category: "AI READING",

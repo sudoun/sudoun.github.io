@@ -109,6 +109,18 @@ body.exhibit-home { background:var(--canvas); }
 .nearstage-panel .product-panel-bottom h2 { font-family:"Songti SC",STSong,Georgia,serif; font-weight:400; letter-spacing:-.035em; }
 .nearstage-panel .panel-link { background:#944f40; color:#fffaf1; }
 .nearstage-panel .panel-link:hover { background:#352f27; }
+.quant-panel { color:#edf2ee; background:#12191f; }
+.quant-panel::before { content:"RESEARCH."; position:absolute; z-index:-1; top:5%; left:2%; color:#426b7b23; font:500 20vw/.9 "Inter Tight",var(--font); letter-spacing:-.07em; }
+.quant-panel .work-preview { inset:12% 6% 23% 25%; width:69%; height:65%; }
+.quant-panel .work-preview img,.quant-panel .work-film { object-fit:contain; border:1px solid #b8ced22a; border-radius:8px; box-shadow:0 20px 60px #0005; background:#1b1c1f; }
+.quant-panel .work-preview::after { display:none; }
+.quant-panel .preview-chrome { top:-30px; right:0; }
+.quant-panel .panel-link { background:#c8dfd6; color:#1b3634; }
+.film-panel { color:#fff3d6; background:#10192e; }
+.film-panel .work-preview img { image-rendering:pixelated; }
+.film-panel .work-preview::after { background:linear-gradient(180deg,#10192e70,transparent 28%,#10192e10 45%,#10192ef2); }
+.film-panel .panel-link { color:#37271b; background:#f3cf8b; }
+.local-demo-panel .panel-link { cursor:pointer; }
 .nijo-panel .work-film,.hogwarts-panel .work-film { object-position:center; }
 .work-actions { display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-shrink:0; pointer-events:auto; }
 .live-work-panel .demo-toolbar { display:flex; align-items:center; gap:24px; min-height:44px; padding:0; color:inherit; cursor:default; }
@@ -350,6 +362,7 @@ body.exhibit-home { background:var(--canvas); }
   .panel-index { font-size:10px; gap:12px; }
   .live-work-panel { display:block; min-height:0; padding:24px 24px 30px; }
   .live-work-panel .work-preview { position:relative; inset:auto; width:100%; height:auto; margin:52px 0 32px; aspect-ratio:1.6; }
+  .quant-panel .work-preview { inset:auto; width:100%; height:auto; }
   .soda-panel .work-preview,.nearstage-panel .work-preview { aspect-ratio:3/2; }
   .live-work-panel .product-panel-bottom { display:flex; flex-direction:column; align-items:flex-start; gap:20px; }
   .live-work-panel .product-panel-bottom h2 { font-size:clamp(42px,12vw,72px); }

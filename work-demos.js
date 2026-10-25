@@ -60,7 +60,7 @@ function sync() {
     const shouldPlay = eligible && !demo.failed && !demo.userPaused && !globallyPaused()
       && (demo.posterReady || demo.posterFailed || demo.manual)
       && (demo.manual || (demo.staticUntil && performance.now() >= demo.staticUntil))
-      && ((!reduced.matches && !saveData && !demo.blocked) || demo.manual);
+      && ((demo.product.autoplay !== false && !reduced.matches && !saveData && !demo.blocked) || demo.manual);
     if (shouldPlay) {
       if (!demo.video.getAttribute("src")) {
         demo.video.poster = poster?.getAttribute("src") || demo.product.preview;
@@ -110,15 +110,16 @@ for (const stage of document.querySelectorAll("[data-work-demo]")) {
   actions.className = "work-actions";
   destination.before(actions);
   actions.append(toolbar, destination);
+  if (destination.hasAttribute("data-demo-open")) destination.addEventListener("click", () => openPlayer(demo));
   const description = document.createElement("p");
   description.className = "sr-only";
-  description.textContent = (product.demoType ? "项目创意动态预览，无声循环。" : "原站操作实录，无声循环。") + product.demoDescription;
+  description.textContent = (product.demoNote || (product.demoType ? "项目创意动态预览，无声循环。" : "原站操作实录，无声循环。")) + product.demoDescription;
   stage.append(description);
   const fallback = document.createElement("p");
   fallback.className = "demo-fallback";
   fallback.setAttribute("role", "status");
   fallback.hidden = true;
-  fallback.textContent = "演示暂不可播放，仍可通过下方入口打开原站。";
+  fallback.textContent = product.url ? "演示暂不可播放，仍可通过下方入口打开原站。" : "演示暂不可播放，封面仍可查看，请稍后重试。";
   stage.append(fallback);
 
   const demo = { stage, product, video, toggle, panel, visible: false, eligible: false, staticUntil: 0, introTimer: null,
@@ -156,7 +157,11 @@ function openPlayer(demo) {
   document.querySelector("#demo-player-title").textContent = demo.product.name;
   document.querySelector("#demo-player-description").textContent = demo.product.demoDescription;
   const destination = document.querySelector("#demo-player-destination");
-  destination.href = safePublicUrl(demo.product.url);
+  const productUrl = safePublicUrl(demo.product.url);
+  destination.hidden = !productUrl;
+  if (productUrl) destination.href = productUrl;
+  else destination.removeAttribute("href");
+  document.querySelector("#demo-player-note").textContent = demo.product.demoNote || "本站展示操作片段，完整功能以原站为准。";
   document.querySelector("#demo-player-error").hidden = true;
   fullVideo.poster = demo.stage.querySelector("img")?.getAttribute("src") || demo.product.preview;
   fullVideo.muted = true;
