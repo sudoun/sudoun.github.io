@@ -52,18 +52,30 @@ window.DALE_PRODUCTS = {
       url: "https://nearstage-three.vercel.app/"
     },
     {
+      id: "rubik",
+      name: "Rubik Chess",
+      category: "3D CHESS",
+      status: "LIVE",
+      tagline: "把棋局，展开到六个面",
+      description: "围绕立体棋盘探索国际象棋，旋转视角观察六面布局，支持 AI 对弈与好友模式。",
+      preview: "assets/works/rubik-quick.webp",
+      demo: "assets/works/rubik-demo.webm",
+      demoType: "scene",
+      demoDescription: "来自原站的 3D 棋盘视角预览：缩放、旋转，观察立体棋盘和棋子的布局。",
+      url: "https://rubik-chess.vercel.app/"
+    },
+    {
       id: "quant",
       name: "Million",
       category: "QUANT RESEARCH",
       status: "DEMO",
       tagline: "让每一次研究，都有证据可循",
       description: "量化研究工作台：检索实验，复核报告与验证门禁，追溯研究记录。",
-      preview: "assets/works/quant-quick.webp",
-      demo: "assets/works/quant-demo.webm",
-      demoType: "interface",
+      preview: "assets/works/quant-diagram.svg",
+      presentation: "diagram",
       autoplay: false,
-      demoDescription: "实际研究界面的操作录屏：实验检索、报告阅读、验证与方法检查、判定与工件筛选。使用现有合成数据，仅展示软件功能。",
-      demoNote: "界面演示 · 合成数据，不代表投资表现。",
+      demoDescription: "研究档案界面示意：检索研究主题，复核验证状态，并追溯证据路径。",
+      demoNote: "界面结构示意，非实时研究数据。",
       url: ""
     },
     {

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-labelledby="title desc">
+<title id="title">Million 研究工作台界面示意</title><desc id="desc">深色研究档案界面，包含检索、实验记录、验证状态与证据路径。内容为示意，不是实时研究数据。</desc>
+<defs><linearGradient id="surface" x2="0" y2="1"><stop stop-color="#25282b"/><stop offset="1" stop-color="#1b1e21"/></linearGradient></defs>
+<rect width="1280" height="800" rx="18" fill="#171b1e"/><rect x="1" y="1" width="1278" height="798" rx="17" fill="none" stroke="#788a932f"/>
+<g font-family="Arial,Microsoft YaHei,sans-serif">
+<path d="M38 40h11l5 12 5-12h11v24h-7V50l-7 14h-4l-7-14v14h-7z" fill="#b4d6be"/>
+<text x="84" y="55" fill="#e4eee7" font-size="17" letter-spacing="2">MILLION</text><text x="1216" y="54" text-anchor="end" fill="#88958e" font-size="12">研究工作台 / 界面示意</text>
+<path d="M38 86h1204" stroke="#343b3d"/>
+<text x="65" y="146" fill="#f0f4f2" font-size="33" font-weight="600">Research</text><text x="236" y="144" fill="#8a9992" font-size="18">研究档案</text>
+<text x="65" y="177" fill="#8a9992" font-size="14">让假设、验证与证据，留在同一条路径上。</text>
+<rect x="1058" y="120" width="144" height="33" rx="16" fill="#26382f"/><circle cx="1075" cy="136" r="3" fill="#a9d5b9"/><text x="1090" y="141" fill="#b4d6be" font-size="12">证据优先</text>
+<g transform="translate(64 214)"><rect width="1152" height="102" rx="10" fill="#202629" stroke="#46504c55"/>
+<g fill="#93a399" font-size="12"><text x="24" y="29">01 / 实验档案</text><text x="314" y="29">02 / 验证门禁</text><text x="604" y="29">03 / 工件审计</text><text x="894" y="29">04 / 研究记录</text></g>
+<g fill="#e4eee7" font-size="22"><text x="24" y="68">检索假设</text><text x="314" y="68">复核方法</text><text x="604" y="68">追溯证据</text><text x="894" y="68">保留判断</text></g>
+<path d="M288 20v62m290-62v62m290-62v62" stroke="#48514c66"/></g>
+<rect x="64" y="342" width="1152" height="349" rx="13" fill="url(#surface)" stroke="#4b555355"/>
+<rect x="84" y="362" width="732" height="42" rx="7" fill="#2b3033" stroke="#6d7a7040"/><circle cx="106" cy="382" r="6" fill="none" stroke="#86998c" stroke-width="1.5"/><path d="m111 387 4 4" stroke="#86998c" stroke-width="1.5"/>
+<text x="130" y="388" fill="#8a9992" font-size="13">检索实验、主题或验证状态</text>
+<rect x="832" y="362" width="173" height="42" rx="7" fill="#2b3033" stroke="#6d7a7040"/><text x="850" y="388" fill="#c3cec7" font-size="12">全部研究状态</text><path d="m978 380 4 5 4-5" fill="none" stroke="#a7b6ac"/>
+<rect x="1020" y="362" width="174" height="42" rx="7" fill="#2b3033" stroke="#6d7a7040"/><text x="1038" y="388" fill="#c3cec7" font-size="12">工件审计</text><path d="m1166 380 4 5 4-5" fill="none" stroke="#a7b6ac"/>
+<g fill="#8c9b92" font-size="11"><text x="87" y="438">研究编号</text><text x="215" y="438">研究主题 / 方法</text><text x="769" y="438">验证状态</text><text x="990" y="438">证据路径</text></g>
+<path d="M84 454h1110m-1110 72h1110m-1110 72h1110" stroke="#75847925"/>
+<g fill="#90a196" font-size="12"><text x="88" y="488">STUDY—01</text><text x="88" y="560">STUDY—02</text><text x="88" y="632">STUDY—03</text></g>
+<g fill="#e1e9e4" font-size="16"><text x="215" y="486">趋势假设 / 成本稳健性</text><text x="215" y="558">跨市场 / 流动性基线</text><text x="215" y="630">数据对齐 / 时间契约</text></g>
+<g fill="#80958a" font-size="11"><text x="215" y="507">HYPOTHESIS → VALIDATION</text><text x="215" y="579">BASELINE → EVIDENCE</text><text x="215" y="651">TIMESTAMP → AUDIT</text></g>
+<g font-size="11"><rect x="768" y="473" width="92" height="25" rx="12" fill="#334637"/><text x="786" y="490" fill="#b3d5b6">方法复核</text><rect x="768" y="545" width="92" height="25" rx="12" fill="#494233"/><text x="786" y="562" fill="#d6c6a1">等待验证</text><rect x="768" y="617" width="92" height="25" rx="12" fill="#343c49"/><text x="786" y="634" fill="#adbed6">补充证据</text></g>
+<g fill="none" stroke="#8ba793" stroke-width="1.5"><circle cx="1002" cy="486" r="5"/><circle cx="1028" cy="486" r="5"/><path d="M1007 486h16"/><circle cx="1002" cy="558" r="5"/><circle cx="1028" cy="558" r="5"/><path d="M1007 558h16"/><circle cx="1002" cy="630" r="5"/><circle cx="1028" cy="630" r="5"/><path d="M1007 630h16"/></g>
+<g fill="#9aafa0" font-size="12"><text x="1050" y="491">可追溯</text><text x="1050" y="563">待归档</text><text x="1050" y="635">可复查</text></g>
+<g fill="none" stroke="#7b8e81"><path d="m1176 482 4 4-4 4m0 64 4 4-4 4m0 64 4 4-4 4"/></g>
+<text x="65" y="739" fill="#778d7e" font-size="11" letter-spacing="2">RESEARCH, WITH A TRACE.</text><text x="1216" y="739" text-anchor="end" fill="#85948c" font-size="12">界面结构示意 · 非实时研究数据</text>
+</g></svg>

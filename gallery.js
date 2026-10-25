@@ -28,7 +28,7 @@ if (gallery) {
       image.src = product.preview || prototypePreviews[product.id];
       image.alt = product.name + " 作品预览";
       document.querySelector("#index-preview-name").textContent = product.name;
-      document.querySelector("#index-preview-status").textContent = product.url ? "在线作品 ↗" : product.status === "DEMO" ? "本地作品 / 可播放 Demo" : "开发中 / 交互示意";
+      document.querySelector("#index-preview-status").textContent = product.url ? "在线作品 ↗" : product.presentation === "diagram" ? "本地作品 / 界面示意" : product.status === "DEMO" ? "本地作品 / 可播放 Demo" : "开发中 / 交互示意";
     }
     catalog.forEach((product, order) => {
       const panel = panels.find((panel) => panel.dataset.projectId === product.id);
@@ -42,7 +42,7 @@ if (gallery) {
       const title = document.createElement("span");
       title.textContent = product.name;
       const stage = document.createElement("small");
-      stage.textContent = product.url ? "在线" : product.status === "DEMO" ? "Demo" : "开发中";
+      stage.textContent = product.url ? "在线" : product.presentation === "diagram" ? "示意" : product.status === "DEMO" ? "Demo" : "开发中";
       const arrow = document.createElement("b");
       arrow.textContent = "↗";
       arrow.setAttribute("aria-hidden", "true");
@@ -133,8 +133,22 @@ if (gallery) {
   gallery.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("resize", queuePosition, { passive: true });
-  window.addEventListener("wheel", event => { if (!event.ctrlKey) glass.arm(active); }, { passive: true });
-  window.addEventListener("touchmove", () => glass.arm(active), { passive: true });
+  let hintedPanel, touchY;
+  function hintAdjacent(direction) {
+    const panel=panels[clampGalleryIndex(active+direction,panels.length)];
+    if(panel?.id!==hintedPanel){hintedPanel=panel.id;document.dispatchEvent(new CustomEvent("gallery:target",{detail:{id:panel.id}}));}
+  }
+  window.addEventListener("wheel", event => {
+    if(event.ctrlKey||document.querySelector("dialog[open]"))return;
+    glass.arm(active);
+    const delta=stacked.matches?event.deltaY:Math.abs(event.deltaX)>Math.abs(event.deltaY)?event.deltaX:event.deltaY;
+    if(delta)hintAdjacent(Math.sign(delta));
+  }, { passive: true });
+  window.addEventListener("touchstart", event=>{touchY=event.touches[0]?.clientY;},{passive:true});
+  window.addEventListener("touchmove", event=>{
+    glass.arm(active);const y=event.touches[0]?.clientY;
+    if(stacked.matches&&Math.abs(touchY-y)>6)hintAdjacent(Math.sign(touchY-y));
+  }, { passive: true });
   window.addEventListener("keydown", event => {
     if (["PageUp", "PageDown", "ArrowUp", "ArrowDown", "Home", "End", " "].includes(event.key)) glass.arm(active);
   });
@@ -200,6 +214,7 @@ if (gallery) {
     if (dragging.moved) {
       event.preventDefault();
       glass.arm(active);
+      hintAdjacent(delta<0?1:-1);
       gallery.scrollLeft = dragging.left - delta;
     }
   });

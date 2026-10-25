@@ -114,6 +114,14 @@ body.exhibit-home { background:var(--canvas); }
 .quant-panel .work-preview { inset:12% 6% 23% 25%; width:69%; height:65%; }
 .quant-panel .work-preview img,.quant-panel .work-film { object-fit:contain; border:1px solid #b8ced22a; border-radius:8px; box-shadow:0 20px 60px #0005; background:#1b1c1f; }
 .quant-panel .work-preview::after { display:none; }
+.rubik-panel { color:#f0e7d6; background:#0f1719; }
+.rubik-panel .work-preview { inset:0 0 4% 7%; width:93%; height:96%; }
+.rubik-panel .work-preview img,.rubik-panel .work-film { object-fit:contain; }
+.rubik-panel .work-preview::after { background:linear-gradient(180deg,#0f171930,transparent 30%,#0f171900 55%,#0f1719ed); }
+.rubik-panel .product-panel-bottom h2 { font-family:Georgia,"Times New Roman",serif; letter-spacing:-.06em; }
+.rubik-panel .panel-link { background:#dac294; color:#17231d; }
+.rubik-panel .panel-link:hover { background:#f4ecd9; }
+.quant-panel .work-preview img { object-fit:contain; }
 .quant-panel .preview-chrome { top:-30px; right:0; }
 .quant-panel .panel-link { background:#c8dfd6; color:#1b3634; }
 .film-panel { color:#fff3d6; background:#10192e; }

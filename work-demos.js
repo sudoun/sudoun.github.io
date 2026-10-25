@@ -6,6 +6,7 @@ const saveData = navigator.connection?.saveData === true;
 const player = document.querySelector("#demo-player");
 const fullVideo = document.querySelector("#demo-player-video");
 const demos = [];
+const stills = [...document.querySelectorAll('[data-static-work]')].map(stage => ({stage,panel:stage.closest('.exhibit-panel'),product:catalog.find(product=>product.id===stage.dataset.staticWork),posterRequested:false,eligible:false}));
 const STATIC_HOLD_MS = 1100;
 const slowNetwork = () => saveData || /(^|-)2g$|^3g$/.test(navigator.connection?.effectiveType || "");
 let neighborTimer;
@@ -15,7 +16,8 @@ function warmNext(demo) {
   if (slowNetwork()) return;
   neighborTimer = setTimeout(() => {
     if (!demo.eligible || document.hidden || document.querySelector("dialog[open]")) return;
-    const next = demos[demos.indexOf(demo) + 1];
+    const product = catalog[catalog.findIndex(item => item.id === demo.product.id) + 1];
+    const next = [...demos,...stills].find(item => item.product.id === product?.id);
     if (next) requestPoster(next, "low");
   }, 450);
 }
@@ -64,6 +66,10 @@ function updateControls(demo) {
 function sync() {
   const modalOpen = Boolean(document.querySelector("dialog[open]"));
   const targetPanel = document.querySelector("#gallery")?.dataset.targetPanel;
+  for(const still of stills){
+    still.eligible=still.panel.classList.contains('is-current')&&(!targetPanel||still.panel.id===targetPanel);
+    if(still.eligible)requestPoster(still);
+  }
   for (const demo of demos) {
     const eligible = demo.visible && demo.panel.classList.contains("is-current")
       && (!targetPanel || demo.panel.id === targetPanel) && !document.hidden && !modalOpen;
@@ -218,14 +224,14 @@ changes.observe(document.body, { attributes: true, attributeFilter: ["class"] })
 document.querySelectorAll("dialog").forEach((dialog) => changes.observe(dialog, { attributes: true, attributeFilter: ["open"] }));
 document.addEventListener("gallery:change", sync);
 document.addEventListener("gallery:target", event => {
-  const demo = demos.find(item => item.panel.id === event.detail?.id);
+  const demo = [...demos,...stills].find(item => item.panel.id === event.detail?.id);
   if (demo) requestPoster(demo);
 });
 document.addEventListener("gallery:settled", sync);
 document.addEventListener("work:poster-ready", sync);
 document.addEventListener("visibilitychange", () => { if (document.hidden) fullVideo?.pause(); sync(); });
 reduced.addEventListener("change", sync);
-const initialDemo = demos.find(demo => demo.panel.classList.contains("is-current"));
+const initialDemo = [...demos,...stills].find(demo => demo.panel.classList.contains("is-current"));
 if (initialDemo) requestPoster(initialDemo);
 window.addEventListener("pagehide", () => { demos.forEach((demo) => { resetIntro(demo); demo.eligible = false; demo.video.pause(); }); fullVideo?.pause(); });
 window.addEventListener("pageshow", sync);
