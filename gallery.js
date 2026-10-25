@@ -1,4 +1,5 @@
 import { clampGalleryIndex } from "./site-core.js";
+import { createGalleryGlass } from "./gallery-glass.js";
 
 const gallery = document.querySelector("#gallery");
 if (gallery) {
@@ -8,6 +9,7 @@ if (gallery) {
   const next = document.querySelector("#gallery-next");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const stacked = window.matchMedia("(max-width: 800px)");
+  const glass = createGalleryGlass();
   let active = 0;
   let renderedIndex = -1;
   let scrollFrame = 0;
@@ -67,6 +69,8 @@ if (gallery) {
     gallery.dataset.targetPanel = panels[target].id;
     if (smooth) history.replaceState(null, "", "#" + panels[target].id);
     const behavior = smooth && !reducedMotion.matches ? "smooth" : "instant";
+    if (behavior === "instant") glass.suspend();
+    else glass.arm();
     if (stacked.matches) {
       // The cover includes the identity header; deep links must not crop it away.
       if (target === 0) window.scrollTo({ top: 0, behavior });
@@ -80,9 +84,10 @@ if (gallery) {
   }
   function updatePosition() {
     const root = stacked.matches ? { left: 0, top: 0, width: innerWidth, height: innerHeight } : gallery.getBoundingClientRect();
+    const rectangles = panels.map(panel => panel.getBoundingClientRect());
     let distance = Infinity;
     panels.forEach((panel, index) => {
-      const rect = panel.getBoundingClientRect();
+      const rect = rectangles[index];
       const relative = stacked.matches ? 0 : Math.max(-1, Math.min(1, (rect.left + rect.width / 2 - root.left - root.width / 2) / root.width));
       panel.style.setProperty("--panel-distance", reducedMotion.matches ? "0" : relative.toFixed(3));
       const nextDistance = stacked.matches
@@ -93,6 +98,7 @@ if (gallery) {
         distance = nextDistance;
       }
     });
+    glass.render(rectangles, stacked.matches, root);
     if (active !== renderedIndex) {
       position.value = String(active);
       previous.disabled = active === 0;
@@ -110,12 +116,15 @@ if (gallery) {
     }
     scrollFrame = 0;
   }
-  function queuePosition() {
+  function queuePosition(event) {
+    if (event?.type === "scroll") glass.start();
+    if (event?.type === "resize") glass.stop(true);
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updatePosition);
     clearTimeout(scrollEndTimer);
     scrollEndTimer = setTimeout(() => {
       if (scrollFrame) cancelAnimationFrame(scrollFrame);
       updatePosition();
+      glass.stop();
       if (targetIndex !== null && active !== targetIndex) return;
       targetIndex = null;
       delete gallery.dataset.targetPanel;
@@ -125,6 +134,12 @@ if (gallery) {
   gallery.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("resize", queuePosition, { passive: true });
+  // Native hash restoration, font swaps and resize anchoring are not gestures.
+  window.addEventListener("wheel", event => { if (!event.ctrlKey) glass.arm(); }, { passive: true });
+  window.addEventListener("touchmove", () => glass.arm(), { passive: true });
+  window.addEventListener("keydown", event => {
+    if (["PageUp", "PageDown", "ArrowUp", "ArrowDown", "Home", "End", " "].includes(event.key)) glass.arm();
+  });
   previous.addEventListener("click", () => goTo((targetIndex ?? active) - 1));
   next.addEventListener("click", () => goTo((targetIndex ?? active) + 1));
   document.querySelector("[data-next-panel]")?.addEventListener("click", () => goTo(1));
@@ -186,6 +201,7 @@ if (gallery) {
     }
     if (dragging.moved) {
       event.preventDefault();
+      glass.arm();
       gallery.scrollLeft = dragging.left - delta;
     }
   });
