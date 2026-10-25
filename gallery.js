@@ -69,8 +69,6 @@ if (gallery) {
     gallery.dataset.targetPanel = panels[target].id;
     if (smooth) history.replaceState(null, "", "#" + panels[target].id);
     const behavior = smooth && !reducedMotion.matches ? "smooth" : "instant";
-    if (behavior === "instant") glass.suspend();
-    else glass.arm();
     if (stacked.matches) {
       // The cover includes the identity header; deep links must not crop it away.
       if (target === 0) window.scrollTo({ top: 0, behavior });
@@ -116,15 +114,12 @@ if (gallery) {
     }
     scrollFrame = 0;
   }
-  function queuePosition(event) {
-    if (event?.type === "scroll") glass.start();
-    if (event?.type === "resize") glass.stop(true);
+  function queuePosition() {
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updatePosition);
     clearTimeout(scrollEndTimer);
     scrollEndTimer = setTimeout(() => {
       if (scrollFrame) cancelAnimationFrame(scrollFrame);
       updatePosition();
-      glass.stop();
       if (targetIndex !== null && active !== targetIndex) return;
       targetIndex = null;
       delete gallery.dataset.targetPanel;
@@ -134,12 +129,6 @@ if (gallery) {
   gallery.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("resize", queuePosition, { passive: true });
-  // Native hash restoration, font swaps and resize anchoring are not gestures.
-  window.addEventListener("wheel", event => { if (!event.ctrlKey) glass.arm(); }, { passive: true });
-  window.addEventListener("touchmove", () => glass.arm(), { passive: true });
-  window.addEventListener("keydown", event => {
-    if (["PageUp", "PageDown", "ArrowUp", "ArrowDown", "Home", "End", " "].includes(event.key)) glass.arm();
-  });
   previous.addEventListener("click", () => goTo((targetIndex ?? active) - 1));
   next.addEventListener("click", () => goTo((targetIndex ?? active) + 1));
   document.querySelector("[data-next-panel]")?.addEventListener("click", () => goTo(1));
@@ -201,7 +190,6 @@ if (gallery) {
     }
     if (dragging.moved) {
       event.preventDefault();
-      glass.arm();
       gallery.scrollLeft = dragging.left - delta;
     }
   });

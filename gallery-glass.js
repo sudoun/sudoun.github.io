@@ -1,9 +1,8 @@
-// A transient, narrow frost at each moving card boundary. No duplicated scenes,
-// textures, continuous RAF loop, or per-frame blur-radius animation.
+// Persistent, narrow frost at each visible card boundary, including at rest.
+// Reuses gallery layout updates; no continuous RAF loop or animated blur radius.
 export function createGalleryGlass() {
   const supported=typeof CSS!=='undefined'&&typeof CSS.supports==='function'&&(CSS.supports('backdrop-filter','blur(1px)')||CSS.supports('-webkit-backdrop-filter','blur(1px)'));
-  if(!supported)return {arm(){},start(){},stop(){},suspend(){},render(){}};
-  const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+  if(!supported)return {render(){}};
   const transparency=matchMedia('(prefers-reduced-transparency:reduce)');
   const contrast=matchMedia('(prefers-contrast:more)');
   const layer=document.createElement('div');
@@ -11,18 +10,11 @@ export function createGalleryGlass() {
   layer.setAttribute('aria-hidden','true');layer.inert=true;
   const panes=Array.from({length:2},()=>{const pane=document.createElement('span');pane.className='gallery-glass-pane';pane.hidden=true;layer.append(pane);return pane;});
   document.body.append(layer);
-  let moving=false,armed=false,hideTimer,suppressedUntil=performance.now()+300;
-  const allowed=()=>!reduced.matches&&!transparency.matches&&!contrast.matches&&!document.hidden&&!document.body.classList.contains('motion-paused');
-  function stop(immediate=false){
-    moving=false;armed=false;layer.classList.remove('is-active');clearTimeout(hideTimer);
-    if(immediate){layer.hidden=true;return;}
-    hideTimer=setTimeout(()=>{layer.hidden=true;},220);
-  }
-  function arm(){armed=true;suppressedUntil=0;}
-  function start(){if(!armed||!allowed()||performance.now()<suppressedUntil)return;clearTimeout(hideTimer);moving=true;}
-  function suspend(){suppressedUntil=performance.now()+300;stop(true);}
+  let layout;
+  const allowed=()=>!transparency.matches&&!contrast.matches&&!document.hidden;
   function render(rects,stacked,root){
-    if(!moving||!allowed())return;
+    layout=[rects,stacked,root];
+    if(!allowed()){layer.hidden=true;return;}
     const box=stacked?{left:12,top:0,width:innerWidth-24,height:innerHeight-65}:{left:22,top:root.top,width:innerWidth-44,height:root.height};
     const breadth=stacked?88:Math.min(156,Math.max(100,innerWidth*.095));
     const extent=stacked?box.height:box.width,origin=stacked?box.top:box.left;
@@ -46,11 +38,12 @@ export function createGalleryGlass() {
         transform:stacked?'translate3d(0,'+(boundary.offset-breadth/2)+'px,0)':'translate3d('+(boundary.offset-breadth/2)+'px,4px,0)'
       });
     });
-    layer.hidden=false;layer.classList.add('is-active');
+    layer.hidden=false;
   }
-  [reduced,transparency,contrast].forEach(query=>query.addEventListener('change',()=>stop(true)));
-  document.addEventListener('motion:change',()=>{if(!allowed())stop(true);});
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop(true);});
-  window.addEventListener('pagehide',()=>stop(true));
-  return {arm,start,stop,suspend,render};
+  const refresh=()=>{if(layout)render(...layout);};
+  [transparency,contrast].forEach(query=>query.addEventListener('change',refresh));
+  document.addEventListener('visibilitychange',refresh);
+  window.addEventListener('pageshow',refresh);
+  window.addEventListener('pagehide',()=>{layer.hidden=true;});
+  return {render};
 }
