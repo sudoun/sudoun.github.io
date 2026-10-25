@@ -38,7 +38,7 @@ function sync() {
     if (!eligible && demo.eligible) resetIntro(demo);
     demo.eligible = eligible;
     const poster = demo.stage.querySelector("img[data-src]");
-    if (eligible && poster && !demo.posterRequested) {
+    if (eligible && poster && !demo.posterRequested && (poster.getAttribute("src") || poster.dataset.posterQuality !== "clear")) {
       demo.posterRequested = true;
       demo.posterPending = true;
       const image = new Image();
@@ -194,6 +194,7 @@ changes.observe(document.body, { attributes: true, attributeFilter: ["class"] })
 document.querySelectorAll("dialog").forEach((dialog) => changes.observe(dialog, { attributes: true, attributeFilter: ["open"] }));
 document.addEventListener("gallery:change", sync);
 document.addEventListener("gallery:settled", sync);
+document.addEventListener("work:poster-ready", sync);
 document.addEventListener("visibilitychange", () => { if (document.hidden) fullVideo?.pause(); sync(); });
 reduced.addEventListener("change", sync);
 window.addEventListener("pagehide", () => { demos.forEach((demo) => { resetIntro(demo); demo.eligible = false; demo.video.pause(); }); fullVideo?.pause(); });

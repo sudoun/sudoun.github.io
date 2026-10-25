@@ -25,10 +25,11 @@ if (cover?.querySelector("#kinetic-sculpture")) {
   function startSculpture() {
     if (queued || !cover.classList.contains("is-current") || document.hidden) return;
     queued = true;
-    requestAnimationFrame(() => requestAnimationFrame(() => {
+    setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(() => {
       if (!cover.classList.contains("is-current") || document.hidden) { queued = false; return; }
-      import("./sculpture.js").catch(() => { queued = false; });
-    }));
+      const sculptureModule = document.documentElement.dataset.sculptureModule || "./sculpture.js";
+      import(sculptureModule).catch(() => { queued = false; });
+    })), 1100);
   }
   document.addEventListener("gallery:change", startSculpture);
   document.addEventListener("visibilitychange", startSculpture);

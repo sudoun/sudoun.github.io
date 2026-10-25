@@ -22,7 +22,11 @@ body.exhibit-home { background:var(--canvas); }
 .sculpture-trigger { position:absolute; z-index:3; top:3%; right:1%; width:64%; height:85%; margin:0; padding:0; background:transparent; border:0; cursor:grab; touch-action:pan-y; }
 .sculpture-trigger:active { cursor:grabbing; }
 .sculpture-trigger:focus-visible { outline-offset:-20px; border-radius:50%; }
-#kinetic-sculpture { display:block; width:100%; height:100%; }
+#kinetic-sculpture { display:block; width:100%; height:100%; opacity:0; }
+.sculpture-still { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; pointer-events:none; }
+.sculpture-still ~ .sculpture-fallback { display:none; }
+.is-rendered .sculpture-still { opacity:0; transition:opacity .9s ease; }
+.is-rendered #kinetic-sculpture { opacity:1; transition:opacity .9s ease; }
 .sculpture-fallback { position:absolute; inset:17% 21%; border:64px solid #777f7c; border-radius:46%; box-shadow:inset 10px 4px 16px #111b,9px 10px 7px #fff,inset -14px -12px 18px white; transform:rotate(-30deg); }
 .is-rendered .sculpture-fallback { display:none; }
 .sculpture-trigger.is-webgl::after { content:""; position:absolute; z-index:-1; left:26%; right:22%; bottom:8%; height:5%; border-radius:50%; background:#26302225; filter:blur(17px); }
