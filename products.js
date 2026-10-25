@@ -20,9 +20,9 @@ window.DALE_PRODUCTS = {
       status: "LIVE",
       tagline: "给好奇心，加一点气泡",
       description: "一个可以调配口味、加入冰块、旋转观察的 3D 苏打水实验室。",
-      preview: "assets/works/soda-demo.jpg",
-      demo: "assets/works/soda-demo.webm",
-      demoDescription: "切换青柠与可乐口味，旋转杯子、加入冰块，观看气泡与小猫的动作。",
+      preview: "assets/works/soda-card-demo.webp",
+      demo: "assets/works/soda-card-demo.webm",
+      demoDescription: "青柠风味插画卡片的循环动画：杯中气泡缓缓上升，液体与背景波纹轻轻流动。",
       url: "https://soda-flax.vercel.app/"
     },
     {

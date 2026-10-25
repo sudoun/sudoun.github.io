@@ -77,7 +77,7 @@ for (const stage of document.querySelectorAll("[data-work-demo]")) {
   actions.append(toolbar, destination);
   const description = document.createElement("p");
   description.className = "sr-only";
-  description.textContent = "原站操作实录，无声循环。" + product.demoDescription;
+  description.textContent = (product.id === "soda" ? "原项目青柠卡片的动态演绎，无声循环。" : "原站操作实录，无声循环。") + product.demoDescription;
   stage.append(description);
   const fallback = document.createElement("p");
   fallback.className = "demo-fallback";

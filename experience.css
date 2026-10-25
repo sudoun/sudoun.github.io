@@ -209,6 +209,7 @@ body.exhibit-home { background:var(--canvas); }
   .live-work-panel .demo-toolbar { justify-content:flex-start; gap:24px; }
   .demo-toolbar button { font-size:10px; }
   .live-work-panel .demo-fallback { top:auto; right:0; bottom:-100px; left:0; max-width:none; padding:8px; font-size:9px; }
+  .soda-panel .work-preview { aspect-ratio:3/2; }
   .soda-panel::before { content:"FIZZ."; position:absolute; z-index:-1; left:2%; top:18%; font:500 40vw/1 "Inter Tight",var(--font); letter-spacing:-.08em; color:#70ac7c25; }
   .nijo-panel { background:#425748; }
   #demo-player { width:calc(100% - 24px); padding:16px; border-radius:12px; }
