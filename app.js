@@ -1,6 +1,6 @@
 import { safePublicUrl, buildInterestSummary, buildMailto } from "./site-core.js";
 import "./gallery.js";
-import "./work-demos.js";
+import "./work-art.js";
 
 // Global motion controls stay available even when WebGL has not been loaded.
 const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");

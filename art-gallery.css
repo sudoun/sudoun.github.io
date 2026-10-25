@@ -1,0 +1,53 @@
+/* Eight original project artworks, with a consistent exhibition presentation. */
+.art-project-panel { color:#f5f4e9; background:#12251d; isolation:isolate; }
+.art-project-panel .project-art { position:absolute; inset:0; display:block; width:100%; height:100%; max-height:none; min-height:0; margin:0; padding:0; border:0; border-radius:0; background:transparent; overflow:hidden; transform:none; box-shadow:none; pointer-events:none; }
+.art-project-panel .project-art:hover { transform:none; box-shadow:none; }
+.art-project-panel .project-art img { position:absolute; z-index:0; inset:0; width:100%; height:100%; max-width:none; object-fit:cover; object-position:50% 0%; transform:none; translate:none; filter:none; border:0; border-radius:0; box-shadow:none; opacity:1; }
+.art-project-panel .project-art img:not([src]) { opacity:0; }
+.art-project-panel .project-art::before { display:none; }
+.art-project-panel .project-art::after { content:""; position:absolute; z-index:1; inset:0; display:block; background:linear-gradient(180deg,#06150e15,transparent 27%,transparent 47%,#08150dd9),linear-gradient(90deg,#06150e44,transparent 60%); transform:none; border:0; border-radius:0; }
+.art-project-panel::before { display:none; }
+.art-project-panel .panel-index { position:relative; z-index:4; }
+.art-project-panel .product-panel-bottom { position:relative; z-index:3; width:100%; transform:none; pointer-events:none; }
+.art-project-panel .product-panel-bottom > div { max-width:600px; }
+.art-project-panel .product-panel-bottom h2 { font-size:clamp(64px,7.4vw,116px); letter-spacing:-.055em; line-height:.9; }
+.art-project-panel .product-panel-bottom h2 > span { font:12px/1.5 var(--font); letter-spacing:0; vertical-align:middle; margin:12px 0 0 16px; opacity:.8; }
+.art-project-panel .product-panel-bottom p { margin-top:20px; font-size:14px; line-height:1.8; max-width:440px; }
+.art-project-panel .work-kicker { font-size:10px; letter-spacing:.055em; margin-bottom:20px; opacity:.8; }
+.art-project-panel .panel-link { min-height:54px; pointer-events:auto; background:#ecf3cf; color:#1e3025; }
+.art-project-panel .panel-link:hover { background:#fff; }
+.slidefetch-panel.art-project-panel { color:#152f4f; background:#b9d0e4; }
+.slidefetch-panel.art-project-panel .project-art::after { background:linear-gradient(180deg,#c8d9e51a,transparent 38%,#d0dfed05 53%,#c5d8eccf),linear-gradient(90deg,#b7cfe329,transparent 55%); }
+.slidefetch-panel.art-project-panel .panel-link { background:#173d68; color:#fff; }
+.soda-panel.art-project-panel { color:#f5f7df; background:#17321b; }
+.soda-panel.art-project-panel .panel-link { background:#e3ef8b; color:#1b321d; }
+.facedrop-panel.art-project-panel { color:#f3f1dc; background:#151d19; }
+.nearstage-panel.art-project-panel { color:#3c3028; background:#e9dcc7; }
+.nearstage-panel.art-project-panel .project-art::after { background:linear-gradient(180deg,#f6ecdd12,transparent 38%,#f4e9d700 50%,#f0e3d0d9),linear-gradient(90deg,#eadcc51a,transparent 55%); }
+.nearstage-panel.art-project-panel .panel-link { background:#914c3b; color:#fff5e6; }
+.rubik-panel.art-project-panel { color:#f4ebda; background:#142321; }
+.rubik-panel.art-project-panel .panel-link { background:#dbc493; color:#1a2b23; }
+.quant-panel.art-project-panel { color:#e9f0de; background:#152b22; }
+.film-panel.art-project-panel { color:#f7edda; background:#141d34; }
+.film-panel.art-project-panel .panel-link { background:#edd3a0; color:#212943; }
+.margin-panel.art-project-panel { color:#374331; background:#e5e8db; display:grid; }
+.margin-panel.art-project-panel .project-art::after { background:linear-gradient(180deg,#f1f0e61a,transparent 40%,#e5e8d900 52%,#e9eadbcc),linear-gradient(90deg,#e9eadb25,transparent 55%); }
+.margin-panel.art-project-panel .panel-link { background:#4a6044; color:#f5f4df; border:0; border-radius:100px; padding:16px 22px; }
+.art-image-error { display:none; }
+[data-art-state="error"] .art-image-error { display:block; position:absolute; top:45%; left:8%; right:8%; text-align:center; font:13px/1.7 var(--font); }
+@media(max-width:800px) {
+ .art-project-panel,.margin-panel.art-project-panel { display:flex; flex-direction:column; gap:0; min-height:0; padding:24px 24px 30px; }
+ .art-project-panel .project-art { position:relative; inset:auto; width:calc(100% + 48px); height:auto; aspect-ratio:3/2; margin:28px -24px 30px; flex-shrink:0; }
+ .art-project-panel .project-art img { object-fit:cover; }
+ .art-project-panel .project-art::after { display:none; }
+ .art-project-panel .product-panel-bottom { display:flex; flex-direction:column; align-items:flex-start; gap:24px; margin:0; }
+ .art-project-panel .product-panel-bottom h2 { font-size:clamp(46px,13vw,72px); line-height:.94; }
+ .art-project-panel .product-panel-bottom h2 > span { display:inline-block; font-size:11px; margin-left:10px; }
+ .art-project-panel .work-kicker { font-size:9px; margin-bottom:15px; }
+ .art-project-panel .product-panel-bottom p { font-size:14px; margin-top:16px; }
+ .art-project-panel .panel-link { min-height:48px; }
+}
+@media(max-width:360px) {
+ .art-project-panel,.margin-panel.art-project-panel { padding-inline:20px; }
+ .art-project-panel .project-art { width:calc(100% + 40px); margin-inline:-20px; }
+}

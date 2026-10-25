@@ -25,10 +25,12 @@ if (gallery) {
     const prototypePreviews = { margin: "assets/reading-garden.svg" };
     function previewProduct(product) {
       const image = document.querySelector("#index-preview-image");
+      image.srcset=product.previewSrcset||"";
+      image.sizes="(max-width:800px) 300px, 42vw";
       image.src = product.preview || prototypePreviews[product.id];
       image.alt = product.name + " 作品预览";
       document.querySelector("#index-preview-name").textContent = product.name;
-      document.querySelector("#index-preview-status").textContent = product.url ? "在线作品 ↗" : product.presentation === "diagram" ? "本地作品 / 界面示意" : product.status === "DEMO" ? "本地作品 / 可播放 Demo" : "开发中 / 交互示意";
+      document.querySelector("#index-preview-status").textContent = product.url ? "在线作品 ↗" : product.id === "film" ? "原创短片 / 按需播放" : product.status === "ALPHA" ? "Alpha / 正在打磨" : "本地研究项目";
     }
     catalog.forEach((product, order) => {
       const panel = panels.find((panel) => panel.dataset.projectId === product.id);
@@ -42,7 +44,7 @@ if (gallery) {
       const title = document.createElement("span");
       title.textContent = product.name;
       const stage = document.createElement("small");
-      stage.textContent = product.url ? "在线" : product.presentation === "diagram" ? "示意" : product.status === "DEMO" ? "Demo" : "开发中";
+      stage.textContent = product.url ? "在线" : product.id === "film" ? "短片" : product.status === "ALPHA" ? "开发中" : "研究";
       const arrow = document.createElement("b");
       arrow.textContent = "↗";
       arrow.setAttribute("aria-hidden", "true");
@@ -251,7 +253,7 @@ if (gallery) {
     panel.style.setProperty("--scene-y", ((event.clientY - bounds.top) / bounds.height - .5).toFixed(3));
   });
   const highlight = document.querySelector("#highlight-toggle");
-  highlight.addEventListener("click", () => {
+  highlight?.addEventListener("click", () => {
     const selected = highlight.getAttribute("aria-pressed") !== "true";
     highlight.setAttribute("aria-pressed", String(selected));
     highlight.innerHTML = selected ? "已经记下这句话 <span>✓</span>" : "试着留一道划线 <span>＋</span>";
