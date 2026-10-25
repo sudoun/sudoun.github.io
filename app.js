@@ -2,9 +2,37 @@ import { safePublicUrl, buildInterestSummary, buildMailto } from "./site-core.js
 import "./gallery.js";
 import "./work-demos.js";
 
-// Let the name, navigation and page layout paint before compiling WebGL shaders.
-if (document.querySelector("#kinetic-sculpture")) {
-  requestAnimationFrame(() => requestAnimationFrame(() => import("./sculpture.js")));
+// Global motion controls stay available even when WebGL has not been loaded.
+const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+const motionToggle = document.querySelector("#motion-toggle");
+let motionPaused = motionPreference.matches;
+function updateMotion() {
+  document.body.classList.toggle("motion-paused", motionPaused);
+  motionToggle.setAttribute("aria-pressed", String(motionPaused));
+  motionToggle.disabled = motionPreference.matches;
+  motionToggle.textContent = motionPreference.matches ? "已减少动效" : motionPaused ? "播放动效 ↗" : "暂停动效 Ⅱ";
+  motionToggle.setAttribute("aria-label", motionPreference.matches ? "系统已设置减少动效" : motionPaused ? "播放动态效果" : "暂停动态效果");
+  document.dispatchEvent(new Event("motion:change"));
+}
+motionToggle.addEventListener("click", () => { motionPaused = !motionPaused; updateMotion(); });
+motionPreference.addEventListener("change", () => { motionPaused = motionPreference.matches; updateMotion(); });
+updateMotion();
+
+// Compile WebGL only when the cover is selected, after the page can paint.
+const cover = document.querySelector(".cover-panel");
+if (cover?.querySelector("#kinetic-sculpture")) {
+  let queued = false;
+  function startSculpture() {
+    if (queued || !cover.classList.contains("is-current") || document.hidden) return;
+    queued = true;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (!cover.classList.contains("is-current") || document.hidden) { queued = false; return; }
+      import("./sculpture.js").catch(() => { queued = false; });
+    }));
+  }
+  document.addEventListener("gallery:change", startSculpture);
+  document.addEventListener("visibilitychange", startSculpture);
+  startSculpture();
 }
 
 const profile = window.PERSONAL_SITE || {};

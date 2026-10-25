@@ -49,7 +49,10 @@ if (gallery) {
       row.addEventListener("focus", () => previewProduct(product));
       indexList.append(row);
     });
-    document.querySelector("[data-index-open]").addEventListener("click", () => indexDialog.showModal());
+    document.querySelector("[data-index-open]").addEventListener("click", () => {
+      if (!document.querySelector("#index-preview-image").getAttribute("src") && catalog[0]) previewProduct(catalog[0]);
+      indexDialog.showModal();
+    });
     document.querySelector(".index-close").addEventListener("click", () => indexDialog.close());
     indexDialog.addEventListener("click", (event) => {
       if (event.target !== indexDialog) return;

@@ -24,6 +24,11 @@ function sync() {
   const modalOpen = Boolean(document.querySelector("dialog[open]"));
   for (const demo of demos) {
     const eligible = demo.visible && demo.panel.classList.contains("is-current") && !document.hidden && !modalOpen;
+    const poster = demo.stage.querySelector("img[data-src]");
+    if (eligible && poster && !poster.getAttribute("src")) {
+      poster.src = poster.dataset.src;
+      poster.loading = "eager";
+    }
     const shouldPlay = eligible && !demo.failed && !demo.userPaused && !globallyPaused()
       && ((!reduced.matches && !saveData && !demo.blocked) || demo.manual);
     if (shouldPlay) {

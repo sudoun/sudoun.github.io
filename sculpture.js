@@ -6,7 +6,6 @@ if (canvas) {
   let context = gl ? null : canvas.getContext("2d", { alpha: true });
   const trigger = document.querySelector("#sculpture-trigger");
   const label = document.querySelector("#sculpture-name");
-  const pause = document.querySelector("#motion-toggle");
   const cover = canvas.closest(".cover-panel");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const compact = matchMedia("(max-width: 800px)");
@@ -26,7 +25,7 @@ if (canvas) {
     const visibleFaces = [];
     const names = ["01 / CHROME KNOT", "02 / ORBIT STUDY", "03 / CURIOUS BLOOM"];
     const environmentBands = [[0, 34, 43, 52], [.19, 119, 132, 143], [.34, 239, 241, 234], [.43, 37, 43, 48], [.51, 16, 23, 31], [.62, 147, 160, 172], [.76, 237, 239, 232], [1, 255, 255, 249]];
-    let gpu;
+    let gpu, meshDirty = false;
     if (gl) {
       const vertexSource = `
         attribute vec3 position;
@@ -108,7 +107,7 @@ if (canvas) {
     } else canvas.dataset.renderer = "canvas";
     let form = 0, morphStart = 0, morphing = false;
     let width = 0, height = 0, frame = 0, lastTime = 0;
-    let visible = true, paused = reduced.matches;
+    let visible = true, paused = reduced.matches || document.body.classList.contains("motion-paused");
     let rotation = .2, manualX = -.25, manualY = -.4;
     let targetX = 0, targetY = 0, pointerX = 0, pointerY = 0;
     let drag = null, suppressClick = false;
@@ -157,8 +156,11 @@ if (canvas) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.uniform2f(gpu.resolution,width,height);
         gl.uniformMatrix3fv(gpu.rotation,false,gpu.matrix);
-        gl.bindBuffer(gl.ARRAY_BUFFER,gpu.position); gl.bufferSubData(gl.ARRAY_BUFFER,0,current);
-        gl.bindBuffer(gl.ARRAY_BUFFER,gpu.normal); gl.bufferSubData(gl.ARRAY_BUFFER,0,normals);
+        if (meshDirty) {
+          gl.bindBuffer(gl.ARRAY_BUFFER,gpu.position); gl.bufferSubData(gl.ARRAY_BUFFER,0,current);
+          gl.bindBuffer(gl.ARRAY_BUFFER,gpu.normal); gl.bufferSubData(gl.ARRAY_BUFFER,0,normals);
+          meshDirty = false;
+        }
         gl.drawElements(gl.TRIANGLES,gpu.count,gl.UNSIGNED_SHORT,0);
         canvas.__renderCount = (canvas.__renderCount || 0) + 1;
         canvas.dataset.ready = "true";
@@ -239,6 +241,7 @@ if (canvas) {
         const progress = Math.min(1, (time - morphStart) / 850);
         const mix = progress * progress * (3 - 2 * progress);
         const target = geometryFor(form);
+        meshDirty = true;
         for (let i = 0; i < current.length; i++) {
           current[i] = from[i] + (target.positions[i] - from[i]) * mix;
           normals[i] = fromNormals[i] + (target.normals[i] - fromNormals[i]) * mix;
@@ -257,7 +260,7 @@ if (canvas) {
       morphStart = performance.now();
       morphing = !paused && !reduced.matches;
       canvas.dataset.morphing = String(morphing);
-      if (!morphing) { current.set(target.positions); normals.set(target.normals); }
+      if (!morphing) { current.set(target.positions); normals.set(target.normals); meshDirty = true; }
       label.textContent = names[form];
       canvas.dataset.form = SCULPTURE_FORMS[form];
       trigger.setAttribute("aria-label", "当前形态：" + SCULPTURE_FORMS[form] + "。点击切换形态，拖动旋转。");
@@ -296,23 +299,18 @@ if (canvas) {
     });
     cover.addEventListener("pointerleave", () => { if (!paused) { targetX = targetY = 0; schedule(); } });
     function updatePause() {
-      if (reduced.matches) paused = true;
+      paused = reduced.matches || document.body.classList.contains("motion-paused");
       if (paused) { targetX = pointerX; targetY = pointerY; }
       if (paused && morphing) {
         morphing = false;
         current.set(geometries[form].positions);
         normals.set(geometries[form].normals);
+        meshDirty = true;
         canvas.dataset.morphing = "false";
       }
-      document.body.classList.toggle("motion-paused", paused);
-      pause.setAttribute("aria-pressed", String(paused));
-      pause.disabled = reduced.matches;
-      pause.textContent = reduced.matches ? "已减少动效" : paused ? "播放动效 ↗" : "暂停动效 Ⅱ";
-      pause.setAttribute("aria-label", reduced.matches ? "系统已设置减少动效" : paused ? "播放动态效果" : "暂停动态效果");
       schedule();
     }
-    pause.addEventListener("click", () => { paused = !paused; updatePause(); });
-    reduced.addEventListener("change", () => { paused = reduced.matches; updatePause(); });
+    document.addEventListener("motion:change", updatePause);
     const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) { lastTime = 0; schedule(); } });
     observer.observe(trigger);
     new ResizeObserver(resize).observe(trigger);
