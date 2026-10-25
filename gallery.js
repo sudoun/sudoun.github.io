@@ -168,7 +168,7 @@ if (gallery) {
   gallery.addEventListener("pointerdown", (event) => {
     targetIndex = null;
     delete gallery.dataset.targetPanel;
-    const control = event.target.closest("button,a,input,textarea,select");
+    const control = event.target.closest("button,a,input,textarea,select,summary");
     if (stacked.matches || event.pointerType !== "mouse" || event.button !== 0 || (control && !control.matches(".work-preview"))) return;
     targetIndex = null;
     delete gallery.dataset.targetPanel;

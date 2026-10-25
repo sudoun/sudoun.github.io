@@ -14,7 +14,7 @@ body.exhibit-home { background:var(--canvas); }
 .panel-index { font-size:9px; letter-spacing:.055em; }
 .cover-panel { position:relative; display:block; flex-basis:calc(100vw - 44px); padding:26px 3.3vw; background:var(--canvas); }
 .cover-panel > .panel-index { z-index:5; }
-.hero-halo { position:absolute; z-index:0; top:17%; right:12%; width:min(36vw,530px); aspect-ratio:1; border-radius:50%; background:var(--yellow); }
+.hero-halo { position:absolute; z-index:0; top:10%; right:0; width:min(52vw,750px); aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,#e8ff5745,transparent 69%); }
 .cover-panel h1.hero-name { position:absolute; z-index:2; top:11%; left:3.3vw; width:auto; margin:0; font-size:clamp(110px,min(15.4vw,25svh),235px); letter-spacing:-.085em; line-height:.82; font-weight:500; }
 .cover-panel h1.hero-name > span { display:block; padding:0; }
 .cover-panel h1.hero-name > span:nth-child(2) { padding-left:7vw; }
@@ -31,7 +31,12 @@ body.exhibit-home { background:var(--canvas); }
 .is-rendered .sculpture-fallback { display:none; }
 .sculpture-trigger.is-webgl::after { content:""; position:absolute; z-index:-1; left:26%; right:22%; bottom:8%; height:5%; border-radius:50%; background:#26302225; filter:blur(17px); }
 .sculpture-caption { position:absolute; z-index:4; right:7%; bottom:15%; display:grid; gap:8px; text-align:right; font:8px ui-monospace,Consolas,monospace; letter-spacing:.02em; pointer-events:none; }
-.sculpture-caption > span:last-child { color:#62665d; font:10px var(--font); }
+.sculpture-caption > span:nth-child(2) { color:#62665d; font:10px var(--font); }
+.paradox-note { position:relative; pointer-events:auto; font:10px/1.7 var(--font); }
+.paradox-note summary { min-height:44px; padding:7px 0; cursor:pointer; list-style:none; }
+.paradox-note summary::-webkit-details-marker { display:none; }
+.paradox-note p { position:absolute; z-index:10; right:0; bottom:32px; width:min(320px,calc(100vw - 65px)); padding:17px 19px; margin:0; color:#48513f; background:#f8f8f0f5; border:1px solid #cbd1bf; border-radius:8px; text-align:left; box-shadow:0 12px 35px #303d2914; }
+.paradox-note a { text-decoration:underline; }
 .hero-introduction { position:absolute; z-index:4; bottom:14%; left:3.3vw; pointer-events:none; }
 .hero-introduction > p { margin:0 0 18px; font-family:"Inter Tight",var(--font); font-size:clamp(24px,2.4vw,36px); line-height:1.02; letter-spacing:-.045em; }
 .hero-introduction em { font-family:"Newsreader",Georgia,serif; font-weight:400; }

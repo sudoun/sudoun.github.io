@@ -27,7 +27,7 @@ if (cover?.querySelector("#kinetic-sculpture")) {
     queued = true;
     setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(() => {
       if (!cover.classList.contains("is-current") || document.hidden) { queued = false; return; }
-      const sculptureModule = document.documentElement.dataset.sculptureModule || "./sculpture.js";
+      const sculptureModule = document.documentElement.dataset.sculptureModule || "./banach-tarski.js";
       import(sculptureModule).catch(() => { queued = false; });
     })), 1100);
   }
