@@ -61,7 +61,7 @@ if (gallery) {
   function goTo(index, smooth = true) {
     const target = clampGalleryIndex(index, panels.length);
     targetIndex = target;
-    const behavior = smooth && !reducedMotion.matches ? "smooth" : "auto";
+    const behavior = smooth && !reducedMotion.matches ? "smooth" : "instant";
     if (stacked.matches) {
       panels[target].scrollIntoView({ behavior, block: "start" });
     } else {
@@ -221,6 +221,7 @@ if (gallery) {
     document.querySelector("#frame-note").textContent = frameNotes[index];
     document.querySelector(".frame-geometry").style.setProperty("--frame-shift", (value - 40) * .5 + "%");
   });
-  updatePosition();
+  // Restore before video observers start, so deep links skip other work media.
+  restoreHash();
   gallery.dataset.ready = "true";
 }
