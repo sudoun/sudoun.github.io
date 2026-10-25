@@ -86,8 +86,8 @@ body.exhibit-home { background:var(--canvas); }
 /* The work itself moves: real, locally hosted recordings, not image parallax. */
 [data-work-demo] { cursor:grab; }
 .live-work-panel .work-film { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; opacity:0; transform:scale(1.06); }
-.live-work-panel .has-film .work-film { opacity:1; }
-.live-work-panel .has-film > img { opacity:0; }
+.live-work-panel .has-film .work-film { opacity:1; transition:opacity 1.5s ease-in-out; }
+.live-work-panel .has-film > img { opacity:1; }
 .live-work-panel .has-film .work-film,.live-work-panel [data-work-demo] > img { transform:none; }
 .slidefetch-panel .work-film { z-index:2; object-position:top left; filter:drop-shadow(0 30px 30px #18375228); border-radius:5px; }
 .slidefetch-panel .has-film .work-film,.slidefetch-panel [data-work-demo] > img { transform:perspective(1400px) rotateY(-9deg) rotateX(4deg) rotateZ(-3deg); }

@@ -6,6 +6,14 @@ const saveData = navigator.connection?.saveData === true;
 const player = document.querySelector("#demo-player");
 const fullVideo = document.querySelector("#demo-player-video");
 const demos = [];
+const STATIC_HOLD_MS = 1100;
+
+function resetIntro(demo) {
+  clearTimeout(demo.introTimer);
+  demo.introTimer = null;
+  demo.staticUntil = 0;
+  demo.stage.classList.remove("has-film");
+}
 
 function globallyPaused() {
   return !reduced.matches && document.body.classList.contains("motion-paused");
@@ -27,6 +35,8 @@ function sync() {
   for (const demo of demos) {
     const eligible = demo.visible && demo.panel.classList.contains("is-current")
       && (!targetPanel || demo.panel.id === targetPanel) && !document.hidden && !modalOpen;
+    if (!eligible && demo.eligible) resetIntro(demo);
+    demo.eligible = eligible;
     const poster = demo.stage.querySelector("img[data-src]");
     if (eligible && poster && !demo.posterRequested) {
       demo.posterRequested = true;
@@ -41,10 +51,15 @@ function sync() {
         sync();
       };
       image.onerror = () => { demo.posterPending = false; demo.posterFailed = true; sync(); };
-      image.src = poster.dataset.src;
+      image.src = poster.dataset.posterQuality === "clear" ? poster.getAttribute("src") : poster.dataset.src;
+    }
+    if (eligible && (demo.posterReady || demo.posterFailed) && !demo.staticUntil) {
+      demo.staticUntil = performance.now() + STATIC_HOLD_MS;
+      demo.introTimer = setTimeout(() => { demo.introTimer = null; sync(); }, STATIC_HOLD_MS + 30);
     }
     const shouldPlay = eligible && !demo.failed && !demo.userPaused && !globallyPaused()
       && (demo.posterReady || demo.posterFailed || demo.manual)
+      && (demo.manual || (demo.staticUntil && performance.now() >= demo.staticUntil))
       && ((!reduced.matches && !saveData && !demo.blocked) || demo.manual);
     if (shouldPlay) {
       if (!demo.video.getAttribute("src")) {
@@ -106,7 +121,7 @@ for (const stage of document.querySelectorAll("[data-work-demo]")) {
   fallback.textContent = "演示暂不可播放，仍可通过下方入口打开原站。";
   stage.append(fallback);
 
-  const demo = { stage, product, video, toggle, panel, visible: false,
+  const demo = { stage, product, video, toggle, panel, visible: false, eligible: false, staticUntil: 0, introTimer: null,
     posterRequested: false, posterPending: false, posterReady: false, posterFailed: false,
     userPaused: false, manual: false, blocked: false, failed: false, pending: false };
   demos.push(demo);
@@ -116,8 +131,16 @@ for (const stage of document.querySelectorAll("[data-work-demo]")) {
     sync();
   });
   expand.addEventListener("click", () => openPlayer(demo));
-  video.addEventListener("loadeddata", () => stage.classList.add("has-film"));
-  video.addEventListener("playing", () => updateControls(demo));
+  video.addEventListener("playing", () => {
+    const reveal = () => {
+      if (demo.eligible && !video.paused && !demo.failed) stage.classList.add("has-film");
+    };
+    if (!stage.classList.contains("has-film")) {
+      if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(reveal);
+      else requestAnimationFrame(reveal);
+    }
+    updateControls(demo);
+  });
   video.addEventListener("pause", () => updateControls(demo));
   video.addEventListener("error", () => {
     demo.failed = true;
@@ -173,4 +196,5 @@ document.addEventListener("gallery:change", sync);
 document.addEventListener("gallery:settled", sync);
 document.addEventListener("visibilitychange", () => { if (document.hidden) fullVideo?.pause(); sync(); });
 reduced.addEventListener("change", sync);
-window.addEventListener("pagehide", () => { demos.forEach((demo) => demo.video.pause()); fullVideo?.pause(); });
+window.addEventListener("pagehide", () => { demos.forEach((demo) => { resetIntro(demo); demo.eligible = false; demo.video.pause(); }); fullVideo?.pause(); });
+window.addEventListener("pageshow", sync);
