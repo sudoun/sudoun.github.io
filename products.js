@@ -69,15 +69,6 @@ window.DALE_PRODUCTS = {
       tagline: "把一本书读成自己的",
       description: "本地优先、证据约束、支持听读同步的 AI 主动阅读器。",
       url: ""
-    },
-    {
-      id: "frameread",
-      name: "FrameRead",
-      category: "VIDEO INTELLIGENCE",
-      status: "LOCAL MVP",
-      tagline: "让 AI 持续观看长视频",
-      description: "给长课堂视频建立字幕和关键画面索引，把观看过程整理成带引用的笔记，方便回看与核对。",
-      url: ""
     }
   ]
 };

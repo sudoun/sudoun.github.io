@@ -20,7 +20,7 @@ if (gallery) {
   const indexList = document.querySelector("#work-index-list");
   if (indexDialog && indexList) {
     const catalog = window.DALE_PRODUCTS?.products || [];
-    const prototypePreviews = { margin: "assets/reading-garden.svg", frameread: "assets/local-desk.svg" };
+    const prototypePreviews = { margin: "assets/reading-garden.svg" };
     function previewProduct(product) {
       const image = document.querySelector("#index-preview-image");
       image.src = product.preview || prototypePreviews[product.id];
@@ -212,7 +212,7 @@ if (gallery) {
   });
   const frameNotes = ["用字幕找到正在讨论的主题。", "把重要画面留作笔记的证据。", "让观点与具体时间点保持联系。", "从上次的位置继续学习。"];
   const scrubber = document.querySelector("#frame-scrubber");
-  scrubber.addEventListener("input", () => {
+  scrubber?.addEventListener("input", () => {
     const value = Number(scrubber.value);
     const seconds = Math.round(value / 100 * 720);
     const index = Math.min(frameNotes.length - 1, Math.floor(value / 25));
