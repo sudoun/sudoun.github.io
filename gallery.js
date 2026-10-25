@@ -136,7 +136,6 @@ if (gallery) {
     if (index >= 0) goTo(index, false);
     updatePosition();
   }
-  window.addEventListener("load", restoreHash, { once: true });
   window.addEventListener("hashchange", restoreHash);
   gallery.addEventListener("wheel", (event) => {
     if (stacked.matches || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.target.closest("input,textarea,select")) return;
