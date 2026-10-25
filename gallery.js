@@ -20,7 +20,7 @@ if (gallery) {
   const indexList = document.querySelector("#work-index-list");
   if (indexDialog && indexList) {
     const catalog = window.DALE_PRODUCTS?.products || [];
-    const prototypePreviews = { margin: "assets/reading-garden.svg", "portfolio-schema": "assets/local-desk.svg", frameread: "assets/local-desk.svg" };
+    const prototypePreviews = { margin: "assets/reading-garden.svg", frameread: "assets/local-desk.svg" };
     function previewProduct(product) {
       const image = document.querySelector("#index-preview-image");
       image.src = product.preview || prototypePreviews[product.id];
@@ -209,13 +209,6 @@ if (gallery) {
     highlight.setAttribute("aria-pressed", String(selected));
     highlight.innerHTML = selected ? "已经记下这句话 <span>✓</span>" : "试着留一道划线 <span>＋</span>";
     document.querySelector(".reader-concept").classList.toggle("is-highlighted", selected);
-  });
-  const demoThemes = { blue: "#8da9f4", coral: "#ee947d", yellow: "#eff56b" };
-  document.querySelectorAll("[data-demo-theme]").forEach((button) => {
-    button.addEventListener("click", () => {
-      document.querySelector("#portfolio-concept").style.setProperty("--demo-accent", demoThemes[button.dataset.demoTheme]);
-      document.querySelectorAll("[data-demo-theme]").forEach((choice) => choice.setAttribute("aria-pressed", String(choice === button)));
-    });
   });
   const frameNotes = ["用字幕找到正在讨论的主题。", "把重要画面留作笔记的证据。", "让观点与具体时间点保持联系。", "从上次的位置继续学习。"];
   const scrubber = document.querySelector("#frame-scrubber");

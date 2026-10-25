@@ -71,15 +71,6 @@ window.DALE_PRODUCTS = {
       url: ""
     },
     {
-      id: "portfolio-schema",
-      name: "Portfolio Schema",
-      category: "CAREER TOOL",
-      status: "MVP",
-      tagline: "从真实项目到可编辑作品集",
-      description: "根据目标岗位、个人背景与真实项目，组织成一份可继续调整区块、主题与文案的个人作品集。",
-      url: ""
-    },
-    {
       id: "frameread",
       name: "FrameRead",
       category: "VIDEO INTELLIGENCE",

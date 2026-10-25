@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6f2">
-    <meta name="description" content="Dale Anfer 的个人工作室。探索阅读、学习与表达，慢慢构建 Margin、Portfolio Schema 和 FrameRead，记录沿途的产品思考。">
+    <meta name="description" content="Dale Anfer 的个人工作室。探索阅读、学习与表达，慢慢构建 Margin 和 FrameRead，记录沿途的产品思考。">
     <title>Dale Anfer — Small tools, curious minds.</title>
     <link rel="icon" type="image/svg+xml" href="assets/mark.svg">
     <link rel="preload" href="assets/newsreader-regular.ttf" as="font" type="font/ttf" crossorigin>
@@ -89,18 +89,13 @@
             <div class="product-info"><div class="product-title"><h3><button type="button" data-product-open="margin">Margin</button></h3><span class="product-badge">正在打磨</span></div><p>一本书，一个更好的阅读伙伴。让 AI 的每个观点都有原文可循。</p><span class="product-category">AI 阅读 · 本地优先 · 听读同步</span></div>
             <button class="product-explore" type="button" data-product-open="margin" aria-label="了解 Margin">了解产品 <span aria-hidden="true">↗</span></button>
           </article>
-          <article class="product-row" data-product-id="portfolio-schema">
-            <div class="product-icon portfolio-icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="16" y="12" width="32" height="40" rx="3" fill="#f9f7ec" stroke="currentColor" stroke-width="1.5"/><path d="M16 23h32M22 18h2m3 0h2m3 0h2M23 30h18M23 35h10M23 43h5m5 0h8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-            <div class="product-info"><div class="product-title"><h3><button type="button" data-product-open="portfolio-schema">Portfolio Schema</button></h3><span class="product-badge">原型探索</span></div><p>从真实项目出发，搭一份可以反复修改、真正属于你的作品集。</p><span class="product-category">个人表达 · 可编辑输出</span></div>
-            <button class="product-explore" type="button" data-product-open="portfolio-schema" aria-label="了解 Portfolio Schema">了解产品 <span aria-hidden="true">↗</span></button>
-          </article>
           <article class="product-row" data-product-id="frameread">
             <div class="product-icon frame-icon" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="11" y="16" width="42" height="29" rx="3" fill="#f9f7ec" stroke="currentColor" stroke-width="1.5"/><path d="m28 24 11 7-11 7Z" fill="currentColor"/><path d="M17 51h30m-26-4v7m22-7v7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
             <div class="product-info"><div class="product-title"><h3><button type="button" data-product-open="frameread">FrameRead</button></h3><span class="product-badge">原型探索</span></div><p>把长视频里的字幕、画面与知识，变成可以回看的有据笔记。</p><span class="product-category">长视频学习 · 带引用的笔记</span></div>
             <button class="product-explore" type="button" data-product-open="frameread" aria-label="了解 FrameRead">了解产品 <span aria-hidden="true">↗</span></button>
           </article>
         </div>
-        <noscript><p class="no-script-note">三个产品都还在开发中。你可以阅读上方手记，或在下方整理一段想与 Dale 分享的想法。</p></noscript>
+        <noscript><p class="no-script-note">两个产品都还在开发中。你可以阅读上方手记，或在下方整理一段想与 Dale 分享的想法。</p></noscript>
       </section>
       <section class="about shell" id="about" aria-labelledby="about-title">
         <div class="about-sketch" aria-hidden="true"><img src="assets/slow-growing.svg" width="260" height="230" alt="" loading="lazy"></div>
@@ -112,7 +107,7 @@
           <div class="contact-inner">
             <p id="contact-help">可以先把想法整理成一段文字。生成后复制给 Dale，不会自动发送。</p>
             <form id="contact-form">
-              <div class="field-row"><label>怎么称呼你<input name="name" autocomplete="name" maxlength="80" placeholder="名字或昵称（可选）"></label><label>想聊什么<select name="type" required><option value="">请选择</option><option>Margin</option><option>Portfolio Schema</option><option>FrameRead</option><option>构建手记</option><option>其他合作</option></select></label></div>
+              <div class="field-row"><label>怎么称呼你<input name="name" autocomplete="name" maxlength="80" placeholder="名字或昵称（可选）"></label><label>想聊什么<select name="type" required><option value="">请选择</option><option>Margin</option><option>FrameRead</option><option>构建手记</option><option>其他合作</option></select></label></div>
               <label>你的想法<textarea name="problem" required maxlength="1000" rows="4" placeholder="一个想解决的问题、一条产品建议，或只是打个招呼。"></textarea></label>
               <div class="form-actions"><button class="solid-button" type="submit" id="contact-submit">生成并复制联系摘要 <span aria-hidden="true">↗</span></button><p id="form-status" role="status" aria-live="polite"></p></div>
               <div id="summary-output" hidden><label>联系摘要<textarea id="summary-text" rows="6" readonly></textarea></label><p class="form-footnote">摘要只保存在当前页面，你可以复制后自行发送。</p></div>
