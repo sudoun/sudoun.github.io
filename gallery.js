@@ -68,7 +68,9 @@ if (gallery) {
     if (smooth) history.replaceState(null, "", "#" + panels[target].id);
     const behavior = smooth && !reducedMotion.matches ? "smooth" : "instant";
     if (stacked.matches) {
-      panels[target].scrollIntoView({ behavior, block: "start" });
+      // The cover includes the identity header; deep links must not crop it away.
+      if (target === 0) window.scrollTo({ top: 0, behavior });
+      else panels[target].scrollIntoView({ behavior, block: "start" });
     } else {
       gallery.scrollTo({
         left: Math.max(0, panels[target].offsetLeft - (gallery.clientWidth - panels[target].offsetWidth) / 2),

@@ -1,6 +1,6 @@
 // A finite point illustration, not a construction of nonmeasurable pieces.
 export const PARADOX_RADIUS = 112;
-export const PARADOX_COLORS = ["#596d8d", "#a35f49", "#6d8062", "#82759b"];
+export const PARADOX_COLORS = ["#3e637f", "#ad6149", "#647b49", "#877197"];
 export const PARADOX_PHASES = ["whole", "decomposed", "doubled"];
 export const PARADOX_STEPS = [0, .36, .78];
 const ease = x => { x = Math.max(0, Math.min(1, x)); return x*x*(3-2*x); };
@@ -8,13 +8,15 @@ const mix = (a,b,t) => a+(b-a)*t;
 export function createParadoxPoints(count=960) {
   return Array.from({length:count},(_,i)=>{
     const y=1-2*(i+.5)/count, r=Math.sqrt(1-y*y), a=i*Math.PI*(3-Math.sqrt(5));
-    return {x:Math.cos(a)*r*PARADOX_RADIUS,y:y*PARADOX_RADIUS,z:Math.sin(a)*r*PARADOX_RADIUS,group:i%4};
+    // Curved color bands make the four sample groups legible as they move.
+    const band=((a+y*2.4)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+    return {x:Math.cos(a)*r*PARADOX_RADIUS,y:y*PARADOX_RADIUS,z:Math.sin(a)*r*PARADOX_RADIUS,group:Math.floor(band/(Math.PI/2))};
   });
 }
 export function paradoxState(progress=0) {
   const t=((progress%1)+1)%1;
   const scatter=ease((t-.14)/.22), assemble=ease((t-.40)/.25), reset=ease((t-.89)/.11);
-  const offsets=[[-130,-70],[110,-90],[-105,100],[130,85]];
+  const offsets=[[-130,-45],[110,-60],[-105,65],[130,55]];
   const groups=offsets.map(([dx,dy],g)=>{
     const target=g<2?[275,300]:[575,300];
     const spread=[425+dx*scatter,290+dy*scatter];
@@ -31,8 +33,22 @@ export function transformParadoxPoint(point,state) {
   const g=state.groups[point.group];
   return {x:g.x+point.x*g.cos+point.z*g.sin,y:g.y+point.y,z:-point.x*g.sin+point.z*g.cos,group:point.group};
 }
-export function createParadoxStillSvg() {
-  const state=paradoxState(0), points=createParadoxPoints(320).map(p=>transformParadoxPoint(p,state)).sort((a,b)=>a.z-b.z);
-  const dots=points.map(p=>'<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="'+(1.25+(p.z/PARADOX_RADIUS+1)*.65).toFixed(1)+'" fill="'+PARADOX_COLORS[p.group]+'" opacity="'+(.3+(p.z/PARADOX_RADIUS+1)*.31).toFixed(2)+'"/>').join('');
-  return '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="650" viewBox="0 0 800 650"><defs><radialGradient id="ball" cx="32%" cy="25%"><stop stop-color="#ffffff" stop-opacity=".95"/><stop offset=".65" stop-color="#dfe6d0" stop-opacity=".46"/><stop offset="1" stop-color="#677c65" stop-opacity=".18"/></radialGradient></defs><g fill="#596253" font-family="Arial,sans-serif" text-anchor="middle"><text x="425" y="70" font-size="13" letter-spacing="3">BANACH–TARSKI</text><text x="425" y="516" font-size="11" letter-spacing="2">ONE BALL → TWO</text><text x="425" y="543" font-size="10" fill="#8b9384">A CONCEPTUAL STUDY OF INFINITY</text></g><circle cx="425" cy="290" r="112" fill="url(#ball)" stroke="#a1ad96" stroke-opacity=".45"/><g fill="none" stroke="#99a58e" stroke-width=".7" opacity=".38"><ellipse cx="425" cy="290" rx="112" ry="36"/><ellipse cx="425" cy="290" rx="42" ry="112" transform="rotate(-24 425 290)"/><ellipse cx="425" cy="290" rx="72" ry="112" transform="rotate(25 425 290)"/></g>'+dots+'<g stroke="#a2ac96" stroke-width=".8"><path d="M313 440h224m-224-4v8m224-8v8"/></g><text x="425" y="461" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#6c7863">r</text></svg>';
+export function paradoxLayout(state,compact=false) {
+  // Only translate centers for the narrow layout; all sample radii stay equal.
+  const centre=(x,y,group=0)=>compact
+    ? {x:210+(x-425)*.45,y:235+(y-290)*.6+(group<2?-110:110)*state.doubleOpacity}
+    : {x,y};
+  return {
+    box:compact?{x:0,y:0,width:420,height:480}:{x:100,y:65,width:650,height:455},
+    groups:state.groups.map((g,i)=>centre(g.x,g.y,i)),
+    source:compact?{x:210,y:235}:{x:425,y:290},
+    doubles:compact?[{x:142.5,y:131},{x:277.5,y:351}]:[{x:275,y:300},{x:575,y:300}]
+  };
+}
+export function createParadoxStillSvg(compact=false) {
+  const state=paradoxState(0),layout=paradoxLayout(state,compact),{x,y}=layout.source,b=layout.box;
+  const points=createParadoxPoints(320),buckets=Array.from({length:16},()=>[]);
+  for(const p of points){const depth=Math.min(3,Math.floor((p.z/PARADOX_RADIUS+1)*2));buckets[depth*4+p.group].push(p);}
+  const dots=buckets.map((bucket,i)=>'<g fill="'+PARADOX_COLORS[i%4]+'" opacity="'+(.23+Math.floor(i/4)*.24).toFixed(2)+'">'+bucket.map(p=>'<circle cx="'+(x+p.x).toFixed(1)+'" cy="'+(y+p.y).toFixed(1)+'" r="'+(1.3+Math.floor(i/4)*.5).toFixed(1)+'"/>').join('')+'</g>').join('');
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="'+b.width+'" height="'+b.height+'" viewBox="'+[b.x,b.y,b.width,b.height].join(' ')+'"><defs><radialGradient id="ball" cx="30%" cy="23%" r="80%"><stop stop-color="#ffffff"/><stop offset=".42" stop-color="#f3f1e6"/><stop offset=".78" stop-color="#c6cfb5"/><stop offset="1" stop-color="#738568"/></radialGradient></defs><ellipse cx="'+x+'" cy="'+(y+137)+'" rx="78" ry="7" fill="#536142" opacity=".09"/><circle cx="'+x+'" cy="'+y+'" r="112" fill="url(#ball)" fill-opacity=".86" stroke="#7f9170" stroke-opacity=".35"/><g fill="none" stroke="#7a896d" stroke-width=".65" opacity=".26"><ellipse cx="'+x+'" cy="'+y+'" rx="112" ry="36"/><ellipse cx="'+x+'" cy="'+y+'" rx="42" ry="112" transform="rotate(-24 '+x+' '+y+')"/></g>'+dots+'</svg>';
 }
