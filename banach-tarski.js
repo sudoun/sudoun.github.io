@@ -1,4 +1,4 @@
-import {createParadoxPoints,paradoxState,paradoxLayout,transformParadoxPoint,PARADOX_RADIUS,PARADOX_COLORS,PARADOX_STEPS} from './banach-tarski-core.js';
+import {paradoxState,paradoxLayout,PARADOX_RADIUS,PARADOX_STEPS,PARADOX_STATEMENTS} from './banach-tarski-core.js';
 
 const canvas=document.querySelector('#kinetic-sculpture');
 const trigger=document.querySelector('#sculpture-trigger');
@@ -7,23 +7,27 @@ const context=canvas?.getContext('2d',{alpha:true});
 if(context&&trigger&&cover) {
   const compact=matchMedia('(max-width:800px)');
   const reduced=matchMedia('(prefers-reduced-motion:reduce)');
-  const points=createParadoxPoints(compact.matches?640:960);
   let width=1,height=1,frame=0,last=0,clock=0,rotationX=-.15,rotationY=.25;
   let visible=true,paused=reduced.matches||document.body.classList.contains('motion-paused');
   let drag=null,suppressClick=false,manualStep=0;
   const steps=[...document.querySelectorAll('[data-paradox-step]')];
   function schedule(){if(!frame&&visible&&!document.hidden)frame=requestAnimationFrame(tick);}
-  function sphere(x,y,opacity){
+  function sphere(x,y,opacity,label){
     if(opacity<.005)return;
     const gradient=context.createRadialGradient(x-42,y-50,5,x-15,y-15,PARADOX_RADIUS*1.4);
     gradient.addColorStop(0,'#ffffff');gradient.addColorStop(.42,'#f3f1e6');gradient.addColorStop(.78,'#c6cfb5');gradient.addColorStop(1,'#738568');
     context.save();context.globalAlpha=opacity*.09;context.fillStyle='#536142';
     context.beginPath();context.ellipse(x,y+137,78,7,0,0,Math.PI*2);context.fill();
-    context.globalAlpha=opacity*.86;context.fillStyle=gradient;context.strokeStyle='#7f917066';context.lineWidth=.8;
+    context.globalAlpha=opacity;context.fillStyle=gradient;context.strokeStyle='#7f917066';context.lineWidth=.8;
     context.beginPath();context.arc(x,y,PARADOX_RADIUS,0,Math.PI*2);context.fill();context.stroke();
-    context.globalAlpha=opacity*.26;context.strokeStyle='#7a896d';
-    context.beginPath();context.ellipse(x,y,PARADOX_RADIUS,36,0,0,Math.PI*2);context.stroke();
-    context.beginPath();context.ellipse(x,y,42,PARADOX_RADIUS,-.42,0,Math.PI*2);context.stroke();context.restore();
+    context.globalAlpha=opacity*.36;context.strokeStyle='#7a896d';
+    context.beginPath();context.ellipse(x,y,PARADOX_RADIUS,20+Math.abs(Math.sin(rotationX))*40,0,0,Math.PI*2);context.stroke();
+    context.beginPath();context.ellipse(x,y,Math.abs(Math.sin(rotationY))*PARADOX_RADIUS,PARADOX_RADIUS,-.42,0,Math.PI*2);context.stroke();
+    context.globalAlpha=opacity;context.strokeStyle='#526744';context.lineWidth=1;
+    context.beginPath();context.moveTo(x,y);context.lineTo(x+PARADOX_RADIUS,y);context.stroke();
+    context.fillStyle='#425538';context.beginPath();context.arc(x,y,2,0,Math.PI*2);context.fill();
+    context.font='italic 28px Georgia, serif';context.textAlign='center';context.fillText(label,x-34,y+10);
+    context.font='italic 19px Georgia, serif';context.fillText('r',x+56,y-8);context.restore();
   }
   function paint(){
     const state=paradoxState(clock),layout=paradoxLayout(state,compact.matches),box=layout.box;
@@ -31,28 +35,27 @@ if(context&&trigger&&cover) {
     context.setTransform(ratio,0,0,ratio,0,0);context.clearRect(0,0,width,height);
     const scale=Math.min(width/box.width,height/box.height);
     context.translate((width-box.width*scale)/2-box.x*scale,(height-box.height*scale)/2-box.y*scale);context.scale(scale,scale);
-    sphere(layout.source.x,layout.source.y,state.sourceOpacity);
-    for(const centre of layout.doubles)sphere(centre.x,centre.y,state.doubleOpacity);
-    const sx=Math.sin(rotationX),cx=Math.cos(rotationX),sy=Math.sin(rotationY),cy=Math.cos(rotationY);
-    const projected=points.map(point=>{
-      const p=transformParadoxPoint(point,state),g=state.groups[point.group];
-      const x=p.x-g.x,z=p.z,y=p.y-g.y;
-      const xx=x*cy+z*sy,zz=z*cy-x*sy;
-      const centre=layout.groups[point.group];
-      return {x:centre.x+xx,y:centre.y+y*cx-zz*sx,z:y*sx+zz*cx,group:point.group};
-    }).sort((a,b)=>a.z-b.z);
-    for(const p of projected){
-      const depth=(p.z/PARADOX_RADIUS+1)*.5;
-      context.globalAlpha=.23+.74*depth;context.fillStyle=PARADOX_COLORS[p.group];
-      context.beginPath();context.arc(p.x,p.y,1.15+depth*1.65,0,Math.PI*2);context.fill();
+    sphere(layout.source.x,layout.source.y,state.sourceOpacity,'B');
+    layout.doubles.forEach((centre,i)=>sphere(centre.x,centre.y,state.doubleOpacity,['B₁','B₂'][i]));
+    // Set names, not cut-out pieces, point samples, or physical motion paths.
+    context.save();context.globalAlpha=state.symbolOpacity;context.textAlign='center';
+    for(const [i,symbol] of layout.symbols.entries()){
+      context.fillStyle=['#3e637f','#ad6149','#68755d','#877197'][i];
+      context.font='italic 46px Georgia, serif';context.fillText(symbol.label,symbol.x,symbol.y+12);
     }
+    const cx=compact.matches?210:425;
+    context.fillStyle='#52634a';context.font='23px Georgia, serif';
+    context.fillText('B = A₁ ⊔ A₂ ⊔ ⋯ ⊔ Aₙ',cx,compact.matches?85:175);
+    context.font='14px Arial, sans-serif';context.fillText('SET SYMBOLS · NOT GEOMETRIC SHAPES',cx,compact.matches?405:410);
+    context.restore();
     context.globalAlpha=1;
     canvas.__renderCount=(canvas.__renderCount||0)+1;
     if(canvas.dataset.ready!=='true'){canvas.dataset.ready='true';canvas.dataset.renderer='canvas';canvas.dataset.morphing='false';trigger.classList.add('is-rendered');}
     if(canvas.dataset.form!==state.phase){
       canvas.dataset.form=state.phase;
       steps.forEach((step,i)=>{if(i===state.index)step.setAttribute('aria-current','step');else step.removeAttribute('aria-current');});
-      trigger.setAttribute('aria-label','Banach–Tarski 悖论概念示意，当前为'+['一个球','分组重排','两个等半径的球'][state.index]+'。点击推进，拖动旋转。');
+      document.querySelector('#paradox-statement').textContent=PARADOX_STATEMENTS[state.index];
+      trigger.setAttribute('aria-label','Banach–Tarski 定理图示。'+PARADOX_STATEMENTS[state.index]+'点击切换示意阶段；不展示实际分解。');
     }
   }
   function tick(time){frame=0;if(!visible||document.hidden)return;const dt=Math.min(70,time-(last||time));if(last&&dt<32){schedule();return;}last=time;

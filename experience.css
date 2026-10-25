@@ -283,10 +283,12 @@ body.exhibit-home { background:var(--canvas); }
 .hero-halo { top:16%; right:2%; width:min(50vw,680px); opacity:.55; }
 .paradox-heading { position:absolute; z-index:4; top:8%; right:6%; margin:0; text-align:right; font:400 26px/1.15 Georgia,serif; letter-spacing:-.03em; pointer-events:none; }
 .paradox-heading > span { display:block; margin-top:10px; color:#62695b; font:12px/1.5 var(--font); letter-spacing:.03em; }
+#paradox-statement { max-width:360px; min-height:36px; }
 .sculpture-trigger { top:8%; right:0; width:62%; height:72%; }
 .sculpture-picture { position:absolute; inset:0; pointer-events:none; }
 .sculpture-picture ~ .sculpture-fallback { display:none; }
-.sculpture-caption { right:6%; bottom:15%; width:40%; display:grid; grid-template-columns:1fr auto; gap:12px 20px; text-align:left; font:12px/1.5 var(--font); letter-spacing:0; }
+.sculpture-caption { right:6%; bottom:12%; width:40%; display:grid; grid-template-columns:1fr auto; gap:12px 20px; text-align:left; font:12px/1.5 var(--font); letter-spacing:0; }
+.paradox-caveat { grid-column:1/-1; margin:0; color:#55634c; font:12px/1.6 var(--font); }
 .paradox-steps { grid-column:1/-1; display:flex; justify-content:space-between; gap:18px; list-style:none; padding:0 0 14px; margin:0; border-bottom:1px solid #cbd0c1; }
 .paradox-steps li { display:flex; align-items:center; gap:9px; color:#737b69; transition:color .4s; }
 .paradox-steps li > span { font:10px ui-monospace,Consolas,monospace; }
@@ -295,7 +297,7 @@ body.exhibit-home { background:var(--canvas); }
 .sculpture-caption > span.paradox-hint { align-self:center; font-size:11px; color:#62695b; }
 .paradox-note { font-size:12px; }
 .paradox-note summary { min-height:44px; padding:12px 0; }
-.paradox-note p { bottom:42px; width:min(340px,calc(100vw - 65px)); font-size:13px; line-height:1.8; }
+.paradox-note p { bottom:42px; width:min(340px,calc(100vw - 65px)); max-height:65svh; overflow:auto; font-size:13px; line-height:1.8; }
 .hero-introduction { bottom:15%; }
 .hero-introduction > p { margin-bottom:22px; font-size:clamp(28px,2.4vw,38px); }
 .hero-introduction > span { font-size:14px; line-height:1.8; }
