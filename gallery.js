@@ -69,6 +69,9 @@ if (gallery) {
     gallery.dataset.targetPanel = panels[target].id;
     if (smooth) history.replaceState(null, "", "#" + panels[target].id);
     const behavior = smooth && !reducedMotion.matches ? "smooth" : "instant";
+    if (behavior === "instant") glass.reset();
+    else glass.arm(active);
+    document.dispatchEvent(new CustomEvent("gallery:target", { detail: { id: panels[target].id } }));
     if (stacked.matches) {
       // The cover includes the identity header; deep links must not crop it away.
       if (target === 0) window.scrollTo({ top: 0, behavior });
@@ -114,7 +117,8 @@ if (gallery) {
     }
     scrollFrame = 0;
   }
-  function queuePosition() {
+  function queuePosition(event) {
+    if (event?.type === "resize") glass.reset();
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updatePosition);
     clearTimeout(scrollEndTimer);
     scrollEndTimer = setTimeout(() => {
@@ -129,6 +133,11 @@ if (gallery) {
   gallery.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("scroll", queuePosition, { passive: true });
   window.addEventListener("resize", queuePosition, { passive: true });
+  window.addEventListener("wheel", event => { if (!event.ctrlKey) glass.arm(active); }, { passive: true });
+  window.addEventListener("touchmove", () => glass.arm(active), { passive: true });
+  window.addEventListener("keydown", event => {
+    if (["PageUp", "PageDown", "ArrowUp", "ArrowDown", "Home", "End", " "].includes(event.key)) glass.arm(active);
+  });
   previous.addEventListener("click", () => goTo((targetIndex ?? active) - 1));
   next.addEventListener("click", () => goTo((targetIndex ?? active) + 1));
   document.querySelector("[data-next-panel]")?.addEventListener("click", () => goTo(1));
@@ -190,6 +199,7 @@ if (gallery) {
     }
     if (dragging.moved) {
       event.preventDefault();
+      glass.arm(active);
       gallery.scrollLeft = dragging.left - delta;
     }
   });

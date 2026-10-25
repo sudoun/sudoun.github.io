@@ -7,6 +7,38 @@ const player = document.querySelector("#demo-player");
 const fullVideo = document.querySelector("#demo-player-video");
 const demos = [];
 const STATIC_HOLD_MS = 1100;
+const slowNetwork = () => saveData || /(^|-)2g$|^3g$/.test(navigator.connection?.effectiveType || "");
+let neighborTimer;
+
+function warmNext(demo) {
+  clearTimeout(neighborTimer);
+  if (slowNetwork()) return;
+  neighborTimer = setTimeout(() => {
+    if (!demo.eligible || document.hidden || document.querySelector("dialog[open]")) return;
+    const next = demos[demos.indexOf(demo) + 1];
+    if (next) requestPoster(next, "low");
+  }, 450);
+}
+function requestPoster(demo, priority = "high") {
+  const poster = demo.stage.querySelector("img[data-src]");
+  if (!poster) return;
+  poster.fetchPriority = priority;
+  if (demo.posterRequested) return;
+  demo.posterRequested = true;
+  demo.posterPending = true;
+  poster.decoding = "async";
+  const finish = async () => {
+    try { await poster.decode(); demo.posterReady = true; }
+    catch { demo.posterFailed = true; }
+    demo.posterPending = false;
+    demo.stage.dataset.posterReady = String(demo.posterReady);
+    sync();
+    if (demo.eligible && demo.product.autoplay === false) warmNext(demo);
+  };
+  poster.addEventListener("load", finish, { once: true });
+  poster.addEventListener("error", () => { demo.posterPending = false; demo.posterFailed = true; sync(); }, { once: true });
+  poster.src = poster.dataset.src;
+}
 
 function resetIntro(demo) {
   clearTimeout(demo.introTimer);
@@ -38,21 +70,7 @@ function sync() {
     if (!eligible && demo.eligible) resetIntro(demo);
     demo.eligible = eligible;
     const poster = demo.stage.querySelector("img[data-src]");
-    if (eligible && poster && !demo.posterRequested && (poster.getAttribute("src") || poster.dataset.posterQuality !== "clear")) {
-      demo.posterRequested = true;
-      demo.posterPending = true;
-      const image = new Image();
-      image.fetchPriority = "high";
-      image.onload = async () => {
-        try { await image.decode(); } catch { /* A decoded inline preview remains visible. */ }
-        poster.src = image.src;
-        demo.posterReady = true;
-        demo.posterPending = false;
-        sync();
-      };
-      image.onerror = () => { demo.posterPending = false; demo.posterFailed = true; sync(); };
-      image.src = poster.dataset.posterQuality === "clear" ? poster.getAttribute("src") : poster.dataset.src;
-    }
+    if (eligible && poster) requestPoster(demo);
     if (eligible && (demo.posterReady || demo.posterFailed) && !demo.staticUntil) {
       demo.staticUntil = performance.now() + STATIC_HOLD_MS;
       demo.introTimer = setTimeout(() => { demo.introTimer = null; sync(); }, STATIC_HOLD_MS + 30);
@@ -60,7 +78,7 @@ function sync() {
     const shouldPlay = eligible && !demo.failed && !demo.userPaused && !globallyPaused()
       && (demo.posterReady || demo.posterFailed || demo.manual)
       && (demo.manual || (demo.staticUntil && performance.now() >= demo.staticUntil))
-      && ((demo.product.autoplay !== false && !reduced.matches && !saveData && !demo.blocked) || demo.manual);
+      && ((demo.product.autoplay !== false && !reduced.matches && !slowNetwork() && !demo.blocked) || demo.manual);
     if (shouldPlay) {
       if (!demo.video.getAttribute("src")) {
         demo.video.poster = poster?.getAttribute("src") || demo.product.preview;
@@ -141,6 +159,7 @@ for (const stage of document.querySelectorAll("[data-work-demo]")) {
       else requestAnimationFrame(reveal);
     }
     updateControls(demo);
+    warmNext(demo);
   });
   video.addEventListener("pause", () => updateControls(demo));
   video.addEventListener("error", () => {
@@ -198,9 +217,15 @@ const changes = new MutationObserver(sync);
 changes.observe(document.body, { attributes: true, attributeFilter: ["class"] });
 document.querySelectorAll("dialog").forEach((dialog) => changes.observe(dialog, { attributes: true, attributeFilter: ["open"] }));
 document.addEventListener("gallery:change", sync);
+document.addEventListener("gallery:target", event => {
+  const demo = demos.find(item => item.panel.id === event.detail?.id);
+  if (demo) requestPoster(demo);
+});
 document.addEventListener("gallery:settled", sync);
 document.addEventListener("work:poster-ready", sync);
 document.addEventListener("visibilitychange", () => { if (document.hidden) fullVideo?.pause(); sync(); });
 reduced.addEventListener("change", sync);
+const initialDemo = demos.find(demo => demo.panel.classList.contains("is-current"));
+if (initialDemo) requestPoster(initialDemo);
 window.addEventListener("pagehide", () => { demos.forEach((demo) => { resetIntro(demo); demo.eligible = false; demo.video.pause(); }); fullVideo?.pause(); });
 window.addEventListener("pageshow", sync);
