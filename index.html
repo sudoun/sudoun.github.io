@@ -4,24 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#eaeae8">
-  <meta name="description" content="Dale Anfer 的个人实验场。体验 SlideFetch、Soda Lab、FaceDrop、二条城与霍格沃茨空间探索，也看看正在构建的阅读工具。">
+  <meta name="description" content="Dale Anfer 的个人实验场。体验 SlideFetch、Soda Lab、FaceDrop 和近场 Nearstage，也看看正在构建的阅读工具。">
   <title>Dale Anfer — An independent playground.</title>
   <link rel="icon" type="image/svg+xml" href="assets/exhibit-mark.svg">
   <link rel="preload" href="assets/inter-tight-medium.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/site.15539dccce99.css">
-  <script type="module" src="assets/site.a7f543827e6c.js"></script>
+  <link rel="stylesheet" href="assets/site.cfa63fee81c8.css">
+  <script type="module" src="assets/site.a31394da4f78.js"></script>
 </head>
 <body class="exhibit-home">
   <a class="skip-link" href="#main">跳到作品画廊</a>
   <header class="exhibit-header" id="top">
     <a class="exhibit-identity" href="index.html" aria-label="Dale Anfer 首页"><svg viewBox="0 0 32 32" width="25" height="25" aria-hidden="true"><path d="M16 1v30M1 16h30M5.4 5.4l21.2 21.2M5.4 26.6 26.6 5.4" stroke="currentColor" stroke-width="2"/></svg><span data-profile-name>Dale Anfer</span></a>
-    <label class="gallery-map header-map"><span class="sr-only">选择画廊页面</span><input type="range" id="gallery-position" min="0" max="7" value="0" step="1"></label>
+    <label class="gallery-map header-map"><span class="sr-only">选择画廊页面</span><input type="range" id="gallery-position" min="0" max="6" value="0" step="1"></label>
     <nav aria-label="主导航"><a href="#products" data-gallery-jump><span>01</span> 作品</a><a href="#about" data-gallery-jump><span>02</span> 关于</a><a href="#contact" data-contact-open>聊聊 ↗</a></nav>
   </header>
   <main id="main">
-    <div class="gallery" id="gallery" tabindex="0" role="region" aria-roledescription="横向作品画廊" aria-label="Dale Anfer 的个人介绍、五个在线作品、一个开发中项目">
+    <div class="gallery" id="gallery" tabindex="0" role="region" aria-roledescription="横向作品画廊" aria-label="Dale Anfer 的个人介绍、四个在线作品、一个开发中项目">
       <section class="exhibit-panel cover-panel" id="cover" data-panel-name="Hello, I'm Dale." aria-labelledby="cover-title">
-        <div class="panel-index"><span>INDEPENDENT BUILDER & CURIOUS HUMAN</span><span>PERSONAL EXPERIMENTS / 001—006</span></div>
+        <div class="panel-index"><span>INDEPENDENT BUILDER & CURIOUS HUMAN</span><span>PERSONAL EXPERIMENTS / 001—005</span></div>
         <div class="hero-halo" data-artwork aria-hidden="true"></div>
         <h1 id="cover-title" class="hero-name" lang="en" aria-label="Dale Anfer"><span>Dale</span><span>Anfer<span class="hero-period">.</span></span></h1>
         <button class="sculpture-trigger" id="sculpture-trigger" type="button" aria-label="当前形态：knot。点击切换形态，拖动旋转。" data-artwork>
@@ -30,7 +30,7 @@
         </button>
         <div class="sculpture-caption"><span id="sculpture-name" aria-live="polite">01 / CHROME KNOT</span><span>拖动旋转 · 点击变形 ↗</span></div>
         <div class="hero-introduction"><p lang="en">Turning curiosity<br>into <em>little worlds.</em></p><span>做顺手的工具，也做无用但有趣的实验。<br>你好，我是 Dale。欢迎来玩。</span></div>
-        <div class="cover-bottom"><span class="hero-small-note">A WORK IN PROGRESS.<br>JUST LIKE THE PERSON BEHIND IT.</span><button class="cover-explore" type="button" data-next-panel><span class="cover-explore-label">ENTER THE PLAYGROUND<br><b>探索 06 个作品</b></span><span aria-hidden="true">↗</span></button></div>
+        <div class="cover-bottom"><span class="hero-small-note">A WORK IN PROGRESS.<br>JUST LIKE THE PERSON BEHIND IT.</span><button class="cover-explore" type="button" data-next-panel><span class="cover-explore-label">ENTER THE PLAYGROUND<br><b>探索 05 个作品</b></span><span aria-hidden="true">↗</span></button></div>
       </section>
 
       <section class="exhibit-panel live-work-panel slidefetch-panel" id="products" data-project-id="slidefetch" data-panel-name="SlideFetch" aria-labelledby="slidefetch-title">
@@ -60,26 +60,17 @@
         <div class="product-panel-bottom"><div><span class="work-kicker">A FACE. A CLUE. THAT AHA MOMENT.</span><h2 id="facedrop-title">FaceDrop</h2><p>看线索一点点出现，猜出熟悉的那张脸。<br>三分钟挑战，或者做一份自己的照片题库。</p></div><a class="panel-link" data-work-link href="https://facedrop-game.vercel.app/" target="_blank" rel="noopener noreferrer">来玩一局 <span aria-hidden="true">↗</span></a></div>
       </section>
 
-      <section class="exhibit-panel live-work-panel nijo-panel" id="nijo-castle" data-project-id="nijo-castle" data-panel-name="二条城" aria-labelledby="nijo-title">
-        <div class="panel-index"><span>04 / 3D ARCHITECTURE</span><span class="work-status">ONLINE · 可探索</span></div>
-        <div class="work-preview" data-work-demo="nijo-castle" role="group" aria-label="二条城动态作品展示">
-          <span class="preview-chrome" aria-hidden="true"><i></i><span>nijo-castle.vercel.app</span><span>↗</span></span>
-          <img src="assets/works/nijo-castle-demo.jpg" width="1120" height="700" alt="二条城实际三维场景中的御殿、唐门与庭园" loading="lazy" decoding="async">
+      <section class="exhibit-panel live-work-panel nearstage-panel" id="nearstage" data-project-id="nearstage" data-panel-name="近场 Nearstage" aria-labelledby="nearstage-title">
+        <div class="panel-index"><span>04 / LIVE MUSIC DISCOVERY</span><span class="work-status">ONLINE · 可体验</span></div>
+        <div class="work-preview" data-work-demo="nearstage" role="group" aria-label="近场 Nearstage 创意动态主视觉">
+          <span class="preview-chrome" aria-hidden="true"><i></i><span>nearstage-three.vercel.app</span><span>↗</span></span>
+          <img src="assets/works/nearstage-demo.webp" width="960" height="640" alt="米色纸雕城市围绕朱砂红小舞台，灯光与城市节点循环亮起" loading="lazy" decoding="async">
         </div>
-        <div class="product-panel-bottom"><div><span class="work-kicker">KYOTO, FROM ANOTHER ANGLE.</span><h2 id="nijo-title">二条城<span lang="en">Nijō Castle</span></h2><p>从屋瓦、木构，到池泉庭园。<br>在浏览器里，换一个角度看看京都。</p></div><a class="panel-link" data-work-link href="https://nijo-castle.vercel.app/" target="_blank" rel="noopener noreferrer">走近二条城 <span aria-hidden="true">↗</span></a></div>
-      </section>
-
-      <section class="exhibit-panel live-work-panel hogwarts-panel" id="hogwarts-castle" data-project-id="hogwarts-castle" data-panel-name="霍格沃茨" aria-labelledby="hogwarts-title">
-        <div class="panel-index"><span>05 / 3D WORLD EXPLORATION</span><span class="work-status">FAN-MADE · 个人创作</span></div>
-        <div class="work-preview" data-work-demo="hogwarts-castle" role="group" aria-label="霍格沃茨动态作品展示">
-          <span class="preview-chrome" aria-hidden="true"><i></i><span>hogwarts-castle.vercel.app</span><span>↗</span></span>
-          <img src="assets/works/hogwarts-castle-demo.jpg" width="1120" height="700" alt="霍格沃茨原站提供的城堡与室内场景预览" loading="lazy" decoding="async">
-        </div>
-        <div class="product-panel-bottom"><div><span class="work-kicker">SOME WORLDS ARE WORTH WALKING INTO.</span><h2 id="hogwarts-title">霍格沃茨<span lang="en">Hogwarts</span></h2><p>从城堡全景，到楼梯厅和学院休息室。<br>一次让想象有了入口的非官方空间练习。</p></div><a class="panel-link" data-work-link href="https://hogwarts-castle.vercel.app/" target="_blank" rel="noopener noreferrer">进入城堡 <span aria-hidden="true">↗</span></a></div>
+        <div class="product-panel-bottom"><div><span class="work-kicker">A GOOD NIGHT STARTS NEARBY.</span><h2 id="nearstage-title">近场<span lang="en">Nearstage</span></h2><p>把城市里的好现场，放进你的下一次出门。<br>发现演出，收藏心动，留在日历里。</p></div><a class="panel-link" data-work-link href="https://nearstage-three.vercel.app/" target="_blank" rel="noopener noreferrer">发现附近的现场 <span aria-hidden="true">↗</span></a></div>
       </section>
 
       <section class="exhibit-panel margin-panel" id="margin" data-project-id="margin" data-panel-name="Margin" aria-labelledby="margin-title">
-        <div class="panel-index"><span>06 / AI READING</span><span>ALPHA · 正在打磨</span></div>
+        <div class="panel-index"><span>05 / AI READING</span><span>ALPHA · 正在打磨</span></div>
         <div class="reader-concept" aria-label="Margin 阅读体验交互示意">
           <div class="reader-top"><span class="reader-logo">m.</span><span>A quieter place to read.</span><span class="concept-label">交互示意</span></div>
           <div class="reader-pages">
@@ -91,7 +82,7 @@
       </section>
 
       <section class="exhibit-panel about-panel" id="about" data-panel-name="A little about Dale" aria-labelledby="about-title">
-        <div class="panel-index"><span>07 / THE PERSON BEHIND THE TOOLS</span><span>STILL EXPLORING.</span></div>
+        <div class="panel-index"><span>06 / THE PERSON BEHIND THE TOOLS</span><span>STILL EXPLORING.</span></div>
         <h2 id="about-title" lang="en">Keep it<br>curious.<br><span>Make it useful.</span></h2>
         <div class="about-panel-bottom"><p>你好，我是 <span data-profile-name>Dale Anfer</span>。<br><br>我做学习和阅读的工具，也做小游戏和可以探索的 3D 空间。这里放着可以打开的作品、正在构建的产品。<br><br>如果某个作品让你停留了一会儿，我们可以聊聊。</p><a class="about-contact" href="#contact" data-contact-open>Say hello <span aria-hidden="true">↗</span></a></div>
         <div class="about-links"><a data-social="github" hidden>GitHub ↗</a><a data-social="x" hidden>X ↗</a><a data-social="newsletter" hidden>订阅 ↗</a><a href="garden.html">书刊版本 ↗</a><span>© <span id="year">2026</span></span></div>
@@ -100,13 +91,13 @@
   </main>
 
   <footer class="exhibit-controls">
-    <div class="gallery-position"><span id="gallery-count" aria-live="polite">01 / 08</span><span id="gallery-current">Hello, I'm Dale.</span></div>
-    <div class="experience-actions"><button type="button" id="motion-toggle" aria-pressed="false">暂停动效 Ⅱ</button><button type="button" data-index-open aria-label="打开作品索引">作品索引 <span>06 ↗</span></button></div>
+    <div class="gallery-position"><span id="gallery-count" aria-live="polite">01 / 07</span><span id="gallery-current">Hello, I'm Dale.</span></div>
+    <div class="experience-actions"><button type="button" id="motion-toggle" aria-pressed="false">暂停动效 Ⅱ</button><button type="button" data-index-open aria-label="打开作品索引">作品索引 <span>05 ↗</span></button></div>
     <div class="gallery-actions"><span class="gallery-hint">滚动 / 拖动 <span aria-hidden="true">↔</span></span><button type="button" id="gallery-prev" aria-label="上一页" disabled>←</button><button type="button" id="gallery-next" aria-label="下一页">→</button></div>
   </footer>
   <noscript><p class="no-script-note">向右滑动或使用底部滚动条浏览作品，也可通过作品入口访问原站。</p></noscript>
 
-  <dialog id="work-index" aria-labelledby="work-index-title"><div class="index-heading"><span>THE PLAYGROUND / 06 SELECTED WORKS</span><button class="index-close" type="button" aria-label="关闭作品索引">关闭 ×</button></div><div class="index-layout"><div><h2 id="work-index-title" lang="en">A few things<br>I've <em>made.</em></h2><div id="work-index-list" aria-label="作品列表"></div></div><figure class="index-preview"><img id="index-preview-image" loading="lazy" decoding="async" src="assets/works/slidefetch.jpg" width="1440" height="960" alt="SlideFetch 作品预览"><figcaption><span id="index-preview-name">SlideFetch</span><span id="index-preview-status">在线作品 ↗</span></figcaption></figure></div></dialog>
+  <dialog id="work-index" aria-labelledby="work-index-title"><div class="index-heading"><span>THE PLAYGROUND / 05 SELECTED WORKS</span><button class="index-close" type="button" aria-label="关闭作品索引">关闭 ×</button></div><div class="index-layout"><div><h2 id="work-index-title" lang="en">A few things<br>I've <em>made.</em></h2><div id="work-index-list" aria-label="作品列表"></div></div><figure class="index-preview"><img id="index-preview-image" loading="lazy" decoding="async" src="assets/works/slidefetch.jpg" width="1440" height="960" alt="SlideFetch 作品预览"><figcaption><span id="index-preview-name">SlideFetch</span><span id="index-preview-status">在线作品 ↗</span></figcaption></figure></div></dialog>
 
   <dialog id="demo-player" aria-labelledby="demo-player-title" aria-describedby="demo-player-description"><div class="demo-dialog-heading"><div><span>PROJECT IN MOTION / 作品演示</span><h2 id="demo-player-title">作品演示</h2></div><button type="button" data-demo-close aria-label="关闭作品演示">关闭 ×</button></div><video id="demo-player-video" controls muted playsinline loop preload="none"></video><p id="demo-player-error" role="status" hidden>视频暂不可播放，你仍然可以打开原站体验。</p><div class="demo-dialog-footer"><div><p id="demo-player-description"></p><small>无声循环预览 · 完整交互请进入原站</small></div><a id="demo-player-destination" target="_blank" rel="noopener noreferrer">打开原站 ↗</a></div></dialog>
 

@@ -93,6 +93,12 @@ body.exhibit-home { background:var(--canvas); }
 .facedrop-panel .work-film { object-fit:contain; background:#06080d; border:1px solid #a6c55d33; border-radius:15px; box-shadow:0 35px 90px #0008; }
 .facedrop-panel .has-film .work-film,.facedrop-panel [data-work-demo] > img { transform:perspective(1400px) rotateY(-5deg) rotateZ(3deg); }
 .soda-panel .work-film { object-position:50% 35%; }
+.nearstage-panel { color:#352f27; background:#f6f1e6; }
+.nearstage-panel .work-preview::after { background:linear-gradient(180deg,#f6f1e638 0%,transparent 24%,#f6f1e600 42%,#f6f1e6ed 100%); }
+.nearstage-panel .work-film,.nearstage-panel .work-preview img { object-position:50% 38%; }
+.nearstage-panel .product-panel-bottom h2 { font-family:"Songti SC",STSong,Georgia,serif; font-weight:400; letter-spacing:-.035em; }
+.nearstage-panel .panel-link { background:#944f40; color:#fffaf1; }
+.nearstage-panel .panel-link:hover { background:#352f27; }
 .nijo-panel .work-film,.hogwarts-panel .work-film { object-position:center; }
 .work-actions { display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-shrink:0; pointer-events:auto; }
 .live-work-panel .demo-toolbar { display:flex; align-items:center; gap:24px; min-height:44px; padding:0; color:inherit; cursor:default; }
@@ -209,7 +215,7 @@ body.exhibit-home { background:var(--canvas); }
   .live-work-panel .demo-toolbar { justify-content:flex-start; gap:24px; }
   .demo-toolbar button { font-size:10px; }
   .live-work-panel .demo-fallback { top:auto; right:0; bottom:-100px; left:0; max-width:none; padding:8px; font-size:9px; }
-  .soda-panel .work-preview { aspect-ratio:3/2; }
+  .soda-panel .work-preview,.nearstage-panel .work-preview { aspect-ratio:3/2; }
   .soda-panel::before { content:"FIZZ."; position:absolute; z-index:-1; left:2%; top:18%; font:500 40vw/1 "Inter Tight",var(--font); letter-spacing:-.08em; color:#70ac7c25; }
   .nijo-panel { background:#425748; }
   #demo-player { width:calc(100% - 24px); padding:16px; border-radius:12px; }

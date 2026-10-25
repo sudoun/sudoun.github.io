@@ -22,6 +22,7 @@ window.DALE_PRODUCTS = {
       description: "一个可以调配口味、加入冰块、旋转观察的 3D 苏打水实验室。",
       preview: "assets/works/soda-card-demo.webp",
       demo: "assets/works/soda-card-demo.webm",
+      demoType: "artwork",
       demoDescription: "青柠风味插画卡片的循环动画：杯中气泡缓缓上升，液体与背景波纹轻轻流动。",
       url: "https://soda-flax.vercel.app/"
     },
@@ -38,28 +39,17 @@ window.DALE_PRODUCTS = {
       url: "https://facedrop-game.vercel.app/"
     },
     {
-      id: "nijo-castle",
-      name: "二条城",
-      category: "3D ARCHITECTURE",
+      id: "nearstage",
+      name: "近场 Nearstage",
+      category: "LIVE MUSIC DISCOVERY",
       status: "LIVE",
-      tagline: "把京都的一角，放进浏览器",
-      description: "围绕二之丸、唐门与庭园制作的三维空间研究，可以旋转、缩放，观察建筑之间的空间关系。",
-      preview: "assets/works/nijo-castle-demo.jpg",
-      demo: "assets/works/nijo-castle-demo.webm",
-      demoDescription: "旋转二之丸全景，切换唐门与庭园视角，观察建筑之间的空间关系。",
-      url: "https://nijo-castle.vercel.app/"
-    },
-    {
-      id: "hogwarts-castle",
-      name: "霍格沃茨",
-      category: "3D WORLD EXPLORATION",
-      status: "LIVE",
-      tagline: "让想象中的城堡，有一个入口",
-      description: "个人制作的非官方城堡空间练习，提供城堡全景、移动楼梯厅与学院休息室的浏览入口。",
-      preview: "assets/works/hogwarts-castle-demo.jpg",
-      demo: "assets/works/hogwarts-castle-demo.webm",
-      demoDescription: "浏览原站的轻量场景预览：从城堡全景切换到庭院、礼堂、楼梯厅与格兰芬多休息室。",
-      url: "https://hogwarts-castle.vercel.app/"
+      tagline: "发现身边的好现场",
+      description: "按城市发现演出，浏览艺人与日历，将感兴趣的现场加入收藏。",
+      preview: "assets/works/nearstage-demo.webp",
+      demo: "assets/works/nearstage-demo.webm",
+      demoType: "concept",
+      demoDescription: "原创纸雕城市与小舞台的动态主视觉：舞台灯光缓缓扫动，城市节点与声波依次亮起。",
+      url: "https://nearstage-three.vercel.app/"
     },
     {
       id: "margin",
