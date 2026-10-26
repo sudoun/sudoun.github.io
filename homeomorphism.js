@@ -66,7 +66,7 @@ void main(){gl_FragColor=.5*(render(gl_FragCoord.xy-vec2(.25))+render(gl_FragCoo
    gl.useProgram(program);const quad=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,quad);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
    const position=gl.getAttribLocation(program,'position');gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
    const uniforms={resolution:gl.getUniformLocation(program,'resolution'),shape:gl.getUniformLocation(program,'shape'),rotation:gl.getUniformLocation(program,'rotation')};
-   let frame=0,last=0,clock=0,progress=0,localPaused=false,visible=true,selected=cover.classList.contains('is-current'),drag=null,tween=null,suppressClick=false,lost=false,covered=false;
+   let frame=0,last=0,clock=0,progress=0,localPaused=false,visible=true,selected=cover.classList.contains('is-current'),drag=null,tween=null,suppressClick=false,lost=false,covered=Boolean(document.querySelector('dialog[open]'));
    let rx=-.45,ry=.20,globalPaused=reduced.matches||document.body.classList.contains('motion-paused');
    const matrix=new Float32Array(9);let lastDraw;
    function rotation(){const sx=Math.sin(rx),cx=Math.cos(rx),sy=Math.sin(ry),cy=Math.cos(ry);matrix.set([cy,0,-sy,sy*sx,cx,cy*sx,sy*cx,-sx,cy*cx]);return matrix;}

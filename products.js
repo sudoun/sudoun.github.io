@@ -87,11 +87,7 @@ window.DALE_PRODUCTS = {
       "tagline": "从一个分镜，到一部小小的电影",
       "description": "本地影视与动画制作：原创短片、分镜组织和逐帧审看。",
       "preview": "assets/art/film-art-1280-v1.webp",
-      "demo": "assets/works/film-demo.webm",
-      "demoType": "film",
       "autoplay": false,
-      "demoDescription": "原创 24 秒像素短片《借一盏光》，接上原生分镜选择、事件跳转和八镜审看界面的实际录屏。美术、动画、程序配乐与音效均来自原项目。",
-      "demoNote": "原创短片＋制作审看界面 · 可在播放器中开启声音。",
       "url": "",
       "previewSrcset": "assets/art/film-art-640-v1.webp 640w, assets/art/film-art-1280-v1.webp 1280w",
       "presentation": "artwork"

@@ -1,6 +1,7 @@
-import { safePublicUrl, buildInterestSummary, buildMailto } from "./site-core.js";
+import { safePublicUrl } from "./site-core.js";
 import "./gallery.js";
 import "./work-art.js";
+import {initializeEmailContact} from "./contact-email.js";
 
 // Global motion controls stay available even when WebGL has not been loaded.
 const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
@@ -23,10 +24,10 @@ const cover = document.querySelector(".cover-panel");
 if (cover?.querySelector("#kinetic-sculpture")) {
   let queued = false;
   function startSculpture() {
-    if (queued || !cover.classList.contains("is-current") || document.hidden) return;
+    if (queued || !cover.classList.contains("is-current") || document.hidden || document.querySelector('dialog[open]')) return;
     queued = true;
     setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(() => {
-      if (!cover.classList.contains("is-current") || document.hidden) { queued = false; return; }
+      if (!cover.classList.contains("is-current") || document.hidden || document.querySelector('dialog[open]')) { queued = false; return; }
       const sculptureModule = document.documentElement.dataset.sculptureModule || "./homeomorphism.js";
       import(sculptureModule).catch(() => {
         queued = false;
@@ -36,6 +37,7 @@ if (cover?.querySelector("#kinetic-sculpture")) {
   }
   document.addEventListener("gallery:change", startSculpture);
   document.addEventListener("visibilitychange", startSculpture);
+  document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('close',startSculpture));
   startSculpture();
 }
 
@@ -48,14 +50,6 @@ const dialog = document.querySelector("#product-dialog");
 const contactDialog = document.querySelector("dialog#contact");
 const formStatus = document.querySelector("#form-status");
 let selectedProduct = null;
-
-const contactType = form?.elements.namedItem("type");
-if (contactType) {
-  products.forEach((product) => {
-    if ([...contactType.options].some((option) => option.value === product.name)) return;
-    contactType.add(new Option(product.name, product.name));
-  });
-}
 
 document.querySelectorAll("[data-profile-name]").forEach((element) => {
   if (profile.name) element.textContent = profile.name;
@@ -79,8 +73,7 @@ function openContact(productName) {
   if (!details || !form) return;
   if (dialog?.open) dialog.close();
   details.open = true;
-  const type = form.elements.namedItem("type");
-  if (productName && [...type.options].some((option) => option.value === productName)) type.value = productName;
+  form.dataset.product = productName || "";
   if (formStatus) formStatus.textContent = "";
   if (contactDialog && !contactDialog.open) contactDialog.showModal();
 }
@@ -138,36 +131,4 @@ dialog?.addEventListener("click", (event) => {
   if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
 });
 
-const mailAvailable = Boolean(buildMailto(profile.email, "Hello", ""));
-if (mailAvailable && form) {
-  document.querySelector("#contact-submit").textContent = "打开邮件，继续聊聊 ↗";
-  document.querySelector("#contact-help").textContent = "填写后会打开你的邮件应用，由你确认后发送。";
-}
-form?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (!form.reportValidity()) return;
-  const data = new FormData(form);
-  const summary = buildInterestSummary({
-    name: data.get("name"),
-    product: data.get("type"),
-    problem: data.get("problem")
-  }, profile.name || "Dale Anfer");
-  document.querySelector("#summary-output").hidden = false;
-  document.querySelector("#summary-text").value = summary;
-  const mailto = buildMailto(profile.email, "关于 " + data.get("type"), summary);
-  if (mailto) {
-    formStatus.textContent = "邮件内容已准备好，请在邮件应用中确认发送。";
-    window.location.href = mailto;
-    return;
-  }
-  try {
-    if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
-    await navigator.clipboard.writeText(summary);
-    formStatus.textContent = "已生成并复制，可粘贴到你与 Dale 的对话中。";
-  } catch {
-    formStatus.textContent = "摘要已生成，请复制下方文字。";
-    const output = document.querySelector("#summary-text");
-    output.focus();
-    output.select();
-  }
-});
+initializeEmailContact(form, profile);
