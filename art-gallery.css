@@ -7,7 +7,9 @@
 .art-scene { position:absolute; inset:0; transform-origin:62% 44%; }
 .art-light { position:absolute; inset:0; pointer-events:none; opacity:0; background:linear-gradient(115deg,transparent 30%,#fff1ce15 48%,#e4f7ff20 56%,transparent 72%); }
 .art-orbit { position:absolute; inset:0; width:100%; height:100%; overflow:hidden; pointer-events:none; }
-@media(prefers-reduced-motion:reduce) { .art-scene { transform:none!important; } .art-light,.art-orbit { display:none; } }
+.art-paper-canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.art-orbit,.art-light { z-index:1; }
+@media(prefers-reduced-motion:reduce) { .art-scene { transform:none!important; } .art-light,.art-orbit,.art-paper-canvas { display:none; } }
 .art-project-panel .project-art::before { display:none; }
 .art-project-panel .project-art::after { content:""; position:absolute; z-index:1; inset:0; display:block; background:linear-gradient(180deg,#06150e15,transparent 27%,transparent 47%,#08150dd9),linear-gradient(90deg,#06150e44,transparent 60%); transform:none; border:0; border-radius:0; }
 .art-project-panel::before { display:none; }

@@ -1,10 +1,10 @@
 // One live artwork at a time. The original still remains the first paint.
 export function createArtworkMotion(artworks,limited){
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- let active=null,animations=[],svg=null,timer,scrolling=false;
+ let active=null,animations=[],svg=null,timer,scrolling=false,paper=null,paperLoading=false,paperTicket=0;
  const allowed=()=>!reduced.matches&&!document.hidden&&!document.body.classList.contains('motion-paused')&&!document.querySelector('dialog[open],#gallery-glass:not([hidden])')&&!limited();
- function pause(){clearTimeout(timer);for(const animation of animations)animation.pause();svg?.pauseAnimations();if(active)active.stage.dataset.artMotion='paused';}
- function clear(){pause();for(const animation of animations)animation.cancel();animations=[];svg?.remove();svg=null;if(active){delete active.stage.dataset.artMotion;active.stage.querySelector('.art-light')?.remove();}active=null;}
+ function pause(){clearTimeout(timer);for(const animation of animations)animation.pause();svg?.pauseAnimations();paper?.pause();if(active)active.stage.dataset.artMotion='paused';}
+ function clear(){pause();paperTicket++;paperLoading=false;paper?.destroy();paper=null;for(const animation of animations)animation.cancel();animations=[];svg?.remove();svg=null;if(active){delete active.stage.dataset.artMotion;active.stage.querySelector('.art-light')?.remove();}active=null;}
  function play(art){
   if(!allowed()||scrolling||art.stage.dataset.artState!=='ready'||!art.panel.classList.contains('is-current'))return;
   if(active!==art){
@@ -12,7 +12,7 @@ export function createArtworkMotion(artworks,limited){
    let scene=art.stage.querySelector('.art-scene');
    if(!scene){scene=document.createElement('div');scene.className='art-scene';art.image.before(scene);scene.append(art.image);}
    const phone=matchMedia('(max-width:800px)').matches,travel=phone?3:8;
-   animations.push(scene.animate([{transform:'scale(1.018) translate3d(0,0,0)'},{transform:`scale(1.026) translate3d(${-travel}px,${-travel*.55}px,0)`},{transform:'scale(1.018) translate3d(0,0,0)'}],{duration:14000,iterations:Infinity,easing:'ease-in-out'}));
+   if(art.stage.dataset.artwork!=='slidefetch')animations.push(scene.animate([{transform:'scale(1.018) translate3d(0,0,0)'},{transform:`scale(1.026) translate3d(${-travel}px,${-travel*.55}px,0)`},{transform:'scale(1.018) translate3d(0,0,0)'}],{duration:14000,iterations:Infinity,easing:'ease-in-out'}));
    const light=document.createElement('div');light.className='art-light';scene.append(light);
    animations.push(light.animate([{opacity:0,transform:'translateX(-5%)'},{opacity:.55,transform:'translateX(3%)'},{opacity:0,transform:'translateX(9%)'}],{duration:11000,iterations:Infinity,easing:'ease-in-out'}));
    if(art.stage.dataset.artwork==='slidefetch'){
@@ -23,7 +23,16 @@ export function createArtworkMotion(artworks,limited){
     animations.push(svg.querySelector('.art-orb-glint').animate([{opacity:.08},{opacity:.62},{opacity:.08}],{duration:5000,iterations:Infinity,easing:'ease-in-out'}));
    }
   }
-  active.stage.dataset.artMotion='playing';for(const animation of animations)animation.play();svg?.unpauseAnimations();
+  active.stage.dataset.artMotion='playing';for(const animation of animations)animation.play();svg?.unpauseAnimations();paper?.resume();
+  if(art.stage.dataset.artwork==='slidefetch'&&!paper&&!paperLoading){
+   const ticket=++paperTicket;paperLoading=true;
+   import(document.documentElement.dataset.paperModule||'./paper-sway.js').then(async module=>{
+    if(ticket!==paperTicket||active!==art)return;
+    const effect=await module.createPaperSway(art.stage.querySelector('.art-scene'),art.image);
+    if(ticket!==paperTicket||active!==art){effect.destroy();return;}
+    paper=effect;paperLoading=false;if(allowed()&&!scrolling)paper.resume();else paper.pause();
+   }).catch(()=>{if(ticket===paperTicket)paperLoading=false;});
+  }
  }
  function sync(){
   clearTimeout(timer);
