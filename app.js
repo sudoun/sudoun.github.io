@@ -27,8 +27,11 @@ if (cover?.querySelector("#kinetic-sculpture")) {
     queued = true;
     setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(() => {
       if (!cover.classList.contains("is-current") || document.hidden) { queued = false; return; }
-      const sculptureModule = document.documentElement.dataset.sculptureModule || "./banach-tarski.js";
-      import(sculptureModule).catch(() => { queued = false; });
+      const sculptureModule = document.documentElement.dataset.sculptureModule || "./homeomorphism.js";
+      import(sculptureModule).catch(() => {
+        queued = false;
+        const hint=document.querySelector('#morph-hint');if(hint)hint.textContent='静态预览 · 动画暂未加载';
+      });
     })), 1100);
   }
   document.addEventListener("gallery:change", startSculpture);

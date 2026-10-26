@@ -1,0 +1,40 @@
+.homeomorphism-cover .hero-halo { background:radial-gradient(circle,#cdddb24a,transparent 68%); }
+.homeomorphism-cover .sculpture-trigger { top:9%; right:2%; width:61%; height:70%; }
+.homeomorphism-cover .sculpture-trigger::after { display:none; }
+.homeomorphism-cover .paradox-heading { top:7%; right:6%; font-size:28px; }
+.homeomorphism-cover .paradox-heading > span { font:12px/1.6 var(--font); margin-top:9px; }
+.homeomorphism-caption { width:42%; right:6%; bottom:11%; gap:7px 14px; }
+.morph-control-row { grid-column:1/-1; display:grid; grid-template-columns:auto 12px auto 1fr; align-items:center; gap:6px; pointer-events:auto; }
+.morph-control-row > span { color:#849279; text-align:center; font-size:13px; }
+.morph-control-row button { pointer-events:auto; min-height:34px; padding:6px 9px; border:1px solid transparent; border-radius:100px; background:transparent; color:#4c6143; font:12px/1.4 var(--font); white-space:nowrap; }
+.morph-control-row [data-morph-target][aria-pressed=true] { background:#e0e7d6; border-color:#c3cfb7; color:#2f4b28; }
+.morph-control-row #morph-toggle { justify-self:end; font-size:11px; border-color:#bfccb5; }
+.morph-control-row button:disabled { opacity:.6; }
+.morph-scrubber-label { grid-column:1/-1; display:grid; grid-template-columns:auto 1fr; align-items:center; gap:15px; color:#7a8671; font:10px/1.4 var(--font); pointer-events:auto; }
+#morph-progress { width:100%; height:26px; padding:0; margin:0; border:0; appearance:none; -webkit-appearance:none; background:transparent; accent-color:#536d45; cursor:ew-resize; }
+#morph-progress::-webkit-slider-runnable-track { height:2px; background:#bdc9b2; border-radius:3px; }
+#morph-progress::-webkit-slider-thumb { appearance:none; -webkit-appearance:none; width:12px; height:12px; margin-top:-5px; border:2px solid #eeeee8; border-radius:50%; background:#526b44; box-shadow:0 0 0 1px #869a75; }
+#morph-progress::-moz-range-track { height:2px; background:#bdc9b2; }
+#morph-progress::-moz-range-thumb { width:9px; height:9px; border:2px solid #eeeee8; border-radius:50%; background:#526b44; }
+.morph-invariant { margin:0; font:12px/1.5 var(--font); color:#506845; }
+.morph-invariant::before { content:""; display:inline-block; width:5px; height:5px; margin-right:8px; border-radius:50%; background:#749b57; vertical-align:middle; }
+.homeomorphism-caption .paradox-note { text-align:right; }
+.homeomorphism-caption .paradox-note summary { padding:0; min-height:0; font-size:11px; }
+.homeomorphism-caption .paradox-note p { text-align:left; }
+#morph-hint { grid-column:1/-1; font:10px/1.5 var(--font); color:#7c8774; }
+@media(max-width:1100px) and (min-width:801px){
+ .homeomorphism-cover .paradox-heading { right:4%; font-size:24px; }
+ .homeomorphism-caption { right:4%; width:44%; }
+ .morph-control-row button { font-size:11px; padding-inline:7px; }
+}
+@media(max-width:800px){
+ .homeomorphism-cover .paradox-heading { top:auto; right:auto; margin-top:30px; font-size:24px; }
+ .homeomorphism-cover .sculpture-trigger { top:auto; right:auto; width:calc(100% + 44px); height:clamp(290px,88vw,390px); margin:4px -22px 8px; }
+ .homeomorphism-caption { width:100%; right:auto; bottom:auto; gap:7px 12px; }
+ .morph-control-row button { font-size:12px; }
+}
+@media(max-width:360px){
+ .homeomorphism-cover .sculpture-trigger { width:calc(100% + 36px); margin-inline:-18px; }
+ .homeomorphism-cover .paradox-heading { font-size:22px; }
+ .morph-control-row button { font-size:11px; padding-inline:7px; }
+}
