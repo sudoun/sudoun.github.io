@@ -1,5 +1,6 @@
 import { clampGalleryIndex } from "./site-core.js";
 import { createGalleryGlass } from "./gallery-glass.js";
+import { artworkSource } from "./art-source.js";
 
 const gallery = document.querySelector("#gallery");
 if (gallery) {
@@ -46,9 +47,10 @@ if (gallery) {
     const prototypePreviews = { margin: "assets/reading-garden.svg" };
     function previewProduct(product) {
       const image = document.querySelector("#index-preview-image");
-      image.srcset=product.previewSrcset||"";
+      const source=artworkSource(product.preview,product.previewSrcset,stacked.matches);
+      if(source.srcset)image.srcset=source.srcset;else image.removeAttribute('srcset');
       image.sizes="(max-width:800px) 300px, 42vw";
-      image.src = product.preview || prototypePreviews[product.id];
+      image.src = source.src || prototypePreviews[product.id];
       image.alt = product.name + " 作品预览";
       document.querySelector("#index-preview-name").textContent = product.name;
       document.querySelector("#index-preview-status").textContent = product.url ? "在线作品 ↗" : product.id === "film" ? "影视制作 / 本地项目" : product.status === "ALPHA" ? "Alpha / 正在打磨" : "本地研究项目";

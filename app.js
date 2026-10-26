@@ -1,7 +1,7 @@
 import { safePublicUrl } from "./site-core.js";
 import "./gallery.js";
 import "./work-art.js";
-import {initializeEmailContact} from "./contact-email.js";
+import {initializeEmailContact,warmContactConnection} from "./contact-email.js";
 
 // Global motion controls stay available even when WebGL has not been loaded.
 const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
@@ -71,6 +71,7 @@ if (year) year.textContent = String(new Date().getFullYear());
 
 function openContact(productName) {
   if (!details || !form) return;
+  warmContactConnection(profile);
   if (dialog?.open) dialog.close();
   details.open = true;
   form.dataset.product = productName || "";
@@ -84,6 +85,7 @@ document.querySelectorAll("[data-contact-open]").forEach((link) => {
   });
 });
 if (location.hash === "#contact") openContact();
+window.addEventListener('hashchange',()=>{if(location.hash==='#contact')openContact();});
 
 document.querySelectorAll("[data-product-open]").forEach((button) => {
   button.addEventListener("click", () => {

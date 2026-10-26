@@ -1,36 +1,51 @@
-const products=window.DALE_PRODUCTS?.products||[];
-const artworks=[...document.querySelectorAll('.project-art[data-artwork]')].map(stage=>({stage,panel:stage.closest('.exhibit-panel'),image:stage.querySelector('img'),product:products.find(p=>p.id===stage.dataset.artwork),requested:false}));
-const saveData=navigator.connection?.saveData===true;
+import {artworkSource} from './art-source.js';
+import {createArtworkMotion} from './work-art-motion.js';
+
+const compact=matchMedia('(max-width:800px)'),gallery=document.querySelector('#gallery');
+const artworks=[...document.querySelectorAll('.project-art[data-artwork]')].map(stage=>({stage,panel:stage.closest('.exhibit-panel'),image:stage.querySelector('img'),source:'',failed:false}));
 let warmTimer;
+const limited=()=>navigator.connection?.saveData===true||/(^|-)2g$|^3g$/.test(navigator.connection?.effectiveType||'');
 function warmNext(art){
-  clearTimeout(warmTimer);
-  if(saveData||/(^|-)2g$|^3g$/.test(navigator.connection?.effectiveType||''))return;
-  warmTimer=setTimeout(()=>{
-    if(document.hidden||!art.panel.classList.contains('is-current'))return;
-    const next=artworks[artworks.indexOf(art)+1];if(next)loadArtwork(next,'low');
-  },500);
+ clearTimeout(warmTimer);
+ if(limited())return;
+ warmTimer=setTimeout(()=>{
+  if(document.hidden||limited()||!art.panel.classList.contains('is-current'))return;
+  const next=artworks[artworks.indexOf(art)+1];if(next)loadArtwork(next,'low');
+ },500);
 }
-function loadArtwork(art,priority='high'){
-  if(!art)return;
-  const image=art.image;image.fetchPriority=priority;
-  if(art.requested)return;
-  art.requested=true;art.stage.dataset.artState='loading';
-  image.addEventListener('load',async()=>{
-    try{await image.decode();}catch{/* A successfully loaded still can paint directly. */}
-    art.stage.dataset.artState='ready';
-    if(art.panel.classList.contains('is-current'))warmNext(art);
-  },{once:true});
-  image.addEventListener('error',()=>{art.stage.dataset.artState='error';},{once:true});
-  if(image.dataset.srcset)image.srcset=image.dataset.srcset;
-  image.src=image.dataset.src;
+function loadArtwork(art,priority='high',retry=false){
+ if(!art)return;
+ const image=art.image,source=artworkSource(image.dataset.src,image.dataset.srcset,compact.matches);
+ image.fetchPriority=priority;
+ if(art.source===source.src&&(!art.failed||!retry))return;
+ art.source=source.src;art.failed=false;art.stage.dataset.artState='loading';
+ // Do not append a cache-busting query when recovering; reuse the public asset.
+ if(retry){image.removeAttribute('src');image.removeAttribute('srcset');}
+ if(source.srcset)image.srcset=source.srcset;else image.removeAttribute('srcset');
+ image.src=source.src;
 }
-function sync(){
-  const target=document.querySelector('#gallery')?.dataset.targetPanel;
-  const art=artworks.find(item=>item.panel.classList.contains('is-current')&&(!target||item.panel.id===target));
-  if(art)loadArtwork(art);
+// Ambient motion uses the already decoded still; 3G alone need not disable it.
+const motion=createArtworkMotion(artworks,()=>navigator.connection?.saveData===true);
+for(const art of artworks){
+ art.image.addEventListener('load',async()=>{
+  try{await art.image.decode();}catch{/* The successful image can still paint. */}
+  if(!art.image.complete||!art.image.naturalWidth)return;
+  art.failed=false;art.stage.dataset.artState='ready';motion.sync();
+  if(art.panel.classList.contains('is-current'))warmNext(art);
+ });
+ art.image.addEventListener('error',()=>{art.failed=true;art.stage.dataset.artState='error';motion.sync();});
 }
-document.addEventListener('gallery:target',event=>loadArtwork(artworks.find(art=>art.panel.id===event.detail?.id)));
-document.addEventListener('gallery:change',sync);
-document.addEventListener('gallery:settled',sync);
-window.addEventListener('pageshow',sync);
+function sync(retry=false){
+ const target=gallery?.dataset.targetPanel;
+ const art=artworks.find(item=>item.panel.classList.contains('is-current')&&(!target||item.panel.id===target));
+ if(art)loadArtwork(art,'high',retry);
+ motion.sync();
+}
+document.addEventListener('gallery:target',event=>{clearTimeout(warmTimer);motion.pause();loadArtwork(artworks.find(art=>art.panel.id===event.detail?.id),'high',true);});
+document.addEventListener('gallery:change',()=>sync(true));
+document.addEventListener('gallery:settled',()=>sync(true));
+window.addEventListener('pageshow',()=>sync(true));
+window.addEventListener('online',()=>sync(true));
+compact.addEventListener('change',()=>sync(true));
+navigator.connection?.addEventListener?.('change',()=>{clearTimeout(warmTimer);sync();});
 sync();
