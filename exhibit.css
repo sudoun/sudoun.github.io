@@ -195,6 +195,9 @@ img, svg { display: block; max-width: 100%; }
 .about-panel-bottom p { max-width: 430px; margin: 0; color: #c5c5c0; font-size: 12px; line-height: 1.9; }
 .about-contact { display: flex; align-items: center; gap: 35px; color: var(--yellow); font-size: 22px; letter-spacing: -.03em; }
 .about-contact > span { font-size: 43px; }
+.about-panel .about-email { gap: 14px; min-width: 0; min-height: 44px; max-width: 100%; font-size: clamp(15px,1.65vw,22px); }
+.about-panel .about-email .about-email-address { min-width: 0; font: inherit; letter-spacing: 0; line-height: 1.4; overflow-wrap: anywhere; }
+@media(max-width:800px) { .about-panel .about-panel-bottom { grid-template-columns: 1fr; gap: 16px; } }
 .about-links { display: flex; align-items: center; flex-wrap: wrap; gap: 21px; padding-top: 6px; margin-top: 5px; color: #b9b9b4; font-size: 9px; }
 .about-links > span:last-child { margin-left: auto; }
 .about-links a:hover { color: var(--yellow); }
