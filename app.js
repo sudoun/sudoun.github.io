@@ -19,6 +19,31 @@ motionToggle.addEventListener("click", () => { motionPaused = !motionPaused; upd
 motionPreference.addEventListener("change", () => { motionPaused = motionPreference.matches; updateMotion(); });
 updateMotion();
 
+// The closing artwork is optional and requested only after its panel is reached.
+const characterStage = document.querySelector('.character-stage');
+if (characterStage) {
+  let loading = false, ready = false, timer;
+  const startCharacters = () => {
+    clearTimeout(timer);
+    if (ready || loading || motionPreference.matches || navigator.connection?.saveData ||
+        document.body.classList.contains('motion-paused') || document.hidden ||
+        !characterStage.closest('.exhibit-panel').classList.contains('is-current')) return;
+    timer = setTimeout(() => {
+      if (!characterStage.closest('.exhibit-panel').classList.contains('is-current') || document.hidden ||
+          motionPreference.matches || navigator.connection?.saveData || document.body.classList.contains('motion-paused')) return;
+      loading = true;
+      import(document.documentElement.dataset.characterModule || './character-art.js')
+        .then(module => { module.createCharacterArt(characterStage); ready = true; })
+        .catch(() => { /* The real heading and email remain available. */ })
+        .finally(() => { loading = false; });
+    }, 500);
+  };
+  for (const event of ['gallery:change', 'gallery:settled', 'motion:change', 'visibilitychange']) document.addEventListener(event, startCharacters);
+  window.addEventListener('online', startCharacters);
+  navigator.connection?.addEventListener?.('change', startCharacters);
+  startCharacters();
+}
+
 // Compile WebGL only when the cover is selected, after the page can paint.
 const cover = document.querySelector(".cover-panel");
 if (cover?.querySelector("#kinetic-sculpture")) {
