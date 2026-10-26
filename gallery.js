@@ -17,6 +17,27 @@ if (gallery) {
   let targetIndex = null;
   let scrollEndTimer;
   let suppressDragClick = false;
+  let wheelGoal=null,wheelFrame=0,wheelLast=0,wheelStarted=0;
+  function stopWheel(){cancelAnimationFrame(wheelFrame);wheelFrame=0;wheelGoal=null;wheelLast=0;}
+  function stepWheel(now){
+    wheelFrame=0;
+    if(wheelGoal===null)return;
+    if(document.hidden||stacked.matches||reducedMotion.matches||document.body.classList.contains('motion-paused')||document.querySelector('dialog[open]')){stopWheel();return;}
+    const current=gallery.scrollLeft,gap=wheelGoal-current;
+    if(Math.abs(gap)<1.25||now-wheelStarted>280){gallery.scrollTo({left:wheelGoal,behavior:'instant'});stopWheel();return;}
+    const dt=Math.min(32,wheelLast?now-wheelLast:16);wheelLast=now;
+    gallery.scrollTo({left:current+gap*(1-Math.exp(-dt/45)),behavior:'instant'});
+    wheelFrame=requestAnimationFrame(stepWheel);
+  }
+  function softenWheel(delta){
+    const current=gallery.scrollLeft;
+    if(wheelGoal===null||Math.sign(delta)!==Math.sign(wheelGoal-current))wheelGoal=current;
+    wheelGoal=Math.max(0,Math.min(gallery.scrollWidth-gallery.clientWidth,wheelGoal+delta));wheelStarted=performance.now();
+    if(!wheelFrame)wheelFrame=requestAnimationFrame(stepWheel);
+  }
+  window.addEventListener('blur',stopWheel);window.addEventListener('pagehide',stopWheel);window.addEventListener('resize',stopWheel);
+  document.addEventListener('motion:change',stopWheel);reducedMotion.addEventListener('change',stopWheel);
+
 
   const indexDialog = document.querySelector("#work-index");
   const indexList = document.querySelector("#work-index-list");
@@ -66,6 +87,7 @@ if (gallery) {
   }
 
   function goTo(index, smooth = true) {
+    stopWheel();
     const target = clampGalleryIndex(index, panels.length);
     targetIndex = target;
     gallery.dataset.targetPanel = panels[target].id;
@@ -179,7 +201,7 @@ if (gallery) {
   window.addEventListener("hashchange", restoreHash);
   gallery.addEventListener("wheel", (event) => {
     if (!event.ctrlKey) { targetIndex = null; delete gallery.dataset.targetPanel; }
-    if (stacked.matches || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.target.closest("input,textarea,select")) return;
+    if (stacked.matches || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.target.closest("input,textarea,select")) { stopWheel(); return; }
     const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? gallery.clientWidth : 1);
     const canScroll = delta > 0
       ? gallery.scrollLeft < gallery.scrollWidth - gallery.clientWidth - 2
@@ -188,7 +210,10 @@ if (gallery) {
     event.preventDefault();
     targetIndex = null;
     delete gallery.dataset.targetPanel;
-    gallery.scrollLeft += delta;
+    // Small/fractional input follows the hand directly; discrete mouse-wheel
+    // steps get a short, bounded settle and never snap to another work.
+    if(reducedMotion.matches||document.body.classList.contains('motion-paused')||Math.abs(delta)<40||!Number.isInteger(event.deltaY)){stopWheel();gallery.scrollLeft+=delta;}
+    else softenWheel(delta);
   }, { passive: false });
   gallery.addEventListener("keydown", (event) => {
     if (event.altKey || event.ctrlKey || event.metaKey || event.target.closest("input,textarea,select,button,a")) return;
@@ -197,6 +222,7 @@ if (gallery) {
     goTo(event.key === "Home" ? 0 : event.key === "End" ? panels.length - 1 : (targetIndex ?? active) + (event.key === "ArrowRight" ? 1 : -1));
   });
   gallery.addEventListener("pointerdown", (event) => {
+    stopWheel();
     targetIndex = null;
     delete gallery.dataset.targetPanel;
     const control = event.target.closest("button,a,input,textarea,select,summary");
