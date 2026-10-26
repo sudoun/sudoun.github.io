@@ -3,7 +3,7 @@ export function createGalleryGlass(){
  const supported=typeof CSS!=='undefined'&&typeof CSS.supports==='function'&&(CSS.supports('backdrop-filter','blur(1px)')||CSS.supports('-webkit-backdrop-filter','blur(1px)'));
  if(!supported)return {arm(){},reset(){},render(){}};
  const preferences=['(prefers-reduced-transparency:reduce)','(prefers-contrast:more)','(prefers-reduced-motion:reduce)'].map(query=>matchMedia(query));
- const panels=[...document.querySelectorAll('#gallery>.exhibit-panel')],layer=document.createElement('div');
+ const panels=[...document.querySelectorAll('#gallery>.exhibit-panel')],header=document.querySelector('.exhibit-header'),layer=document.createElement('div');
  layer.id='gallery-glass';layer.className='gallery-glass-layer';layer.dataset.effect='soft-edge';layer.hidden=true;layer.inert=true;layer.setAttribute('aria-hidden','true');
  for(const depth of ['light','near']){const pane=document.createElement('span');pane.className='gallery-glass-pane';pane.dataset.depth=depth;layer.append(pane);}
  document.body.append(layer);
@@ -29,7 +29,9 @@ export function createGalleryGlass(){
   if(progress>.01)departure.moved=true;
   if(progress>=.995||(progress<.004&&departure.moved)){reset();return;}
   if(progress<.012){layer.hidden=true;return;}
-  const box=stacked?{left:12,top:0,right:innerWidth-12,bottom:innerHeight-65}:{left:0,top:root.top,right:innerWidth,bottom:root.bottom};
+  // The departure boundary begins below the persistent mobile language controls.
+  const headerEdge=stacked&&header&&getComputedStyle(header).position==='sticky'?Math.max(0,header.getBoundingClientRect().bottom):0;
+  const box=stacked?{left:12,top:headerEdge,right:innerWidth-12,bottom:innerHeight-65}:{left:0,top:root.top,right:innerWidth,bottom:root.bottom};
   const penetration=stacked?(direction<0?box.top-rect.top:rect.bottom-box.bottom):(direction<0?box.left-rect.left:rect.right-box.right);
   if(penetration<=0){layer.hidden=true;return;}
   let left=Math.max(box.left,rect.left),right=Math.min(box.right,rect.right),top=Math.max(box.top,rect.top),bottom=Math.min(box.bottom,rect.bottom);

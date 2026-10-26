@@ -1,6 +1,12 @@
 @font-face { font-family: "Newsreader"; font-style: italic; font-weight: 400; font-display: swap; src: url("assets/newsreader-italic-ui.woff2") format("woff2"); }
 :root { --canvas:#eeeee8; --ink:#20221f; --yellow:#e8ff57; }
 body.exhibit-home { background:var(--canvas); }
+[data-i18n] { white-space:pre-line; }
+.exhibit-home .panel-link > [data-i18n], .exhibit-home .exhibit-header nav a > [data-i18n], .exhibit-home [data-index-open] > [data-i18n] { font:inherit; color:inherit; letter-spacing:inherit; vertical-align:baseline; margin:0; }
+.exhibit-home [data-index-open] > [data-i18n] { display:inline; }
+.exhibit-home .exhibit-header nav a > [data-i18n] { display:inline; }
+.language-toggle { min-width:36px; min-height:44px; padding:7px; border:1px solid #a1a39b88; border-radius:20px; color:var(--ink); background:transparent; font:11px ui-monospace,Consolas,monospace; }
+.language-toggle:hover { background:#e8ff5770; border-color:#89916c; }
 .exhibit-header { height:76px; padding-inline:30px; }
 .exhibit-identity { letter-spacing:-.04em; }
 .exhibit-header nav { gap:28px; }
@@ -287,6 +293,15 @@ body.exhibit-home { background:var(--canvas); }
   .live-work-panel .product-panel-bottom h2 > span { display:block; margin:10px 0 0; }
   #gallery-current { max-width:73px; }
   .experience-actions { gap:7px; }
+}
+@media(max-width:800px) {
+  .exhibit-home .exhibit-header { position:sticky; top:0; z-index:8; display:flex; justify-content:space-between; gap:8px; padding-inline:14px; background:var(--canvas); }
+  .exhibit-home .exhibit-panel:not(.cover-panel) { scroll-margin-top:64px; }
+  .exhibit-header .header-map { display:none; }
+  .exhibit-header .exhibit-identity { flex-shrink:0; gap:7px; font-size:14px; }
+  .exhibit-home .exhibit-header nav { min-width:0; gap:10px; font-size:11px; }
+  .exhibit-header nav [data-gallery-jump] > span:not([data-i18n]) { display:none; }
+  .language-toggle { min-width:30px; padding-inline:5px; }
 }
 @media (prefers-reduced-motion:reduce) {
   .live-work-panel .work-preview img,.live-work-panel .product-panel-bottom { translate:none; }

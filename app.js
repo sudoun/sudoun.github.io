@@ -2,22 +2,27 @@ import { safePublicUrl } from "./site-core.js";
 import "./gallery.js";
 import "./work-art.js";
 import {initializeEmailContact,warmContactConnection} from "./contact-email.js";
+import {t,productCopy} from './i18n.js';
 
 // Global motion controls stay available even when WebGL has not been loaded.
 const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
 const motionToggle = document.querySelector("#motion-toggle");
 let motionPaused = motionPreference.matches;
-function updateMotion() {
-  document.body.classList.toggle("motion-paused", motionPaused);
+function renderMotionControl() {
   motionToggle.setAttribute("aria-pressed", String(motionPaused));
   motionToggle.disabled = motionPreference.matches;
-  motionToggle.textContent = motionPreference.matches ? "已减少动效" : motionPaused ? "播放动效 ↗" : "暂停动效 Ⅱ";
-  motionToggle.setAttribute("aria-label", motionPreference.matches ? "系统已设置减少动效" : motionPaused ? "播放动态效果" : "暂停动态效果");
+  motionToggle.textContent = t(motionPreference.matches ? 'motionReduced' : motionPaused ? 'motionPlay' : 'motionPause');
+  motionToggle.setAttribute("aria-label", t(motionPreference.matches ? 'motionReducedLabel' : motionPaused ? 'motionPlayLabel' : 'motionPauseLabel'));
+}
+function updateMotion() {
+  document.body.classList.toggle("motion-paused", motionPaused);
+  renderMotionControl();
   document.dispatchEvent(new Event("motion:change"));
 }
 motionToggle.addEventListener("click", () => { motionPaused = !motionPaused; updateMotion(); });
 motionPreference.addEventListener("change", () => { motionPaused = motionPreference.matches; updateMotion(); });
 updateMotion();
+document.addEventListener('locale:change',renderMotionControl);
 
 // The closing artwork is optional and requested only after its panel is reached.
 const characterStage = document.querySelector('.character-stage');
@@ -56,7 +61,7 @@ if (cover?.querySelector("#kinetic-sculpture")) {
       const sculptureModule = document.documentElement.dataset.sculptureModule || "./homeomorphism.js";
       import(sculptureModule).catch(() => {
         queued = false;
-        const hint=document.querySelector('#morph-hint');if(hint)hint.textContent='静态预览 · 动画暂未加载';
+        const hint=document.querySelector('#morph-hint');if(hint){hint.dataset.message='morphMissing';hint.textContent=t('morphMissing');}
       });
     })), 1100);
   }
@@ -116,18 +121,21 @@ document.querySelectorAll("[data-product-open]").forEach((button) => {
   button.addEventListener("click", () => {
     selectedProduct = products.find((product) => product.id === button.dataset.productOpen);
     if (!selectedProduct || !dialog) return;
-    document.querySelector("#dialog-title").textContent = selectedProduct.name;
+    renderProductDetails();
+    dialog.showModal();
+  });
+});
+function renderProductDetails() {
+    if(!selectedProduct)return;
+    const copy=productCopy(selectedProduct);
+    document.querySelector("#dialog-title").textContent = copy.name;
     document.querySelector("#dialog-category").textContent = selectedProduct.category;
-    document.querySelector("#dialog-tagline").textContent = selectedProduct.tagline;
-    document.querySelector("#dialog-description").textContent = selectedProduct.description;
+    document.querySelector("#dialog-tagline").textContent = copy.tagline;
+    document.querySelector("#dialog-description").textContent = copy.description;
     const publicUrl = safePublicUrl(selectedProduct.url);
-    document.querySelector("#dialog-stage").textContent = publicUrl
-      ? "可以前往产品网站，了解更多功能与使用方式。"
-      : selectedProduct.status === "ALPHA"
-        ? "开发中，暂未开放。"
-        : "个人项目，暂未开放。";
+    document.querySelector("#dialog-stage").textContent = t(publicUrl ? 'liveDetail' : selectedProduct.status==='ALPHA' ? 'alphaDetail' : 'privateDetail');
     const destination = document.querySelector("#product-destination");
-    destination.textContent = publicUrl ? "前往 " + selectedProduct.name + " ↗" : "联系作者 ↗";
+    destination.textContent = publicUrl ? t('destination',{name:copy.name}) : t('author');
     destination.href = publicUrl || "#contact";
     if (publicUrl) {
       destination.target = "_blank";
@@ -136,9 +144,8 @@ document.querySelectorAll("[data-product-open]").forEach((button) => {
       destination.removeAttribute("target");
       destination.removeAttribute("rel");
     }
-    dialog.showModal();
-  });
-});
+}
+document.addEventListener('locale:change',()=>{if(dialog?.open)renderProductDetails();const hint=document.querySelector('#morph-hint');if(hint?.dataset.message)hint.textContent=t(hint.dataset.message);});
 document.querySelector("#product-destination")?.addEventListener("click", (event) => {
   if (selectedProduct && !safePublicUrl(selectedProduct.url)) {
     if (contactDialog) event.preventDefault();

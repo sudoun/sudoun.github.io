@@ -1,6 +1,7 @@
 import { clampGalleryIndex } from "./site-core.js";
 import { createGalleryGlass } from "./gallery-glass.js";
 import { artworkSource } from "./art-source.js";
+import {t,productCopy} from './i18n.js';
 
 const gallery = document.querySelector("#gallery");
 if (gallery) {
@@ -45,15 +46,18 @@ if (gallery) {
   if (indexDialog && indexList) {
     const catalog = window.DALE_PRODUCTS?.products || [];
     const prototypePreviews = { margin: "assets/reading-garden.svg" };
+    let previewed;
     function previewProduct(product) {
+      previewed=product;
+      const copy=productCopy(product);
       const image = document.querySelector("#index-preview-image");
       const source=artworkSource(product.preview,product.previewSrcset,stacked.matches);
       if(source.srcset)image.srcset=source.srcset;else image.removeAttribute('srcset');
       image.sizes="(max-width:800px) 300px, 42vw";
       image.src = source.src || prototypePreviews[product.id];
-      image.alt = product.name + " 作品预览";
-      document.querySelector("#index-preview-name").textContent = product.name;
-      document.querySelector("#index-preview-status").textContent = product.url ? "在线作品 ↗" : product.status === "ALPHA" ? "开发中 · 未开放" : "个人项目 · 未开放";
+      image.alt = t('preview',{name:copy.name});
+      document.querySelector("#index-preview-name").textContent = copy.name;
+      document.querySelector("#index-preview-status").textContent = t(product.url ? 'liveIndex' : product.status==='ALPHA' ? 'alphaIndex' : 'privateIndex');
     }
     catalog.forEach((product, order) => {
       const panel = panels.find((panel) => panel.dataset.projectId === product.id);
@@ -62,12 +66,13 @@ if (gallery) {
       row.className = "index-row";
       row.href = "#" + panel.id;
       row.dataset.galleryJump = "";
+      row.dataset.productId = product.id;
       const number = document.createElement("span");
       number.textContent = String(order + 1).padStart(2, "0");
       const title = document.createElement("span");
-      title.textContent = product.name;
+      title.textContent = productCopy(product).name;
       const stage = document.createElement("small");
-      stage.textContent = product.url ? "在线" : "未开放";
+      stage.textContent = t(product.url ? 'liveShort' : 'privateShort');
       const arrow = document.createElement("b");
       arrow.textContent = "↗";
       arrow.setAttribute("aria-hidden", "true");
@@ -75,6 +80,10 @@ if (gallery) {
       row.addEventListener("pointerenter", () => previewProduct(product));
       row.addEventListener("focus", () => previewProduct(product));
       indexList.append(row);
+    });
+    document.addEventListener('locale:change',()=>{
+      for(const row of indexList.children){const product=catalog.find(p=>p.id===row.dataset.productId);row.children[1].textContent=productCopy(product).name;row.querySelector('small').textContent=t(product.url?'liveShort':'privateShort');}
+      if(previewed){const copy=productCopy(previewed);document.querySelector('#index-preview-image').alt=t('preview',{name:copy.name});document.querySelector('#index-preview-name').textContent=copy.name;document.querySelector('#index-preview-status').textContent=t(previewed.url?'liveIndex':previewed.status==='ALPHA'?'alphaIndex':'privateIndex');}
     });
     document.querySelector("[data-index-open]").addEventListener("click", () => {
       if (!document.querySelector("#index-preview-image").getAttribute("src") && catalog[0]) previewProduct(catalog[0]);

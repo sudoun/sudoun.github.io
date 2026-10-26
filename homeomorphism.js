@@ -1,4 +1,5 @@
 import {HOMEOMORPHISM_MODEL as model,deformationState,autoMorphProgress,clockForProgress,clamp01,smooth01} from './homeomorphism-core.js';
+const t=(key,values)=>window.SITE_I18N.t(key,values);
 
 const canvas=document.querySelector('#kinetic-sculpture'),trigger=document.querySelector('#sculpture-trigger'),cover=canvas?.closest('.cover-panel');
 const slider=document.querySelector('#morph-progress'),toggle=document.querySelector('#morph-toggle');
@@ -9,7 +10,7 @@ if(canvas&&trigger&&cover){
  function fallback(){
   canvas.dataset.ready='true';canvas.dataset.renderer='static';slider.disabled=true;toggle.disabled=true;trigger.disabled=true;
   trigger.classList.remove('is-rendered');document.querySelectorAll('[data-morph-target]').forEach(button=>{button.disabled=true;});
-  document.querySelector('#morph-hint').textContent='静态预览 · 浏览器未启用 3D';
+  const hint=document.querySelector('#morph-hint');hint.dataset.message='morphNo3d';hint.textContent=t('morphNo3d');
  }
  if(!gl)fallback();
  else{
@@ -73,15 +74,15 @@ void main(){gl_FragColor=.5*(render(gl_FragCoord.xy-vec2(.25))+render(gl_FragCoo
    function controls(){
     const paused=globalPaused||localPaused;
     canvas.dataset.automatic=String(!paused);
-    toggle.disabled=globalPaused;const text=localPaused?'▶':'Ⅱ',label=localPaused?'自动播放':'暂停变形';if(toggle.textContent!==text)toggle.textContent=text;toggle.setAttribute('aria-label',label);toggle.title=label;toggle.setAttribute('aria-pressed',String(paused));
+    toggle.disabled=globalPaused;const text=localPaused?'▶':'Ⅱ',label=t(localPaused?'morphPlay':'morphPause');if(toggle.textContent!==text)toggle.textContent=text;toggle.setAttribute('aria-label',label);toggle.title=label;toggle.setAttribute('aria-pressed',String(paused));
     document.querySelectorAll('[data-morph-target]').forEach(button=>{const selected=String(Number(button.dataset.morphTarget)===Math.round(progress)&&[0,1].includes(progress));if(button.getAttribute('aria-pressed')!==selected)button.setAttribute('aria-pressed',selected);});
    }
    function paint(force=false){
     if(lost)return;if(!force&&lastDraw&&lastDraw[0]===progress&&lastDraw[1]===rx&&lastDraw[2]===ry)return;lastDraw=[progress,rx,ry];
     const state=deformationState(progress);gl.uniform2f(uniforms.shape,state.blend,state.cavityFloor);gl.uniformMatrix3fv(uniforms.rotation,false,rotation());gl.drawArrays(gl.TRIANGLES,0,6);
     canvas.__renderCount=(canvas.__renderCount||0)+1;canvas.dataset.progress=progress.toFixed(4);canvas.dataset.automatic=String(!globalPaused&&!localPaused);
-    slider.value=String(Math.round(progress*1000));slider.setAttribute('aria-valuetext',state.phase==='torus'?'甜甜圈':state.phase==='mug'?'咖啡杯':'连续变形中');
-    if(canvas.dataset.form!==state.phase){canvas.dataset.form=state.phase;const statement=document.querySelector('#homeomorphism-statement');statement.textContent=state.phase==='torus'?'甜甜圈，中央是一个通孔。':state.phase==='mug'?'杯腔有底，通孔在杯把。':'拉伸外形，通孔仍在。';trigger.setAttribute('aria-label','同胚形变。'+statement.textContent+'拖动旋转视角，点击切换形状。');}
+    slider.value=String(Math.round(progress*1000));slider.setAttribute('aria-valuetext',t(state.phase==='torus'?'morphTorus':state.phase==='mug'?'morphMug':'morphBetween'));
+    if(canvas.dataset.form!==state.phase){canvas.dataset.form=state.phase;const statement=document.querySelector('#homeomorphism-statement');statement.textContent=t(state.phase==='torus'?'statementTorus':state.phase==='mug'?'statementMug':'statementBetween');trigger.setAttribute('aria-label',t('morphAria',{statement:statement.textContent}));}
     controls();
    }
    function schedule(){if(!frame&&visible&&selected&&!document.hidden&&!lost&&!covered)frame=requestAnimationFrame(tick);}
@@ -107,6 +108,7 @@ void main(){gl_FragColor=.5*(render(gl_FragCoord.xy-vec2(.25))+render(gl_FragCoo
    function release(event){if(!drag)return;suppressClick=drag.moved;drag=null;if(event.pointerId!==undefined&&trigger.hasPointerCapture(event.pointerId))trigger.releasePointerCapture(event.pointerId);last=0;schedule();}
    trigger.addEventListener('pointerup',release);trigger.addEventListener('pointercancel',release);trigger.addEventListener('lostpointercapture',release);window.addEventListener('blur',release);
    document.addEventListener('motion:change',()=>{globalPaused=reduced.matches||document.body.classList.contains('motion-paused');if(globalPaused)tween=null;last=0;controls();schedule();});
+   document.addEventListener('locale:change',()=>{delete canvas.dataset.form;lastDraw=null;paint(true);});
    document.addEventListener('visibilitychange',()=>{if(!document.hidden){last=0;schedule();}});
    document.addEventListener('gallery:change',()=>{selected=cover.classList.contains('is-current');if(!selected){cancelAnimationFrame(frame);frame=0;}else{last=0;schedule();}});
    new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(visible){last=0;schedule();}}).observe(trigger);
@@ -114,7 +116,7 @@ void main(){gl_FragColor=.5*(render(gl_FragCoord.xy-vec2(.25))+render(gl_FragCoo
    const modalObserver=new MutationObserver(()=>{covered=Boolean(document.querySelector('dialog[open]'));if(covered){cancelAnimationFrame(frame);frame=0;}else{last=0;schedule();}});document.querySelectorAll('dialog').forEach(dialog=>modalObserver.observe(dialog,{attributes:true,attributeFilter:['open']}));
    canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();lost=true;cancelAnimationFrame(frame);frame=0;fallback();});
    canvas.__homeomorphism={setProgress,getProgress:()=>progress};
-   canvas.dataset.ready='true';canvas.dataset.renderer='webgl';trigger.classList.add('is-rendered');document.querySelector('#morph-hint').textContent='拖动转动 · 点击变形 ↗';resize();
+   canvas.dataset.ready='true';canvas.dataset.renderer='webgl';trigger.classList.add('is-rendered');const hint=document.querySelector('#morph-hint');hint.dataset.message='morphHint';hint.textContent=t('morphHint');resize();
   }
  }
 }
