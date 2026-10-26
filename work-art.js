@@ -41,7 +41,7 @@ function sync(retry=false){
  if(art)loadArtwork(art,'high',retry);
  motion.sync();
 }
-document.addEventListener('gallery:target',event=>{clearTimeout(warmTimer);motion.pause();loadArtwork(artworks.find(art=>art.panel.id===event.detail?.id),'high',true);});
+document.addEventListener('gallery:target',event=>{clearTimeout(warmTimer);motion.pause();const art=artworks.find(art=>art.panel.id===event.detail?.id);loadArtwork(art,'high',true);if(art?.panel.classList.contains('is-current'))motion.sync();});
 document.addEventListener('gallery:change',()=>sync(true));
 document.addEventListener('gallery:settled',()=>sync(true));
 window.addEventListener('pageshow',()=>sync(true));

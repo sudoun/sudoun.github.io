@@ -11,11 +11,9 @@ export function createArtworkMotion(artworks,limited){
    clear();active=art;
    let scene=art.stage.querySelector('.art-scene');
    if(!scene){scene=document.createElement('div');scene.className='art-scene';art.image.before(scene);scene.append(art.image);}
-   const phone=matchMedia('(max-width:800px)').matches,travel=phone?3:8;
-   if(art.stage.dataset.artwork!=='slidefetch')animations.push(scene.animate([{transform:'scale(1.018) translate3d(0,0,0)'},{transform:`scale(1.026) translate3d(${-travel}px,${-travel*.55}px,0)`},{transform:'scale(1.018) translate3d(0,0,0)'}],{duration:14000,iterations:Infinity,easing:'ease-in-out'}));
+   if(art.stage.dataset.artwork==='slidefetch'){
    const light=document.createElement('div');light.className='art-light';scene.append(light);
    animations.push(light.animate([{opacity:0,transform:'translateX(-5%)'},{opacity:.55,transform:'translateX(3%)'},{opacity:0,transform:'translateX(9%)'}],{duration:11000,iterations:Infinity,easing:'ease-in-out'}));
-   if(art.stage.dataset.artwork==='slidefetch'){
     svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 1280 853');svg.setAttribute('preserveAspectRatio','xMidYMin slice');svg.setAttribute('aria-hidden','true');svg.classList.add('art-orbit');
     // These two paths follow the blue wires already present in the illustration.
     svg.innerHTML='<defs><radialGradient id="art-orb-light"><stop stop-color="#fff" stop-opacity=".65"/><stop offset="1" stop-color="#aedfff" stop-opacity="0"/></radialGradient></defs><circle cx="896" cy="277" r="39" fill="url(#art-orb-light)" class="art-orb-glint"/><circle r="3.2" fill="#fff7ba"><animateMotion dur="9s" repeatCount="indefinite" path="M550 28 C560 165 658 236 798 319 C922 393 1098 382 1117 267"/></circle><circle r="2.5" fill="#d3f0ff"><animateMotion dur="12s" begin="-5s" repeatCount="indefinite" path="M541 398 C653 342 816 367 942 269 C1055 181 1096 151 1103 196"/></circle>';
@@ -24,11 +22,12 @@ export function createArtworkMotion(artworks,limited){
    }
   }
   active.stage.dataset.artMotion='playing';for(const animation of animations)animation.play();svg?.unpauseAnimations();paper?.resume();
-  if(art.stage.dataset.artwork==='slidefetch'&&!paper&&!paperLoading){
+  if(!paper&&!paperLoading){
    const ticket=++paperTicket;paperLoading=true;
-   import(document.documentElement.dataset.paperModule||'./paper-sway.js').then(async module=>{
+   const isPaper=art.stage.dataset.artwork==='slidefetch';
+   import(isPaper?(document.documentElement.dataset.paperModule||'./paper-sway.js'):(document.documentElement.dataset.projectMotionModule||'./project-motion.js')).then(async module=>{
     if(ticket!==paperTicket||active!==art)return;
-    const effect=await module.createPaperSway(art.stage.querySelector('.art-scene'),art.image);
+    const effect=isPaper?await module.createPaperSway(art.stage.querySelector('.art-scene'),art.image):await module.createProjectMotion(art.stage.querySelector('.art-scene'),art.image,art.stage.dataset.artwork);
     if(ticket!==paperTicket||active!==art){effect.destroy();return;}
     paper=effect;paperLoading=false;if(allowed()&&!scrolling)paper.resume();else paper.pause();
    }).catch(()=>{if(ticket===paperTicket)paperLoading=false;});
