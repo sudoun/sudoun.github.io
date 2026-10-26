@@ -73,7 +73,7 @@ void main(){gl_FragColor=.5*(render(gl_FragCoord.xy-vec2(.25))+render(gl_FragCoo
    function controls(){
     const paused=globalPaused||localPaused;
     canvas.dataset.automatic=String(!paused);
-    toggle.disabled=globalPaused;const text=localPaused?'▶ 自动播放':'Ⅱ 暂停变形';if(toggle.textContent!==text)toggle.textContent=text;toggle.setAttribute('aria-pressed',String(paused));
+    toggle.disabled=globalPaused;const text=localPaused?'▶':'Ⅱ',label=localPaused?'自动播放':'暂停变形';if(toggle.textContent!==text)toggle.textContent=text;toggle.setAttribute('aria-label',label);toggle.title=label;toggle.setAttribute('aria-pressed',String(paused));
     document.querySelectorAll('[data-morph-target]').forEach(button=>{const selected=String(Number(button.dataset.morphTarget)===Math.round(progress)&&[0,1].includes(progress));if(button.getAttribute('aria-pressed')!==selected)button.setAttribute('aria-pressed',selected);});
    }
    function paint(force=false){
