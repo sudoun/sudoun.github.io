@@ -1,10 +1,11 @@
 // Local texture deformation: one copy of the existing artwork, no cutout ghosts
-// or replacement background. Four small scissor regions keep the GPU work local.
+// or replacement background. Small scissor regions keep the GPU work local.
 const SHEETS=[
- {id:'upper-left',center:[596,64],radius:[53,43],pin:[598,91],height:62,period:6.2,phase:.3},
- {id:'upper-middle',center:[706,56],radius:[52,52],pin:[711,95],height:79,period:7.1,phase:1.8},
- {id:'upper-right',center:[965,97],radius:[65,65],pin:[982,146],height:100,period:6.7,phase:3.4},
- {id:'lower-right',center:[965,551],radius:[66,54],pin:[978,590],height:76,period:7.8,phase:5.1}
+ {id:'upper-left',center:[596,64],radius:[65,60],pin:[598,91],height:62,period:4.2,phase:.3},
+ {id:'upper-middle',center:[706,56],radius:[64,65],pin:[711,95],height:79,period:4.8,phase:1.8},
+ {id:'upper-right',center:[965,97],radius:[82,82],pin:[982,146],height:100,period:4.4,phase:3.4},
+ {id:'lower-right',center:[965,551],radius:[82,70],pin:[978,590],height:76,period:5.2,phase:5.1},
+ {id:'foreground',center:[636,367],radius:[85,65],pin:[581,386],height:58,period:4.5,phase:2.6}
 ];
 const VERTEX=`attribute vec2 position;varying vec2 screenUV;void main(){screenUV=vec2(position.x*.5+.5,.5-position.y*.5);gl_Position=vec4(position,0.,1.);}`;
 const FRAGMENT=`precision highp float;
@@ -14,13 +15,13 @@ varying vec2 screenUV;
 void main(){
  vec2 uv=screenUV*cropScale+cropOffset;
  vec2 p=uv*vec2(1280.,853.);
- float distance=length((p-center)/radius);
- float weight=1.-smoothstep(.58,1.,distance);
+ vec2 q=abs((p-center)/radius);float distance=sqrt(sqrt(dot(q*q,q*q)));
+ float weight=1.-smoothstep(.68,1.,distance);
  float freeEdge=clamp((pin.y-p.y)/height,0.,1.);
  vec2 local=p-pin;
  // The lower attachment stays still; the free edge flexes and sways.
  vec2 displacement=vec2(-local.y*angle+curl*freeEdge*freeEdge,local.x*angle*.45+lift*freeEdge);
- vec2 source=(p-displacement*weight)/vec2(1280.,853.);
+ vec2 source=(p-displacement*weight*smoothstep(0.,.18,freeEdge))/vec2(1280.,853.);
  gl_FragColor=texture2D(artwork,source);
 }`;
 
@@ -62,7 +63,8 @@ export async function createPaperSway(scene,image){
    const top=Math.max(0,Math.floor((cy-ry)/853/scaleY*canvas.height)),bottom=Math.min(canvas.height,Math.ceil((cy+ry)/853/scaleY*canvas.height));
    if(right<=left||bottom<=top)continue;
    const phase=time*Math.PI*2/sheet.period+sheet.phase;
-   const angle=Math.sin(phase)*.035,lift=Math.sin(phase+.7)*2.4,curl=Math.sin(phase*1.35+.4)*2.8;
+   const strength=Math.min(1,time/.45);
+   const angle=Math.sin(phase)*.14*strength,lift=Math.sin(phase+.7)*8.5*strength,curl=Math.sin(phase*1.35+.4)*9*strength;
    gl.scissor(left,canvas.height-bottom,right-left,bottom-top);gl.uniform2f(uniforms.center,cx,cy);gl.uniform2f(uniforms.radius,rx,ry);gl.uniform2f(uniforms.pin,...sheet.pin);gl.uniform1f(uniforms.height,sheet.height);gl.uniform1f(uniforms.angle,angle);gl.uniform1f(uniforms.lift,lift);gl.uniform1f(uniforms.curl,curl);gl.drawArrays(gl.TRIANGLES,0,6);
    states.push({id:sheet.id,angle:Math.round(angle*10000)/10000,lift:Math.round(lift*100)/100});
   }
