@@ -99,10 +99,10 @@ document.querySelectorAll("[data-product-open]").forEach((button) => {
     document.querySelector("#dialog-stage").textContent = publicUrl
       ? "可以前往产品网站，了解更多功能与使用方式。"
       : selectedProduct.status === "ALPHA"
-        ? "还在认真打磨的 Alpha 版本，尚未开放公开体验。如果你也遇到类似的问题，很想听听你的想法。"
-        : "这是一个仍在探索中的产品原型，尚未开放公开体验。欢迎分享你的使用场景和建议。";
+        ? "开发中，暂未开放。"
+        : "个人项目，暂未开放。";
     const destination = document.querySelector("#product-destination");
-    destination.textContent = publicUrl ? "前往 " + selectedProduct.name + " ↗" : "聊聊这个产品 ↗";
+    destination.textContent = publicUrl ? "前往 " + selectedProduct.name + " ↗" : "联系作者 ↗";
     destination.href = publicUrl || "#contact";
     if (publicUrl) {
       destination.target = "_blank";

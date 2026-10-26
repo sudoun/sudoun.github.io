@@ -53,7 +53,7 @@ if (gallery) {
       image.src = source.src || prototypePreviews[product.id];
       image.alt = product.name + " 作品预览";
       document.querySelector("#index-preview-name").textContent = product.name;
-      document.querySelector("#index-preview-status").textContent = product.url ? "在线作品 ↗" : product.id === "film" ? "影视制作 / 本地项目" : product.status === "ALPHA" ? "Alpha / 正在打磨" : "本地研究项目";
+      document.querySelector("#index-preview-status").textContent = product.url ? "在线作品 ↗" : product.status === "ALPHA" ? "开发中 · 未开放" : "个人项目 · 未开放";
     }
     catalog.forEach((product, order) => {
       const panel = panels.find((panel) => panel.dataset.projectId === product.id);
@@ -67,7 +67,7 @@ if (gallery) {
       const title = document.createElement("span");
       title.textContent = product.name;
       const stage = document.createElement("small");
-      stage.textContent = product.url ? "在线" : product.id === "film" ? "影视" : product.status === "ALPHA" ? "开发中" : "研究";
+      stage.textContent = product.url ? "在线" : "未开放";
       const arrow = document.createElement("b");
       arrow.textContent = "↗";
       arrow.setAttribute("aria-hidden", "true");
